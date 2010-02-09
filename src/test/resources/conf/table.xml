@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<!--  Mat properties for the table rows. The order of the tablerow elements results in their order in the table.-->
+<config name="table">
+    <table>
+
+        <tablerow>
+            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.ModificationLabelTableRowImpl</uniqueid>
+            <property name="name">Modification Label</property>
+            <property name="active">false</property>
+        </tablerow>
+
+        <!-- This tablerow displays the Nterminal modification state. -->
+        <tablerow>
+            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.NtermModificationLabelTableRowImpl</uniqueid>
+            <property name="name">Nterm Modification Label</property>
+            <property name="active">true</property>
+        </tablerow>
+
+        <!-- This tablerow displays the ionscore. -->
+        <tablerow>
+            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.IonScoreTableRowImpl</uniqueid>
+            <property name="name">Ion Score</property>
+            <property name="active">true</property>
+        </tablerow>
+        <!-- This tablerow displays the identification id, if the source was an ms_lims database. -->
+        <tablerow>
+            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.IdentificationIDTableRowImpl</uniqueid>
+            <property name="name">IdentificationID</property>
+            <property name="active">true</property>
+        </tablerow>
+
+        <!-- This tablerow displays the peptide's identity threhold at default confidence. -->
+        <tablerow>
+            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.IdentityThresholdTableRowImpl</uniqueid>
+            <property name="name">Identity</property>
+            <property name="active">true</property>
+        </tablerow>
+        <!-- This tablerow displays the peptide's homology theshold. -->
+        <tablerow>
+            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.HomologyScoreTableRowImpl</uniqueid>
+            <property name="name">Homology</property>
+            <property name="active">true</property>
+        </tablerow>
+        <!-- This tablerow displays the peptide's homology theshold. -->
+        <tablerow>
+            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.ExpectancyTableRowImpl</uniqueid>
+            <property name="name">E-Value</property>
+            <property name="active">true</property>
+        </tablerow>
+        <!-- This tablerow displays the score difference between the first and second rank peptidehit. -->
+        <tablerow>
+            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.Delta12RankScoreTableRowImpl</uniqueid>
+            <property name="name">Delta rank n - (n-1)</property>
+            <property name="active">true</property>
+        </tablerow>
+        <!-- This tablerow displays the peptide's sequence. -->
+        <tablerow>
+            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.SequenceTableRowImpl</uniqueid>
+            <property name="name">Sequence</property>
+            <property name="active">true</property>
+        </tablerow>
+        <!-- This tablerow displays the peptide's modified sequence. -->
+        <tablerow>
+            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.ModifiedSequenceTableRowImpl</uniqueid>
+            <property name="name">Modified Sequence</property>
+            <property name="active">true</property>
+        </tablerow>
+        <!-- This tablerow displays the peptide's mass error. -->
+        <tablerow>
+            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.MassErrorTableRowImpl</uniqueid>
+            <property name="name">Mass Error</property>
+            <property name="active">true</property>
+        </tablerow>
+        <!-- This tablerow displays the peptide's modified sequence. -->
+        <tablerow>
+            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.ProteinTableRowImpl</uniqueid>
+            <property name="name">Proteins</property>
+            <property name="active">true</property>
+        </tablerow>
+        <tablerow>
+            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.SequenceColorTableRowImpl</uniqueid>
+            <property name="name">Color Sequence</property>
+            <property name="active">true</property>
+        </tablerow>
+        <tablerow>
+            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.SequenceCoverageTableRowImpl</uniqueid>
+            <property name="name">Sequence Coverage</property>
+            <property name="active">true</property>
+        </tablerow>
+        <tablerow>
+            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.DatabaseTableRowImpl</uniqueid>
+            <property name="name">Sequence Database</property>
+            <property name="active">true</property>
+        </tablerow>
+        <tablerow>
+            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.IsAboveCustomConfidenceTableRowImpl</uniqueid>
+            <property name="name">95%Confident</property>
+            <property name="active">false</property>
+            <property name="alpha">0.05</property>
+        </tablerow>
+        <tablerow>
+            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.IdentityThreshold95TableRowImpl</uniqueid>
+            <property name="name">95%Threshold</property>
+            <property name="active">false</property>
+        </tablerow>
+
+        <tablerow>
+            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.DatabaseTableRowImpl</uniqueid>
+            <property name="name">Sequence Database</property>
+            <property name="active">true</property>
+        </tablerow>
+        <tablerow>
+            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.BTagTableRowImpl</uniqueid>
+            <property name="name">BTag</property>
+            <property name="active">true</property>
+        </tablerow>
+        <tablerow>
+            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.YTagTableRowImpl</uniqueid>
+            <property name="name">YTag</property>
+            <property name="active">true</property>
+        </tablerow>
+    </table>
+    <!-- End of table configuration file-->
+</config>
