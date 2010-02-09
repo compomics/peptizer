@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--  Peptizer aggregator properties -->
+
+<config name="aggregators">
+    <aggregators>
+        <aggregator>
+            <!-- 1. Simple AgentAggregator description. -->
+            <uniqueid>com.compomics.peptizer.util.agentaggregator.SimpleAgentAggregator</uniqueid>
+            <property name="name">Simple Agent Aggregator</property>
+            <property name="score">2</property>
+        </aggregator>
+        <aggregator>
+            <!-- 2. Optimistic AgentAggregator description. -->
+            <uniqueid>com.compomics.peptizer.util.agentaggregator.OptimisticAgentAggregator</uniqueid>
+            <property name="name">Optimistic Agent Aggregator</property>
+            <property name="score">2</property>
+            <property name="dummy">dummy</property>
+        </aggregator>
+        <aggregator>
+            <!-- 3. Best Hit AgentAggregator description. -->
+            <uniqueid>com.compomics.peptizer.util.agentaggregator.BestHitAggregator</uniqueid>
+            <property name="name">Best Hit Agent Aggregator</property>
+            <property name="score">2</property>
+        </aggregator>
+        
+    </aggregators>
+    <!-- End of aggregator configuration file-->
+</config>

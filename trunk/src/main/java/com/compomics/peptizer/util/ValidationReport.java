@@ -1,0 +1,148 @@
+package com.compomics.peptizer.util;
+
+import com.compomics.peptizer.util.fileio.MatLogger;
+
+import java.io.Serializable;
+
+/**
+ * Created by IntelliJ IDEA.
+ * User: kenny
+ * Date: 12-jul-2007
+ * Time: 10:31:32
+ */
+
+/**
+ * Class description:
+ * ------------------
+ * This class was developed to save the results of an Agent in a PeptideIdentification instance.
+ * The class extends a Hashmap.
+ * The AgentReport has defines static final ReportKeys ("RK_*") that serve as keys in this map.
+ */
+public class ValidationReport implements Serializable {
+
+    /**
+     * Report on the validation status.<br>
+     * False indicates that the identification has not been validated yet. Otherwise true.
+     */
+    private boolean iValidated = false;
+
+    /**
+     * Report on the validation.<br>
+     * <b>True</b> indicates that the identification was judged correct and therefor accepted.
+     * <b>False</b> indicates that the identification was judged incorrect and therefor not rejected.<br>
+     */
+    private boolean iResult;
+
+    /**
+     * The PeptideHitNumber that is judged as correct. Needs to be set!
+     * If no correct hit, leave at -1.
+     */
+    private int iCorrectPeptideHitNumber = -1;
+
+    /**
+     * Comment on the validation.
+     */
+    private String iComment = null;
+
+    /**
+     * Constructs an empty <tt>ValidationReport</tt> with the default initial capacity
+     * (16) and the default load factor (0.75).
+     */
+    public ValidationReport() {
+    }
+
+
+    /**
+     * Returns status of validation.
+     *
+     * @return status of validation.
+     */
+    public boolean isValidated() {
+        return iValidated;
+    }
+
+    /**
+     * Sets status of validation.
+     * Private method only used when validity is set.
+     *
+     * @param aValidated Class .
+     */
+    private void setValidated(boolean aValidated) {
+        iValidated = aValidated;
+    }
+
+
+    /**
+     * Returns result boolean whether identification is accepted or rejected.
+     * <b>True</b> indicates that the identification was judged correct and therefor accepted.
+     * <b>False</b> indicates that the identification was judged incorrect and therefor not rejected.<br>
+     *
+     * @return boolean whether identification was accepted or rejected.
+     */
+    public boolean getResult() {
+        if (!isValidated()) {
+            MatLogger.logExceptionalEvent("The results were requested from non-validated identifications!");
+        }
+        return iResult;
+    }
+
+    /**
+     * Sets result boolean whether identification is accepted or rejected.
+     * <b>True</b> indicates that the identification was judged correct and therefor accepted.
+     * <b>False</b> indicates that the identification was judged incorrect and therefor not rejected.<br>
+     *
+     * @param aResult boolean whether identification is accepted or rejected.
+     */
+    public void setResult(boolean aResult) {
+        iResult = aResult;
+        setValidated(true);
+    }
+
+    /**
+     * Returns comment on validation.
+     *
+     * @return comment on validation.
+     */
+    public String getComment() {
+        return iComment;
+    }
+
+    /**
+     * Sets comment on validation.
+     *
+     * @param aComment String on validation.
+     */
+    public void setComment(String aComment) {
+        iComment = aComment;
+    }
+
+    /**
+     * Returns correctPeptideHitNumber .
+     * Where '1' returns the first rank peptidehit.
+     *
+     * @return correctPeptideHitNumber.
+     */
+    public int getCorrectPeptideHitNumber() {
+        return iCorrectPeptideHitNumber;
+    }
+
+    /**
+     * Sets correctPeptideHitNumber. Where '1' marks the first rank peptidehit.
+     *
+     * @param aCorrectPeptideHitNumber Class .
+     */
+    public void setCorrectPeptideHitNumber(int aCorrectPeptideHitNumber) {
+        iCorrectPeptideHitNumber = aCorrectPeptideHitNumber;
+    }
+
+    /**
+     * Resets the information in the validationreport.
+     * Validation status to false and discard the comment.
+     */
+    public void reset() {
+        setResult(false);
+        // Mind that when the validation is false, the result cannot be accessed!
+        setValidated(false);
+        setComment("NA");
+    }
+}

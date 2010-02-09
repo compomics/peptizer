@@ -1,0 +1,138 @@
+\documentclass[12pt,a4paper,oneside]{book}
+\usepackage{a4wide}                     % Iets meer tekst op een bladzijde
+\usepackage[english]{babel}       % Voor nederlandstalige hyphenatie (woordsplitsing)
+\usepackage{amsmath}                    % Uitgebreide wiskundige mogelijkheden
+\usepackage{amssymb}                    % Voor speciale symbolen zoals de verzameling Z, R...
+\usepackage{url}                       % Om url's te verwerken
+\usepackage{graphicx}                   % Om figuren te kunnen verwerken
+\usepackage[small,bf,hang]{caption2}    % Om de captions wat te verbeteren
+\usepackage{xspace}                     % Magische spaties na een commando
+\usepackage[latin1]{inputenc}           % Om niet ascii karakters rechtstreeks te kunnen typen
+\usepackage{float}                      % Om nieuwe float environments aan te maken. Ook optie H!
+\usepackage{flafter}                    % Opdat floats niet zouden voorsteken
+\usepackage{listings}                   % Voor het weergeven van letterlijke text en codelistings
+\usepackage{marvosym}                   % Om het euro symbool te krijgen
+\usepackage{textcomp}                   % Voor onder andere graden celsius
+\usepackage{fancyhdr}                   % Voor fancy headers en footers.
+\usepackage{graphics}			% Om figuren te verwerken.
+\usepackage[nottoc]{tocbibind} % Bibliografie in ToC; zie tocbibind.dvi
+%\usepackage{pstricks}
+\usepackage{longtable}
+\usepackage{algorithm}
+\usepackage{pdfpages}  % pdf pagina's importeren
+\usepackage{remreset}
+\makeatletter\@removefromreset{footnote}{chapter}\makeatother
+
+
+%\newcommand{\npar}{\par \vspace{2.3ex plus 0.3ex minus 0.3ex} \indent}	% Om witruimte te krijgen tussen paragrafen
+\newcommand{\npar}{\par \vspace{2.3ex plus 0.3ex minus 0.3ex} \noindent}	% Om witruimte te krijgen tussen paragrafen
+\newcommand{\ITRAQ}{
+iTRAQ\begin{tiny}$^{TM}$\end{tiny}
+}
+
+% iTRAQ tm benaming!
+
+\graphicspath{{figures/}}               % De plaats waar latex zijn figuren gaat halen.
+%\usepackage[bf]{caption2}	% Mooiere captions
+%\usepackage{caption}
+\usepackage[a4paper,colorlinks=true,plainpages=false]{hyperref}    % Om hyperlinks te hebben in het pdfdocument.
+\newcommand{\command}[1]{\lstinline[basicstyle=\tt]{#1}\xspace} %Voor commando's
+
+% Het bibliografisch opmaak bestand.
+\bibliographystyle{unsrt}
+%\bibliographystyle{bibliodutch}
+%\bibpunct{[}{]}{,}{n}{,}{,}
+
+\renewcommand{\chaptermark}[1]{\markright{\MakeUppercase{#1}}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection~#1}}
+\newcommand{\headerfmt}[1]{\textsl{\textsf{#1}}}
+\newcommand{\headerfmtpage}[1]{\textsf{#1}}
+
+\fancyhf{}
+\fancyhead[LE,RO]{\headerfmtpage{\thepage}}
+\fancyhead[LO]{\headerfmt{\rightmark}}
+\fancyhead[RE]{\headerfmt{\leftmark}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\fancypagestyle{plain}{ % eerste bladzijde van een hoofdstuk
+  \fancyhf{}
+  \fancyhead[LE,RO]{\headerfmtpage{\thepage}}
+  \fancyhead[LO]{\headerfmt{\rightmark}}
+  \fancyhead[RE]{\headerfmt{\leftmark}}
+  \renewcommand{\headrulewidth}{0.5pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+
+\renewcommand{\lstlistoflistings}{\begingroup
+   \tocfile{\lstlistlistingname}{lol}
+\endgroup}
+
+% anderhalve interlinie (opm: titelblad gaat uit van 1.5)
+\renewcommand{\baselinestretch}{1.5}
+\hypersetup{
+    colorlinks=true,
+    pdfauthor = {Kenny Helsens},
+    pdftitle = {Peptizer_manual},
+    pdfsubject = {Guide for the Peptizer platform. (http://genesis.ugent.be/peptizer/)}
+}
+
+\begin{document}
+\nocite{*}
+\selectlanguage{english}
+\renewcommand\lstlistlistingname{Lijst van codefragmenten}
+\renewcommand\lstlistingname{Codefragment}
+
+\frontmatter
+%\input{s-titel}
+
+% lege pagina (!!)
+%\newpage
+%\vfil\null
+%\newpage
+
+% titelblad (!!)
+\input{peptizer-title}
+
+% geen paginanummering tot we aan de inhoudsopgave komen
+\pagestyle{empty}
+
+% voorwoord met dankwoord en toelating tot bruikleen (ondertekend)
+%\input{s-voorwoord}
+
+% overzicht
+%\include{s-overzicht}
+
+% abstract
+%\addcontentsline{toc}{chapter}{Extended abstract}
+%\includepdf[pages=-]{../abstract/abstract.pdf}
+
+\pagestyle{fancy}
+\renewcommand{\baselinestretch}{1.08} 	% De interlinie afstand wat verkleinen.
+\small\normalsize                       % Nodig om de baselinestretch goed te krijgen.
+\addcontentsline{toc}{chapter}{Table of contents}
+\tableofcontents
+\renewcommand{\baselinestretch}{1.2} 	% De interlinie afstand wat vergroten.
+\small\normalsize                       % Nodig om de baselinestretch goed te krijgen.
+\input{peptizer-abbreviations}
+
+\mainmatter
+\input{peptizer-introduction}
+\input{peptizer-installation}
+\input{peptizer-usage}
+\input{peptizer-extensions}
+
+
+\backmatter
+%\input{peptizer-faq}
+%\listoffigures
+%\addcontentsline{toc}{chapter}{Lijst van codefragmenten}
+%\lstlistoflistings
+
+% lege pagina (!!)
+
+% kaft
+
+
+
+\end{document}

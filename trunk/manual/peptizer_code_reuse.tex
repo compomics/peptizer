@@ -1,0 +1,62 @@
+code templates for the peptizer manual:
+
+%%%%%
+%HINT%
+%%%%%
+\begin{center}
+	\fbox{
+        	 \begin{minipage}[t]{1.0\textwidth}
+	            \textsc{Hint}\\A short tooltip describing an Agent's logic can be shown by \textit{holding} the mouse on it's name cell.
+        	 \end{minipage}
+         }
+\end{center}
+
+
+%%%%%%%%%%%%%%%%
+%LABELED FIGURE INDEX%
+%%%%%%%%%%%%%%%%
+\renewcommand{\labelenumi}{\Alph{enumi}.}
+\begin{enumerate}
+	\item Defining the data source.\\\textit{Which peptide identifications do you want to use?}
+	\item Activating and customizing Agent's.\\\textit{What rules do the peptide identifications have to fit?}
+	\item Selecting and customizing the AgentAggregator.\\\textit{How should the Agent votes be aggregated to judge a peptide identification?}
+	\item Defining the Mascot confidence.\\\textit{When do you consider a peptide as confident?}
+	\item Storing, clearing or loading a Peptizer configuration.\textit{What pre-defined configuration do you want to use?}
+	\item Starting the task.
+\end{enumerate}
+
+
+%%%%%%
+%FIGURE%
+%%%%%%
+\begin{figure}[h]
+\begin{center}
+	\includegraphics[width=.85\textwidth]{filename}
+	\caption{\label{label_name}figure text}
+\end{center}
+\end{figure}
+
+
+%%%%%%%%%
+%DESCRIPTION%
+%%%%%%%%%
+\begin{description}
+	\item[bold_head] text
+\end{description}
+%
+
+
+%
+%%%%%
+%CODE%
+%%%%%
+\begin{algorithm}[t!]
+\caption{Agent signature in a code outline}
+\scriptsize
+\vspace{0.3cm}
+\begin{verbatim}
+%%% 3 x spaces code indent!
+\end{verbatim}
+\end{algorithm}
+%
+%

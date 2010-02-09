@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--  General properties -->
+<config name="general">
+    <general>
+        <!-- Set the default MS/MS spectrum annotation type for the GUI: 0 will show the Mascot annotations and 1 will show the Fused annotations. -->
+        <property name="RDB_ANNOTATION">0</property>
+        <!-- Set the number of pixels between the tree nodes. -->
+        <property name="TREE_HEIGHT">20</property>
+        <!-- Set the alpha value for starting a new selection task. -->
+        <property name="DEFAULT_ALPHA">0.05</property>
+        <!-- Set the preset folder for the Datfile folder data source. -->
+        <property name="ITERATOR_FOLDER_PATH">F:\target\datfiles_324</property>
+        <!-- Set the preset file for the Datfile data source. -->
+        <property name="ITERATOR_FILE_PATH">/Users/kenny/Java/mascotdatfile/target/test-classes/F004071.dat</property>
+        <!-- Set the preset file for the Datfile data source. -->
+        <property name="SAVEVALIDATION_CSV">C:\\validation.csv</property>
+        <property name="SAVEVALIDATION_PDF">C:\\peptizer_output.pdf</property>
+        <!-- Set the annotations on the modified or the non-modified peptide sequence if respectively true or false. -->
+        <property name="MODIFEDSEQUENCE_FRAGMENTATION_PANEL">true</property>
+        <!-- Default file for db connection defaults. This file can include the DRIVER and URL fields from the connection dialog
+          if Peptizer is used to connect to the ms_lims database system. -->
+        <property name="CONNECTION_PROPERTIES">conf/connection.properties</property>
+        <!-- Default percentage for matching fragmentions in the fused . -->
+        <property name="FUSED_INTENSITY_PERCENTAGE">0.02</property>
+        <!-- Set Peptizer to stream confident peptide hypothesises that were not selected into a temporary file.
+        If set to true, an extra option appears in the SavetoCSV function to save these peptide hypothesises as well.
+        Note that this temporary file is deleted after Peptizer is closed and this comes along with a performance cost. -->
+        <property name="ENABLE_CONFIDENT_NONSELECTED_OBJECT.OUTPUTSTREAM">true</property>
+        <!-- Set Peptizer to stream non-confident peptide hypothesises into a temporary file. As such, data on the negative population can easily be gathered. If set to true, an extra option appears in the SavetoCSV function to save these peptide hypothesises as well.
+          Note that this temporary file is deleted after Peptizer is closed and this comes along with a performance cost.
+          Saving these allows to easily gather on the negative population of peptide hypothesises. -->
+        <property name="ENABLE_NONCONFIDENT_OBJECT.OUTPUTSTREAM">false</property>
+    </general>
+    <!-- End of configuration file-->
+</config>
