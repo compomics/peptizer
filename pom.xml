@@ -93,22 +93,6 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>2.3</version>
                 <executions>
-                    <execution>
-                        <id>copy-resources</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/peptizer-${project.version}</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>src/main/resources/</directory>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-
                     <!-- Copy main resources to test resources before testing. Peptizer config files! -->
                     <execution>
                         <id>copy-test-resources</id>
@@ -129,6 +113,30 @@
 
                 </executions>
             </plugin>
+
+			<!-- Resources plugin - classes -->
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources/</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 
@@ -211,15 +219,6 @@
         </dependency>
 
 
-        <!-- This project depends on the MySQL JAR file.
-                    -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>3.1.12-bin</version>
-            <type>jar</type>
-        </dependency>
-
         <!-- This project depends on the JFreeChart visualistations.
           -->
         <dependency>
@@ -257,9 +256,9 @@
         <!-- This project depends on the iText pdf library for pdf output.
         -->
         <dependency>
-            <groupId>kenny</groupId>
-            <artifactId>itext</artifactId>
-            <version>2.0.2</version>
+            <groupId>itext</groupId>
+            <artifactId>iText</artifactId>
+            <version>2.0.8</version>
             <type>jar</type>
         </dependency>
 
