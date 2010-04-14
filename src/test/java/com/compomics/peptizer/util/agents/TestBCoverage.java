@@ -14,6 +14,7 @@ import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import junit.TestCaseLM;
 import junit.framework.Assert;
 
+import java.io.File;
 import java.util.Vector;
 
 /**
@@ -38,7 +39,11 @@ public class TestBCoverage extends TestCaseLM {
 
     public void testInspect() {
         //query160
-        MascotDatfile lMascotDatfile = new MascotDatfile(getFullFilePath("F015264.dat"));
+        String datFile = getFullFilePath("F015264.dat");
+        if (File.separatorChar == '\\') {
+            datFile = datFile.replace("%20", " ");
+        }
+        MascotDatfile lMascotDatfile = new MascotDatfile(datFile);
         int lQueryNumber = 353;
 
         Query lQuery = (Query) lMascotDatfile.getQuery(lQueryNumber);

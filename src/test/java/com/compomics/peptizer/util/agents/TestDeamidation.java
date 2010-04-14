@@ -15,6 +15,7 @@ import junit.TestCaseLM;
 import junit.framework.Assert;
 
 import java.util.Vector;
+import java.io.File;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,7 +42,11 @@ public class TestDeamidation extends TestCaseLM {
         iDeamidation.setProperty(Deamidation.COUNT, "2");
 
         //query160
-        MascotDatfile lMascotDatfile = new MascotDatfile(getFullFilePath("F015264.dat"));
+        String datFile = getFullFilePath("F015264.dat");
+        if (File.separatorChar == '\\') {
+            datFile = datFile.replace("%20", " ");
+        }
+        MascotDatfile lMascotDatfile = new MascotDatfile(datFile);
         int lQueryNumber = 162;
 
         Query lQuery = (Query) lMascotDatfile.getQuery(lQueryNumber);

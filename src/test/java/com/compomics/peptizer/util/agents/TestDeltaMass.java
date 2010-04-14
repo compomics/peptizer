@@ -18,6 +18,7 @@ import junit.TestCaseLM;
 import junit.framework.Assert;
 
 import java.util.Vector;
+import java.io.File;
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,7 +41,11 @@ public class TestDeltaMass extends TestCaseLM {
         Agent lAgent = AgentFactory.getInstance().getAgent("com.compomics.peptizer.util.agents.DeltaMassPPMAgent");
 
         //query160
-        MascotDatfileInf lMascotDatfile = MascotDatfileFactory.create(getFullFilePath("F015264.dat"), MascotDatfileType.INDEX);
+        String datFile = getFullFilePath("F015264.dat");
+        if (File.separatorChar == '\\') {
+            datFile = datFile.replace("%20", " ");
+        }
+        MascotDatfileInf lMascotDatfile = MascotDatfileFactory.create(datFile, MascotDatfileType.INDEX);
         int lQueryNumber = 161;
 
 
@@ -104,7 +109,11 @@ public class TestDeltaMass extends TestCaseLM {
         Agent lAgent = AgentFactory.getInstance().getAgent("com.compomics.peptizer.util.agents.DeltaMassDaAgent");
 
         //query160
-        MascotDatfile lMascotDatfile = new MascotDatfile(getFullFilePath("F015264.dat"));
+        String datFile = getFullFilePath("F015264.dat");
+        if (File.separatorChar == '\\') {
+            datFile = datFile.replace("%20", " ");
+        }
+        MascotDatfile lMascotDatfile = new MascotDatfile(datFile);
         int lQueryNumber = 161;
 
         Query lQuery = (Query) lMascotDatfile.getQuery(lQueryNumber);

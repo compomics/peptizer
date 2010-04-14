@@ -12,10 +12,7 @@ import de.proteinms.omxparser.util.MSSearchSettings;
 import de.proteinms.omxparser.util.MSSpectrum;
 
 import java.io.File;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -166,11 +163,22 @@ public class OmxfileIterator implements PeptideIdentificationIterator {
                     hitsNumber = sHitSet.MSHitSet_hits.MSHits.size();
                 }
                 Vector peptizerPeptideHits = new Vector();
+                ArrayList<String> foundPeptides = new ArrayList();        // OMSSA produces duplicates we need to eliminate to make results readable
+                boolean duplicate;
                 if (hitsNumber > 0) {
+                    foundPeptides.add(sHitSet.MSHitSet_hits.MSHits.get(0).MSHits_pepstring);
                     peptizerPeptideHits.add(0, new OmssaPeptideHit(sHitSet.MSHitSet_hits.MSHits.get(0), iOmssaOmxFile.getModifications(), getSettings(), getMSResponseScale()));
                     for (int i = 1; i < hitsNumber; i++) {
-                        if (sHitSet.MSHitSet_hits.MSHits.get(i - 1).MSHits_pepstring.compareTo(sHitSet.MSHitSet_hits.MSHits.get(i).MSHits_pepstring) != 0) {
+                        duplicate = false;
+                        for (int j=0 ; j < foundPeptides.size() ; j++) {
+                            if (sHitSet.MSHitSet_hits.MSHits.get(i).MSHits_pepstring.compareTo(foundPeptides.get(j))==0) {
+                                duplicate = true;
+                                break;
+                            }
+                        }
+                        if (!duplicate) {
                             peptizerPeptideHits.add(new OmssaPeptideHit(sHitSet.MSHitSet_hits.MSHits.get(i), iOmssaOmxFile.getModifications(), getSettings(), getMSResponseScale()));
+                            foundPeptides.add(sHitSet.MSHitSet_hits.MSHits.get(i).MSHits_pepstring);
                         }
                     }
                 }
