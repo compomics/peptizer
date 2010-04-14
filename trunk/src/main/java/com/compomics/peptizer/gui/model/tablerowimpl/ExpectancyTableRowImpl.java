@@ -21,36 +21,36 @@ import java.util.Properties;
 public class ExpectancyTableRowImpl extends AbstractTableRow {
 
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public ExpectancyTableRowImpl() {
-		super();
-		Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
-		super.setName(prop.getProperty("name"));
-		super.setActive(new Boolean(prop.getProperty("active")));
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public ExpectancyTableRowImpl() {
+        super();
+        Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
+        super.setName(prop.getProperty("name"));
+        super.setActive(new Boolean(prop.getProperty("active")));
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
-		double lConfidence = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_ALPHA"));
+    /**
+     * {@inheritDoc}
+     */
+    public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+        double lConfidence = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_ALPHA"));
 
-		BigDecimal lBigDecimal = new BigDecimal(aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getExpectancy(lConfidence));
-		lBigDecimal = lBigDecimal.setScale(5, BigDecimal.ROUND_HALF_DOWN);
+        BigDecimal lBigDecimal = new BigDecimal(aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getExpectancy(lConfidence));
+        lBigDecimal = lBigDecimal.setScale(5, BigDecimal.ROUND_HALF_DOWN);
 
-		return lBigDecimal.toString();
-	}
+        return lBigDecimal.toString();
+    }
 
-	/**
-	 * Returns a description for the TableRow.
-	 * Use for tooltips and configuration.
-	 *
-	 * @return String description of the TableRow.
-	 */
-	public String getDescription() {
-		double lConfidence = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_ALPHA"));
-		return "Generalrow - The E-value (for default " + new Double((1.0 - lConfidence) * 100) + "% confidence).";
-	}
+    /**
+     * Returns a description for the TableRow.
+     * Use for tooltips and configuration.
+     *
+     * @return String description of the TableRow.
+     */
+    public String getDescription() {
+        double lConfidence = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_ALPHA"));
+        return "Generalrow - The E-value (for default " + new Double((1.0 - lConfidence) * 100) + "% confidence).";
+    }
 }

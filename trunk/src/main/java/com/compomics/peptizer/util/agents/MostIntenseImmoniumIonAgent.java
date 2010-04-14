@@ -3,8 +3,8 @@ package com.compomics.peptizer.util.agents;
 import com.compomics.peptizer.interfaces.Agent;
 import com.compomics.peptizer.util.AgentReport;
 import com.compomics.peptizer.util.PeptideIdentification;
-import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.datatools.Ion;
+import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.IonTypeEnum;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
@@ -26,7 +26,7 @@ public class MostIntenseImmoniumIonAgent extends Agent {
     public MostIntenseImmoniumIonAgent() {
         // Init the general Agent settings.
         initialize(new String[]{AMINOACIDS, ERROR});
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA };
+        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA};
         compatibleSearchEngine = searchEngines;
 
         // Build a Map with immonium ion masses.

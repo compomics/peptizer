@@ -12,7 +12,10 @@ import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 public interface PeptizerProteinHit {
 
     public String getAccession();
+
     public SearchEngineEnum getSearchEngineEnum();
+
     public int getStart();
+
     public int getEnd();
 }

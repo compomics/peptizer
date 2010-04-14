@@ -19,34 +19,34 @@ import java.util.Properties;
  */
 public class SequenceTableRowImpl extends AbstractTableRow {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public SequenceTableRowImpl() {
-		super();
-		Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
-		super.setName(prop.getProperty("name"));
-		super.setActive(new Boolean(prop.getProperty("active")));
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public SequenceTableRowImpl() {
+        super();
+        Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
+        super.setName(prop.getProperty("name"));
+        super.setActive(new Boolean(prop.getProperty("active")));
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
+    /**
+     * {@inheritDoc}
+     */
 
-	public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
-		return aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getSequence();
-	}
+    public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+        return aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getSequence();
+    }
 
-	/**
-	 * Returns a description for the TableRow.
-	 * Use for tooltips and configuration.
-	 *
-	 * @return String description of the TableRow.
-	 */
-	@Override
-	public String getDescription() {
-		String s = "Generalrow - The sequence of peptidehit n.";
-		return s;
-	}
+    /**
+     * Returns a description for the TableRow.
+     * Use for tooltips and configuration.
+     *
+     * @return String description of the TableRow.
+     */
+    @Override
+    public String getDescription() {
+        String s = "Generalrow - The sequence of peptidehit n.";
+        return s;
+    }
 
 }

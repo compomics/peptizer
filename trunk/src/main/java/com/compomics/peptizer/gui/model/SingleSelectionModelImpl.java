@@ -18,51 +18,51 @@ import javax.swing.*;
  */
 public class SingleSelectionModelImpl extends DefaultSingleSelectionModel {
 
-	/**
-	 * The parent TabbedView.
-	 */
-	TabbedView iTabbedView;
+    /**
+     * The parent TabbedView.
+     */
+    TabbedView iTabbedView;
 
-	/**
-	 * This constructor takes a TabbedView instance as a single argument.
-	 *
-	 * @param aTabbedView TabbedView parent.
-	 */
-	public SingleSelectionModelImpl(TabbedView aTabbedView) {
-		super();
-		iTabbedView = aTabbedView;
-	}
+    /**
+     * This constructor takes a TabbedView instance as a single argument.
+     *
+     * @param aTabbedView TabbedView parent.
+     */
+    public SingleSelectionModelImpl(TabbedView aTabbedView) {
+        super();
+        iTabbedView = aTabbedView;
+    }
 
-	private int index = -1;
+    private int index = -1;
 
-	// implements javax.swing.SingleSelectionModel
-	public int getSelectedIndex() {
-		return index;
-	}
+    // implements javax.swing.SingleSelectionModel
+    public int getSelectedIndex() {
+        return index;
+    }
 
-	// implements javax.swing.SingleSelectionModel
-	public void setSelectedIndex(int index) {
-		if (this.index != index) {
-			this.index = index;
-			fireStateChanged();
-		}
-		// Index is set, notion mediator!
-		// Needed a SingleSelectionModelImpl to update a selectionChange at all times.
-		// If a Tab is removed and the index remains identical, the Table needs to be updated nevertheles!!
-		iTabbedView.selectionChanged(this.index);
-	}
+    // implements javax.swing.SingleSelectionModel
+    public void setSelectedIndex(int index) {
+        if (this.index != index) {
+            this.index = index;
+            fireStateChanged();
+        }
+        // Index is set, notion mediator!
+        // Needed a SingleSelectionModelImpl to update a selectionChange at all times.
+        // If a Tab is removed and the index remains identical, the Table needs to be updated nevertheles!!
+        iTabbedView.selectionChanged(this.index);
+    }
 
-	// implements javax.swing.SingleSelectionModel
-	public void clearSelection() {
-		setSelectedIndex(-1);
-	}
+    // implements javax.swing.SingleSelectionModel
+    public void clearSelection() {
+        setSelectedIndex(-1);
+    }
 
-	// implements javax.swing.SingleSelectionModel
-	public boolean isSelected() {
-		boolean ret = false;
-		if (getSelectedIndex() != -1) {
-			ret = true;
-		}
-		return ret;
-	}
+    // implements javax.swing.SingleSelectionModel
+    public boolean isSelected() {
+        boolean ret = false;
+        if (getSelectedIndex() != -1) {
+            ret = true;
+        }
+        return ret;
+    }
 }

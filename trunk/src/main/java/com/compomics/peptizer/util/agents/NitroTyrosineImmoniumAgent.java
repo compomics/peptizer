@@ -6,8 +6,8 @@ import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.Ion;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerSpectrum;
 import com.compomics.peptizer.util.enumerator.AgentVote;
-import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import com.compomics.peptizer.util.enumerator.IonTypeEnum;
+import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -43,7 +43,7 @@ public class NitroTyrosineImmoniumAgent extends Agent {
     public NitroTyrosineImmoniumAgent() {
         // Init the general Agent settings.
         initialize(new String[]{TOLERANCE});
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA };
+        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA};
         compatibleSearchEngine = searchEngines;
     }
 

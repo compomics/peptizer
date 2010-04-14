@@ -1,11 +1,10 @@
 package com.compomics.peptizer.util.datatools.implementations.mascot;
 
-import com.compomics.peptizer.util.datatools.interfaces.PeptizerFragmentIon;
-import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
-import com.compomics.peptizer.util.enumerator.IonTypeEnum;
 import com.compomics.mascotdatfile.util.interfaces.FragmentIon;
+import com.compomics.peptizer.util.datatools.interfaces.PeptizerFragmentIon;
+import com.compomics.peptizer.util.enumerator.IonTypeEnum;
+import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import com.compomics.util.gui.interfaces.SpectrumAnnotation;
-
 
 import java.awt.*;
 
@@ -25,7 +24,7 @@ public class MascotFragmentIon extends PeptizerFragmentIon implements SpectrumAn
     }
 
     public MascotFragmentIon(FragmentIon aFragmention) {
-        iFragmentIon = aFragmention ;
+        iFragmentIon = aFragmention;
     }
 
     public SearchEngineEnum getSearchEngineEnum() {
@@ -42,21 +41,25 @@ public class MascotFragmentIon extends PeptizerFragmentIon implements SpectrumAn
 
     public IonTypeEnum getType() {
         switch (iFragmentIon.getID()) {
-                // singly charged Yion
-                case FragmentIon.Y_ION : return IonTypeEnum.y;
-                // singly charged Bion
-                case FragmentIon.B_ION : return IonTypeEnum.b;
-                // double charged Yion
-                case FragmentIon.Y_DOUBLE_ION : return IonTypeEnum.y;
-                // double charged Bion
-                case FragmentIon.B_DOUBLE_ION : return IonTypeEnum.b;
+            // singly charged Yion
+            case FragmentIon.Y_ION:
+                return IonTypeEnum.y;
+            // singly charged Bion
+            case FragmentIon.B_ION:
+                return IonTypeEnum.b;
+            // double charged Yion
+            case FragmentIon.Y_DOUBLE_ION:
+                return IonTypeEnum.y;
+            // double charged Bion
+            case FragmentIon.B_DOUBLE_ION:
+                return IonTypeEnum.b;
         }
 
-        return IonTypeEnum.other;  
-        }
+        return IonTypeEnum.other;
+    }
 
     // Methods used for the display of the annotations on the spectrum
-    
+
     public double getMZ() {
         return iFragmentIon.getMZ();
     }

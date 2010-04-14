@@ -1,5 +1,7 @@
 package com.compomics.peptizer.util.datatools;
 
+import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+
 import java.io.Serializable;
 
 /**
@@ -12,20 +14,28 @@ import java.io.Serializable;
 public class AnnotationType implements Serializable {
     private String name;
     private int index;
+    private SearchEngineEnum searchEngine;
 
     public AnnotationType() {
 
     }
-    public AnnotationType(String aName, int anIndex) {
+
+    public AnnotationType(String aName, int anIndex, SearchEngineEnum searchEngine) {
         name = aName;
         index = anIndex;
+        this.searchEngine = searchEngine;
     }
 
     public int getIndex() {
         return index;
     }
+
     public String getName() {
         return name;
+    }
+
+    public SearchEngineEnum getSearchEngine() {
+        return searchEngine;
     }
 
 }

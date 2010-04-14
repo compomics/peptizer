@@ -29,7 +29,7 @@ public class MultipleConfidentHits extends Agent {
     public MultipleConfidentHits() {
         // Init the general Agent settings.
         initialize(DELTA);
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot };
+        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot};
         compatibleSearchEngine = searchEngines;
     }
 
@@ -62,9 +62,9 @@ public class MultipleConfidentHits extends Agent {
 
             // The resulting Inspection score.
             // If shorter then the given length, set to 1.
+            boolean identifiedByMascot = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
 
-
-            if ((i + 1) < lNumberOfConfidentPeptideHits) {
+            if ((i + 1) < lNumberOfConfidentPeptideHits && identifiedByMascot) {
                 // If there are more confident peptidehits left after this one, score '+1'.
                 double lDeltaIonscore =
                         aPeptideIdentification.getPeptideHit(i).getIonsScore() - aPeptideIdentification.getPeptideHit(i + 1).getIonsScore();

@@ -21,36 +21,36 @@ import java.util.Properties;
 public class IdentityThreshold95TableRowImpl extends AbstractTableRow {
 
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public IdentityThreshold95TableRowImpl() {
-		super();
-		Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
-		super.setName(prop.getProperty("name"));
-		super.setActive(new Boolean(prop.getProperty("active")));
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public IdentityThreshold95TableRowImpl() {
+        super();
+        Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
+        super.setName(prop.getProperty("name"));
+        super.setActive(new Boolean(prop.getProperty("active")));
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
-		double lConfidence = 0.05;
+    /**
+     * {@inheritDoc}
+     */
+    public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+        double lConfidence = 0.05;
 
-		BigDecimal lBigDecimal = new BigDecimal(aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).calculateThreshold(lConfidence));
-		lBigDecimal = lBigDecimal.setScale(2, BigDecimal.ROUND_HALF_DOWN);
+        BigDecimal lBigDecimal = new BigDecimal(aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).calculateThreshold(lConfidence));
+        lBigDecimal = lBigDecimal.setScale(2, BigDecimal.ROUND_HALF_DOWN);
 
-		return lBigDecimal.toString();
-	}
+        return lBigDecimal.toString();
+    }
 
-	/**
-	 * Returns a description for the TableRow.
-	 * Use for tooltips and configuration.
-	 *
-	 * @return String description of the TableRow.
-	 */
-	public String getDescription() {
-		double lConfidence = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_ALPHA"));
-		return "Generalrow - The Identity threshold at " + new Double((1.0 - lConfidence) * 100) + "% confidence.";
-	}
+    /**
+     * Returns a description for the TableRow.
+     * Use for tooltips and configuration.
+     *
+     * @return String description of the TableRow.
+     */
+    public String getDescription() {
+        double lConfidence = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_ALPHA"));
+        return "Generalrow - The Identity threshold at " + new Double((1.0 - lConfidence) * 100) + "% confidence.";
+    }
 }

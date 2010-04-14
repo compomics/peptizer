@@ -3,8 +3,8 @@ package com.compomics.peptizer.util.agents;
 import com.compomics.peptizer.interfaces.Agent;
 import com.compomics.peptizer.util.AgentReport;
 import com.compomics.peptizer.util.PeptideIdentification;
-import com.compomics.peptizer.util.datatools.interfaces.PeptizerSpectrum;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeak;
+import com.compomics.peptizer.util.datatools.interfaces.PeptizerSpectrum;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 
@@ -44,7 +44,7 @@ public class ReporterIonAgent extends Agent {
     public ReporterIonAgent() {
         // a. Sets general properties shared among all Agents.
         initialize(new String[]{MASS_1, MASS_2, RATIO, ERROR});
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA };
+        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA};
         compatibleSearchEngine = searchEngines;
     }
 

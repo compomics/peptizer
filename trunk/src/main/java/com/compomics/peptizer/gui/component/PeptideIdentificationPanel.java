@@ -9,6 +9,7 @@ import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeak;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerProteinHit;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerSpectrum;
+import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -50,29 +51,19 @@ public class PeptideIdentificationPanel {
         $$$setupUI$$$();
 
         // Set the spectrum filename into the border of the spectrumpanel.
-        spectrumContainer.setBorder(BorderFactory.createTitledBorder(null, iPeptideIdentification.getSpectrum().getFilename(), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font(spectrumContainer.getFont().getName(), Font.ITALIC, 10)));
+        spectrumContainer.setBorder(BorderFactory.createTitledBorder(null, iPeptideIdentification.getSpectrum().getName(), TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font(spectrumContainer.getFont().getName(), Font.ITALIC, 10)));
 
         createLabels();
-    }
-
-    private void createAnnotatedSequence() {
-        PeptizerPeak[] lPeaks = iPeptideIdentification.getSpectrum().getPeakList();
-        String lModifiedSequene = iPeptideHit.getModifiedSequence();
-        // lAnnotations will contain the annotations of the last type found, ie Fuse for Mascot.
-        Vector lAnnotations = (Vector) iPeptideHit.getAnnotation(iPeptideIdentification, 0).get(iPeptideHit.getAnnotationType().get(iPeptideHit.getAnnotationType().size() - 1) + "" + 1);
-        SequenceFragmentationPanel lSequenceFragmentationPanel;
-        lSequenceFragmentationPanel = new SequenceFragmentationPanel(lModifiedSequene, lAnnotations, true);
-        jpanSequence = lSequenceFragmentationPanel;
     }
 
     private void createSpectrum() {
         PeptizerSpectrum lSpectrum = iPeptideIdentification.getSpectrum();
         PeptizerPeak[] lPeaks = lSpectrum.getPeakList();
         // annotationsFromLastType will contain the annotations of the last type found, ie Fuse for Mascot.
-        HashMap lAnnotationMap = iPeptideHit.getAnnotation(iPeptideIdentification, 0);
-        AnnotationType lAnnotationType = iPeptideHit.getAnnotationType().get(1);
+        HashMap lAnnotationMap = iPeptideHit.getAllAnnotation(iPeptideIdentification, 0);
+        AnnotationType lAnnotationType = iPeptideHit.getAnnotationType().get(0);
 
-        Vector annotationsFromLastType = (Vector) lAnnotationMap.get(lAnnotationType.getIndex() + "" + 1);
+        Vector annotationsFromLastType = (Vector) lAnnotationMap.get(lAnnotationType.getIndex() + "" + lAnnotationType.getSearchEngine().getId() + "" + 1);
 
 
         double[] lMasses = new double[lSpectrum.getPeakList().length];
@@ -103,7 +94,7 @@ public class PeptideIdentificationPanel {
             lAnnotations.add(annotationsFromLastType.get(i));
         }
 
-        SpectrumpanelMcp lSpectrumPanel = new SpectrumpanelMcp(lMasses, lIntensities, lSpectrum.getPrecursorMZ(), lSpectrum.getChargeString(), lSpectrum.getFilename());
+        SpectrumpanelMcp lSpectrumPanel = new SpectrumpanelMcp(lMasses, lIntensities, lSpectrum.getPrecursorMZ(), lSpectrum.getChargeString(), lSpectrum.getName());
         lSpectrumPanel.setAnnotations(lAnnotations);
 
         spectrumContainer = new JPanel();
@@ -117,7 +108,7 @@ public class PeptideIdentificationPanel {
         double alphaPercentage = (1 - alpha) * 100;
         BigDecimal lPercentage = new BigDecimal(alphaPercentage).setScale(2, BigDecimal.ROUND_UP);
 
-        PeptideHit lPeptideHit = (PeptideHit) iPeptideHit.getOriginalPeptideHit();
+        PeptideHit lPeptideHit = (PeptideHit) iPeptideHit.getOriginalPeptideHit(SearchEngineEnum.Mascot);
         BigDecimal lThreshold = new BigDecimal(lPeptideHit.calculateIdentityThreshold(alpha)).setScale(2, BigDecimal.ROUND_UP);
         ArrayList lProteins;
         lProteins = iPeptideHit.getProteinHits();
@@ -129,7 +120,7 @@ public class PeptideIdentificationPanel {
                 lProteinText.append(", ");
             }
         }
-        double lDeltaMass = ((PeptideHit) (iPeptideHit.getOriginalPeptideHit())).getDeltaMass();
+        double lDeltaMass = ((PeptideHit) (iPeptideHit.getOriginalPeptideHit(SearchEngineEnum.Mascot))).getDeltaMass();
         double lPrecursorMZ = iPeptideIdentification.getSpectrum().getPrecursorMZ();
         String lChargeString = iPeptideIdentification.getSpectrum().getChargeString();
 

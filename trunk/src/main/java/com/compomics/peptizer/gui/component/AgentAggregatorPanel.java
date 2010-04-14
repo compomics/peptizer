@@ -22,7 +22,9 @@ import java.util.Properties;
  * Time: 15:23:33
  */
 
-/** Class description: ------------------ This class was developed to */
+/**
+ * Class description: ------------------ This class was developed to
+ */
 public class AgentAggregatorPanel extends JPanel {
 
     // Instance data
@@ -41,7 +43,9 @@ public class AgentAggregatorPanel extends JPanel {
     private final String FIRST_COLUMNNAME = "Name";
     private final String SECOND_COLUMNNAME = "Value";
 
-    /** Creates a new <code>JPanel</code> displaying the availlable Aggregators of Peptizer. */
+    /**
+     * Creates a new <code>JPanel</code> displaying the availlable Aggregators of Peptizer.
+     */
     public AgentAggregatorPanel() {
         // Call super constructor of JPanel.
         super();
@@ -53,14 +57,18 @@ public class AgentAggregatorPanel extends JPanel {
         setListeners();
     }
 
-    /** Load the list with AgentAggregator's from the Factory. */
+    /**
+     * Load the list with AgentAggregator's from the Factory.
+     */
     public void resetAgentAggregatorPanel() {
         iAgentAggregators = AgentAggregatorFactory.getInstance().getAgentAggregators();
         this.removeAll();
         constructPanel();
     }
 
-    /** Construct the GUI components on this Panel. */
+    /**
+     * Construct the GUI components on this Panel.
+     */
     private void constructPanel() {
 
         // The combobox will contain all the AgentAggregators.
@@ -90,7 +98,7 @@ public class AgentAggregatorPanel extends JPanel {
 
         scrollTable = new JScrollPane(iAgentAggregatorTable);
         scrollTable.getViewport().setPreferredSize(new Dimension((new Double(scrollTable.getViewport().getPreferredSize().width)).intValue(),
-                                                                 new Double(iAgentAggregators[cmbAgentAggregators.getSelectedIndex()].getProperties().size() * 50).intValue()));
+                new Double(iAgentAggregators[cmbAgentAggregators.getSelectedIndex()].getProperties().size() * 50).intValue()));
 
         jpanTable = new JPanel();
         jpanTable.setBorder(BorderFactory.createTitledBorder("Properties Table"));
@@ -128,7 +136,9 @@ public class AgentAggregatorPanel extends JPanel {
         return lAgentAggregator;
     }
 
-    /** Sets the listeners on the AgentPanel. */
+    /**
+     * Sets the listeners on the AgentPanel.
+     */
     private void setListeners() {
 
         // A. Detect <ctrl>+<c> combinations.
@@ -188,21 +198,29 @@ public class AgentAggregatorPanel extends JPanel {
     }
 
 
-    /** TableModel for the Table in the AgentPanel. */
+    /**
+     * TableModel for the Table in the AgentPanel.
+     */
     private class AgentAggregatorTableModel extends DefaultTableModel {
 
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public int getRowCount() {
             return iAgentAggregators[cmbAgentAggregators.getSelectedIndex()].getProperties().size();
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public int getColumnCount() {
             return 2;
         }
 
-        /** '0' returns the name of the first column. {@inheritDoc} */
+        /**
+         * '0' returns the name of the first column. {@inheritDoc}
+         */
         public String getColumnName(int column) {
             if (column == 0) {
                 return FIRST_COLUMNNAME;
@@ -213,7 +231,9 @@ public class AgentAggregatorPanel extends JPanel {
             }
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public Object getValueAt(int row, int column) {
             Properties lProperties = iAgentAggregators[cmbAgentAggregators.getSelectedIndex()].getProperties();
 
@@ -229,12 +249,16 @@ public class AgentAggregatorPanel extends JPanel {
             return o.toString();
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public boolean isCellEditable(int row, int column) {
             return false;
         }
 
-        /** {@inheritDoc} */
+        /**
+         * {@inheritDoc}
+         */
         public Class getColumnClass(int columnIndex) {
             return getValueAt(0, columnIndex).getClass();
         }
@@ -266,7 +290,6 @@ public class AgentAggregatorPanel extends JPanel {
          * @param renderer the <code>TableCellRenderer</code> to prepare
          * @param row      the row of the cell to render, where 0 is the first row
          * @param column   the column of the cell to render, where 0 is the first column
-         *
          * @return the <code>Component</code> under the event location
          */
         @Override

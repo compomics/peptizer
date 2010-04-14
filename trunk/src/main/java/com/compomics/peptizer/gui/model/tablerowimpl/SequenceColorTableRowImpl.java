@@ -14,11 +14,15 @@ import java.util.Properties;
  * Time: 16:12:53
  */
 
-/** Class description: ------------------ This class was developed as a TableRow implementation to populate the table. */
+/**
+ * Class description: ------------------ This class was developed as a TableRow implementation to populate the table.
+ */
 public class SequenceColorTableRowImpl extends AbstractTableRow {
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public SequenceColorTableRowImpl() {
         super();
         Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
@@ -26,7 +30,9 @@ public class SequenceColorTableRowImpl extends AbstractTableRow {
         super.setActive(new Boolean(prop.getProperty("active")));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Object getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
         JLabel label = null;
         try {
@@ -76,11 +82,10 @@ public class SequenceColorTableRowImpl extends AbstractTableRow {
          * Returns a string representation of this component and its values.
          *
          * @return a string representation of this component
-         *
          * @since JDK1.0
          */
-		@Override
-		public String toString() {
+        @Override
+        public String toString() {
 			return iName;
 		}
 	}

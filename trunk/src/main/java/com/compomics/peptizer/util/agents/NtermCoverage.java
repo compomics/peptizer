@@ -87,9 +87,11 @@ public class NtermCoverage extends Agent {
             int lYcount = 0;
             int lFirstMatch = 0;
 
+            boolean identifiedByMascot = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
+            boolean identifiedByOMSSA = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocates().contains(SearchEngineEnum.OMSSA);
 
-            if (lPeptideHit.getSearchEngineEnum() == SearchEngineEnum.Mascot) {
-                PeptideHit aMPh = (PeptideHit) lPeptideHit.getOriginalPeptideHit();
+            if (identifiedByMascot) {
+                PeptideHit aMPh = (PeptideHit) lPeptideHit.getOriginalPeptideHit(SearchEngineEnum.Mascot);
                 PeptideHitAnnotation lPeptideHitAnnotation =
                         aMPh.getPeptideHitAnnotation((Masses) aPeptideIdentification.getMetaData(MetaKey.Masses_section), (Parameters) aPeptideIdentification.getMetaData(MetaKey.Parameter_section));
 

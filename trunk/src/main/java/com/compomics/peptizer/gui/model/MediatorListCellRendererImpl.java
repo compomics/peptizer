@@ -69,7 +69,7 @@ public class MediatorListCellRendererImpl extends DefaultListCellRenderer {
      * The tab numbering of PeptizerGUI is used for representing the Mediators in the combobox.
      */
     public MediatorListCellRendererImpl(PeptizerGUI aPeptizerGui) {
-		super();
-		iPeptizerGUI = aPeptizerGui;
-	}
+        super();
+        iPeptizerGUI = aPeptizerGui;
+    }
 }

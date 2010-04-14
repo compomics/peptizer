@@ -2,6 +2,7 @@ package com.compomics.peptizer.util.datatools.implementations.xtandem;
 
 import com.compomics.mascotdatfile.util.interfaces.FragmentIon;
 import com.compomics.peptizer.util.PeptideIdentification;
+import com.compomics.peptizer.util.datatools.Advocate;
 import com.compomics.peptizer.util.datatools.AnnotationType;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
@@ -24,11 +25,7 @@ import java.util.Vector;
  * Time: 18:10:13
  * To change this template use File | Settings | File Templates.
  */
-public class XTandemPeptideHit implements PeptizerPeptideHit, Serializable {
-    /**
-     * The search engine
-     */
-    private final SearchEngineEnum iSearchEngineEnum = SearchEngineEnum.XTandem;
+public class XTandemPeptideHit extends PeptizerPeptideHit implements Serializable {
     /**
      * The original Peptide(hit)
      */
@@ -42,13 +39,15 @@ public class XTandemPeptideHit implements PeptizerPeptideHit, Serializable {
     private String[] iModArray;
 
     public XTandemPeptideHit(Peptide aPeptide, XTandemFile aXTandemFile) {
+        originalPeptideHits.put(SearchEngineEnum.XTandem, aPeptide);
+        advocate = new Advocate(SearchEngineEnum.XTandem);
         iPeptide = aPeptide;
         iXTandemFile = aXTandemFile;
     }
 
     private ArrayList<AnnotationType> createAnnotationType() {
         ArrayList<AnnotationType> result = new ArrayList();
-        AnnotationType all = new AnnotationType("All", 0);
+        AnnotationType all = new AnnotationType("X!Tandem", 0, SearchEngineEnum.XTandem);
         result.add(all);
         return result;
     }
@@ -207,14 +206,6 @@ public class XTandemPeptideHit implements PeptizerPeptideHit, Serializable {
         return label;
     }
 
-    public SearchEngineEnum getSearchEngineEnum() {
-        return iSearchEngineEnum;
-    }
-
-    public Peptide getOriginalPeptideHit() {
-        return iPeptide;
-    }
-
     public int getBTag(PeptideIdentification aPeptideIdentification) {
         return getIonTag(1);
     }
@@ -301,7 +292,7 @@ public class XTandemPeptideHit implements PeptizerPeptideHit, Serializable {
             allAnnotations.add(new XTandemFragmentIon(yIons[i]));
         }
 
-        lAnnotationsMap.put(iAnnotationType.get(0).getIndex() + "" + (id + 1), allAnnotations);
+        lAnnotationsMap.put(iAnnotationType.get(0).getIndex() + "" + SearchEngineEnum.XTandem.getId() + "" + (id + 1), allAnnotations);
         return lAnnotationsMap;
     }
 

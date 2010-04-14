@@ -118,8 +118,12 @@ public class ModificationAgent extends Agent {
      * @return boolean - true if peptidehit contains the Modification as described by aModificationName.
      */
     private boolean isModified(PeptizerPeptideHit aPPh, String aModificationName) {
-        if (aPPh.getSearchEngineEnum() == SearchEngineEnum.Mascot) {
-            PeptideHit aPh = (PeptideHit) aPPh.getOriginalPeptideHit();
+        boolean identifiedByMascot = aPPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
+        boolean identifiedByOMSSA = aPPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.OMSSA);
+        boolean identifiedByXTandem = aPPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.XTandem);
+
+        if (identifiedByMascot) {
+            PeptideHit aPh = (PeptideHit) aPPh.getOriginalPeptideHit(SearchEngineEnum.Mascot);
             int lCount = 0;
             while (lCount < (aPh.getSequence().length() + 2)) {
                 Modification lMod = aPh.getModifications()[lCount];
@@ -131,7 +135,7 @@ public class ModificationAgent extends Agent {
                 }
                 lCount++;
             }
-        } else if (aPPh.getSearchEngineEnum() == SearchEngineEnum.OMSSA) {
+        } else if (identifiedByOMSSA) {
             OmssaPeptideHit anOPH = (OmssaPeptideHit) aPPh;
             // Get the id of the modification
             int id = -1;
@@ -156,14 +160,14 @@ public class ModificationAgent extends Agent {
             }
 
             // inspect variable modifications
-            MSHits aPH = (MSHits) anOPH.getOriginalPeptideHit();
+            MSHits aPH = (MSHits) anOPH.getOriginalPeptideHit(SearchEngineEnum.OMSSA);
             for (int i = 0; i < aPH.MSHits_mods.MSModHit.size(); i++) {
                 // if we have the concerned modification return true
                 if (aPH.MSHits_mods.MSModHit.get(i).MSModHit_modtype.MSMod == id) {
                     return true;
                 }
             }
-        } else if (aPPh.getSearchEngineEnum() == SearchEngineEnum.XTandem) {
+        } else if (identifiedByXTandem) {
             XTandemPeptideHit ph = (XTandemPeptideHit) aPPh;
             String seq = ph.getModifiedSequence();
             // Check if the sequence contains the modifications signs

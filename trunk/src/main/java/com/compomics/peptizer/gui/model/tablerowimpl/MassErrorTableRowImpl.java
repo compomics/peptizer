@@ -20,30 +20,30 @@ import java.util.Properties;
 public class MassErrorTableRowImpl extends AbstractTableRow {
 
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public MassErrorTableRowImpl() {
-		super();
-		Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
-		super.setName(prop.getProperty("name"));
-		super.setActive(Boolean.valueOf(prop.getProperty("active")));
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public MassErrorTableRowImpl() {
+        super();
+        Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
+        super.setName(prop.getProperty("name"));
+        super.setActive(Boolean.valueOf(prop.getProperty("active")));
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
-		return Double.toString(aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getDeltaMass()) + "Da";
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+        return Double.toString(aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getDeltaMass()) + "Da";
+    }
 
-	/**
-	 * Returns a description for the TableRow.
-	 * Use for tooltips and configuration.
-	 *
-	 * @return String description of the TableRow.
-	 */
-	public String getDescription() {
-		return "Hi, i am the Mass Error tablerow implementation. I show the difference between the experimental mass and the theoretical precursor mass (Da).";
-	}
+    /**
+     * Returns a description for the TableRow.
+     * Use for tooltips and configuration.
+     *
+     * @return String description of the TableRow.
+     */
+    public String getDescription() {
+        return "Hi, i am the Mass Error tablerow implementation. I show the difference between the experimental mass and the theoretical precursor mass (Da).";
+    }
 }

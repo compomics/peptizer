@@ -22,7 +22,9 @@ import java.util.Set;
  */
 public class ConfigurationWriter {
 
-    /** Empty constructor. */
+    /**
+     * Empty constructor.
+     */
     public ConfigurationWriter() {
     }
 
@@ -116,7 +118,6 @@ public class ConfigurationWriter {
      * Writes the current state of the AgentFactory into a given buffered writer.
      *
      * @param aBufferedWriter BufferedWriter to write the Agent configurations.
-     *
      * @throws java.io.IOException by writing to the BufferedWriter
      */
     public static void writeAgentConfiguration(BufferedWriter aBufferedWriter) throws IOException {
@@ -139,7 +140,6 @@ public class ConfigurationWriter {
      * Writes the current state of the AgentFactory into a given buffered writer.
      *
      * @param aBufferedWriter BufferedWriter to write the Agent configurations.
-     *
      * @throws java.io.IOException by writing to the BufferedWriter
      */
     public static void writeAgentAggregatorConfiguration(BufferedWriter aBufferedWriter) throws IOException {
@@ -162,7 +162,6 @@ public class ConfigurationWriter {
      * Writes the current state of the General MatConfig properties into a given buffered writer.
      *
      * @param aBufferedWriter BufferedWriter to write the general configurations.
-     *
      * @throws java.io.IOException by writing to the BufferedWriter
      */
     public static void writeGeneralConfiguration(BufferedWriter aBufferedWriter) throws IOException {
@@ -177,7 +176,7 @@ public class ConfigurationWriter {
         // Pretty hardcoded output presentation of an Agent tag in the configuration file.
 
         sb.append("        <aggregator>\n" +
-                  "          <!-- General properties for Peptizer. -->\n");
+                "          <!-- General properties for Peptizer. -->\n");
 
         while (iter.hasNext()) {
             // Property Name - Key
@@ -200,7 +199,6 @@ public class ConfigurationWriter {
      * Returns an Xml configuration block for a given AgentAggregator
      *
      * @param aAgentAggregator AgentAggregator to extract configuration settings from.
-     *
      * @return String with configuration for a given Agent.
      */
     private static String nextAgentAggregatorUnit(AgentAggregator aAgentAggregator) {
@@ -210,9 +208,9 @@ public class ConfigurationWriter {
         // Pretty hardcoded output presentation of an Agent tag in the configuration file.
 
         sb.append("        <aggregator>\n" +
-                  "            <!-- " + aAgentAggregator.getDescription() + " -->\n" +
-                  "            <uniqueid>" + aAgentAggregator.getUniqueID() + "</uniqueid>\n" +
-                  "            <property name=\"name\">" + aAgentAggregator.getName() + "</property>\n");
+                "            <!-- " + aAgentAggregator.getDescription() + " -->\n" +
+                "            <uniqueid>" + aAgentAggregator.getUniqueID() + "</uniqueid>\n" +
+                "            <property name=\"name\">" + aAgentAggregator.getName() + "</property>\n");
 
         while (iter.hasNext()) {
             // Property Name - Key
@@ -231,7 +229,6 @@ public class ConfigurationWriter {
      * Returns a Xml configuration block for a given Agent.
      *
      * @param aAgent Agent to extract configuration settings from.
-     *
      * @return String with Configuration for a given Agent.
      */
     private static String nextAgentUnit(Agent aAgent) {
@@ -241,11 +238,11 @@ public class ConfigurationWriter {
         // Pretty hardcoded output presentation of an Agent tag in the configuration file.
 
         sb.append("        <agent>\n" +
-                  "            <!-- " + aAgent.getTagFreeDescription() + " -->\n" +
-                  "            <uniqueid>" + aAgent.getUniqueID() + "</uniqueid>\n" +
-                  "            <property name=\"name\">" + aAgent.getName() + "</property>\n" +
-                  "            <property name=\"active\">" + aAgent.isActive() + "</property>\n" +
-                  "            <property name=\"veto\">" + aAgent.hasVeto() + "</property>\n");
+                "            <!-- " + aAgent.getTagFreeDescription() + " -->\n" +
+                "            <uniqueid>" + aAgent.getUniqueID() + "</uniqueid>\n" +
+                "            <property name=\"name\">" + aAgent.getName() + "</property>\n" +
+                "            <property name=\"active\">" + aAgent.isActive() + "</property>\n" +
+                "            <property name=\"veto\">" + aAgent.hasVeto() + "</property>\n");
 
         while (iter.hasNext()) {
             // Property Name - Key
@@ -264,7 +261,6 @@ public class ConfigurationWriter {
      * Returns the start for the xml file.
      *
      * @param aConfigurationName String on the type of configuration file.
-     *
      * @return String for starting the configuration file.
      */
     private static String getXMLStart(String aConfigurationName) {
@@ -280,7 +276,6 @@ public class ConfigurationWriter {
      * Returns the stop for the xml file.
      *
      * @param aConfigurationName String on the type of configuration file.
-     *
      * @return String for stopping the configuration file.
      */
     private static String getXMLStop(String aConfigurationName) {

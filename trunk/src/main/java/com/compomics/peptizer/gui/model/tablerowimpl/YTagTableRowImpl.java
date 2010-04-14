@@ -13,10 +13,14 @@ import java.util.Properties;
  * Time: 13:38:58
  */
 
-/** Class description: ------------------ This class was developed to */
+/**
+ * Class description: ------------------ This class was developed to
+ */
 public class YTagTableRowImpl extends AbstractTableRow {
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public YTagTableRowImpl() {
         super();
         Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
@@ -24,7 +28,9 @@ public class YTagTableRowImpl extends AbstractTableRow {
         super.setActive(new Boolean(prop.getProperty("active")));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public Object getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
         String result = null;
         try {
@@ -48,5 +54,5 @@ public class YTagTableRowImpl extends AbstractTableRow {
      */
     public String getDescription() {
         return "Hi, i am a Y Tag tablerow implementation. I display the length of the longest sequence tag covered by y-ions.";
-	}
+    }
 }

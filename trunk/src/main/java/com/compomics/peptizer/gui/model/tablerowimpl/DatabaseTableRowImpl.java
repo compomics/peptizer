@@ -2,7 +2,6 @@ package com.compomics.peptizer.gui.model.tablerowimpl;
 
 import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.model.AbstractTableRow;
-import com.compomics.peptizer.util.MetaKey;
 import com.compomics.peptizer.util.PeptideIdentification;
 
 import java.util.Properties;
@@ -13,11 +12,15 @@ import java.util.Properties;
  * Time: 15:45:29
  */
 
-/** Class description: ------------------ This class was developed as a TableRow implementation to populate the table. */
+/**
+ * Class description: ------------------ This class was developed as a TableRow implementation to populate the table.
+ */
 public class DatabaseTableRowImpl extends AbstractTableRow {
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public DatabaseTableRowImpl() {
         super();
         Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
@@ -25,7 +28,9 @@ public class DatabaseTableRowImpl extends AbstractTableRow {
         super.setActive(Boolean.valueOf(prop.getProperty("active")));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
         return aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getDatabase(aPeptideIdentification);
     }
@@ -37,5 +42,5 @@ public class DatabaseTableRowImpl extends AbstractTableRow {
      */
     public String getDescription() {
         return "Hi, i am a Databse tablerow implementation. I show the database into which this identification was made.";
-	}
+    }
 }

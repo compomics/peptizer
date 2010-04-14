@@ -1,10 +1,10 @@
 package com.compomics.peptizer.util.fileio;
 
+import com.compomics.mslims.db.accessors.Validation;
 import com.compomics.peptizer.gui.SelectedPeptideIdentifications;
 import com.compomics.peptizer.interfaces.ValidationSaver;
 import com.compomics.peptizer.util.MetaKey;
 import com.compomics.peptizer.util.PeptideIdentification;
-import com.compomics.mslims.db.accessors.Validation;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -83,7 +83,7 @@ public class ValidationSaveToMsLims extends ValidationSaver {
                         boolean lResult = lPeptideIdentification.getValidationReport().getResult();
 
                         // Allocate the identification id!
-                        String lSpectrumFile = lPeptideIdentification.getSpectrum().getFilename();
+                        String lSpectrumFile = lPeptideIdentification.getSpectrum().getName();
                         String lDatfileID = lPeptideIdentification.getMetaData(MetaKey.Datfile_id).toString();
 
                         ResultSet rs = performSelect(lDatfileID, lSpectrumFile);

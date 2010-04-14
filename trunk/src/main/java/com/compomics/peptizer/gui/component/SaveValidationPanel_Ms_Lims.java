@@ -1,6 +1,5 @@
 package com.compomics.peptizer.gui.component;
 
-import com.compomics.util.gui.dialogs.ConnectionDialog;
 import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.Mediator;
 import com.compomics.peptizer.gui.dialog.SaveValidationDialog;
@@ -9,6 +8,7 @@ import com.compomics.peptizer.gui.progressbars.DefaultProgressBar;
 import com.compomics.peptizer.interfaces.ValidationSaver;
 import com.compomics.peptizer.util.fileio.ConnectionManager;
 import com.compomics.peptizer.util.fileio.ValidationSaveToMsLims;
+import com.compomics.util.gui.dialogs.ConnectionDialog;
 import com.compomics.util.interfaces.Connectable;
 
 import javax.swing.*;
@@ -212,6 +212,6 @@ public class SaveValidationPanel_Ms_Lims extends JPanel implements SaveValidatio
     private class MyActionListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             iMediator = iDialog.getSelectedMediator();
-		}
-	}
+        }
+    }
 }

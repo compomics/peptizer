@@ -21,7 +21,9 @@ import java.util.Properties;
 public class SequenceCoverageTableRowImpl extends AbstractTableRow {
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public SequenceCoverageTableRowImpl() {
         super();
         Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
@@ -29,7 +31,9 @@ public class SequenceCoverageTableRowImpl extends AbstractTableRow {
         super.setActive(Boolean.valueOf(prop.getProperty("active")));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
         StringBuffer sb = new StringBuffer();
         PeptizerPeptideHit lPeptideHit = aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1);
@@ -54,5 +58,5 @@ public class SequenceCoverageTableRowImpl extends AbstractTableRow {
      */
     public String getDescription() {
         return "Hi, i am a Sequence Coverage tablerow implementation. I show b, y and general ion coverage of Fused Matched Ions.";
-	}
+    }
 }

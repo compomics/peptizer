@@ -4,11 +4,12 @@ import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.PeptizerGUI;
 import com.compomics.peptizer.gui.SelectedPeptideIdentifications;
 import com.compomics.peptizer.gui.component.*;
-import com.compomics.peptizer.gui.interfaces.IteratorPanel;
+import com.compomics.peptizer.gui.interfaces.ImportPanel;
 import com.compomics.peptizer.gui.progressbars.DefaultProgressBar;
 import com.compomics.peptizer.interfaces.AgentAggregator;
 import com.compomics.peptizer.interfaces.PeptideIdentificationIterator;
 import com.compomics.peptizer.util.AgentFactory;
+import com.compomics.peptizer.util.datatools.IdentificationFactory;
 import com.compomics.peptizer.util.fileio.ConfigurationWriter;
 import com.compomics.peptizer.util.fileio.FileManager;
 import com.compomics.peptizer.util.fileio.MatLogger;
@@ -199,11 +200,12 @@ public class CreateTaskDialog extends JDialog {
      */
     private void startPressed() {
 
-
+        DefaultProgressBar lProgress = new DefaultProgressBar(iPeptizerGUI, "Data loading", 0, 2);
         MatLogger.logNormalEvent("New task started.");
 
-        PeptideIdentificationIterator iter = jpanSource.getSelectedIterator();
-
+        ImportPanel importPanel = jpanSource.getSelectedImport();
+        importPanel.loadIdentifications(lProgress);
+        PeptideIdentificationIterator iter = IdentificationFactory.getInstance().getIterator();
 
         if (iter != null) {
             AgentAggregator lAggregator = null;
@@ -211,7 +213,7 @@ public class CreateTaskDialog extends JDialog {
 
             final SelectedPeptideIdentifications lSelectedPeptideIdentifications = new SelectedPeptideIdentifications();
 
-            DefaultProgressBar lProgress = new DefaultProgressBar(iPeptizerGUI, "Task progress", 0, 2);
+            lProgress = new DefaultProgressBar(iPeptizerGUI, "Task progress", 0, 2);
 
             MatWorker worker = new MatWorker(iter, lAggregator, lSelectedPeptideIdentifications, lProgress);
             worker.start();
@@ -232,15 +234,15 @@ public class CreateTaskDialog extends JDialog {
     }
 
     public void setMs_lims_project_selected(long aProjectID) {
-        IteratorPanel iterator = IteratorPanel_Ms_Lims_Project.getInstance();
-        ((IteratorPanel_Ms_Lims_Project) iterator).setProjectID(aProjectID);
-        jpanSource.setSelectedIterator(iterator);
+        ImportPanel anImport = ImportPanel_Ms_Lims_Project.getInstance();
+        ((ImportPanel_Ms_Lims_Project) anImport).setProjectID(aProjectID);
+        jpanSource.setSelectedIterator(anImport);
     }
 
 
     public void setMs_lims_project_selected() {
-        IteratorPanel iterator = IteratorPanel_Ms_Lims_Project.getInstance();
-        jpanSource.setSelectedIterator(iterator);
+        ImportPanel anImport = ImportPanel_Ms_Lims_Project.getInstance();
+        jpanSource.setSelectedIterator(anImport);
     }
 
 
@@ -250,16 +252,16 @@ public class CreateTaskDialog extends JDialog {
      * @param aIdentificationId ArrayList with Long identificationId's.
      */
     public void setMs_lims_identification_id_selected(ArrayList<Long> aIdentificationId) {
-        IteratorPanel iterator = IteratorPanel_Ms_Lims_IdentificationIDList.getInstance();
-        ((IteratorPanel_Ms_Lims_IdentificationIDList) iterator).setIdentificationIDs(aIdentificationId);
-        jpanSource.setSelectedIterator(iterator);
+        ImportPanel anImport = ImportPanel_Ms_Lims_IdentificationIDList.getInstance();
+        ((ImportPanel_Ms_Lims_IdentificationIDList) anImport).setIdentificationIDs(aIdentificationId);
+        jpanSource.setSelectedIterator(anImport);
     }
 
     /**
      * Set the combobox selection to ms_lims enter the list with identification ids.
      */
     public void setMs_lims_identification_id_selected() {
-        IteratorPanel iterator = IteratorPanel_Ms_Lims_IdentificationIDList.getInstance();
-        jpanSource.setSelectedIterator(iterator);
+        ImportPanel anImport = ImportPanel_Ms_Lims_IdentificationIDList.getInstance();
+        jpanSource.setSelectedIterator(anImport);
     }
 }

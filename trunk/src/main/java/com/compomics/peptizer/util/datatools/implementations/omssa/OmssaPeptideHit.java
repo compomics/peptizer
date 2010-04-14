@@ -1,18 +1,19 @@
 package com.compomics.peptizer.util.datatools.implementations.omssa;
 
-import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
-import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
+import com.compomics.peptizer.util.PeptideIdentification;
+import com.compomics.peptizer.util.datatools.Advocate;
 import com.compomics.peptizer.util.datatools.AnnotationType;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeak;
-import com.compomics.peptizer.util.PeptideIdentification;
+import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
+import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import de.proteinms.omxparser.util.*;
 
 import javax.swing.*;
-import java.util.List;
-import java.util.Vector;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.io.Serializable;
+import java.util.List;
+import java.util.Vector;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,8 +22,7 @@ import java.io.Serializable;
  * Time: 15:17:38
  * To change this template use File | Settings | File Templates.
  */
-public class OmssaPeptideHit implements PeptizerPeptideHit, Serializable {
-    private final SearchEngineEnum iSearchEngineEnum = SearchEngineEnum.OMSSA;
+public class OmssaPeptideHit extends PeptizerPeptideHit implements Serializable {
     private MSHits msHits;
     public HashMap<Integer, OmssaModification> modifs;
     private MSSearchSettings msSearchSettings;
@@ -31,18 +31,21 @@ public class OmssaPeptideHit implements PeptizerPeptideHit, Serializable {
     /**
      * The final annotation types available.
      */
-    private final ArrayList<AnnotationType> iAnnotationType = createAnnotationType() ;
+    private final ArrayList<AnnotationType> iAnnotationType = createAnnotationType();
 
     public OmssaPeptideHit(MSHits msHits, HashMap modifs, MSSearchSettings msSearchSettings, int msResponseScale) {
-        this.msHits=msHits;
-        this.modifs=modifs;
-        this.msSearchSettings=msSearchSettings;
-        this.msResponseScale=msResponseScale;
+        originalPeptideHits.put(SearchEngineEnum.OMSSA, msHits);
+        advocate = new Advocate(SearchEngineEnum.OMSSA);
+        annotationType = createAnnotationType();
+        this.msHits = msHits;
+        this.modifs = modifs;
+        this.msSearchSettings = msSearchSettings;
+        this.msResponseScale = msResponseScale;
     }
 
     private ArrayList<AnnotationType> createAnnotationType() {
         ArrayList<AnnotationType> result = new ArrayList();
-        AnnotationType all = new AnnotationType("All", 0);
+        AnnotationType all = new AnnotationType("OMSSA", 0, SearchEngineEnum.OMSSA);
         result.add(all);
 //        AnnotationType nonSuspect = new AnnotationType("Non-suspect", 1);
 //        result.add(nonSuspect);
@@ -55,9 +58,9 @@ public class OmssaPeptideHit implements PeptizerPeptideHit, Serializable {
 
     public String[] decomposeSequence(String sequence) {
         String[] decomposedSequence = new String[sequence.length()];
-        for (int i=0 ; i < sequence.length() ; i++) {
+        for (int i = 0; i < sequence.length(); i++) {
             Character a = new Character(sequence.charAt(i));
-            decomposedSequence[i]=a.toString();
+            decomposedSequence[i] = a.toString();
         }
         return decomposedSequence;
     }
@@ -68,41 +71,61 @@ public class OmssaPeptideHit implements PeptizerPeptideHit, Serializable {
         // First handle the fixed modifications
         List<Integer> fixedModifications = msSearchSettings.MSSearchSettings_fixed.MSMod;
 
-        for (int i=0 ; i < fixedModifications.size() ; i++) {
-            String modType = new String();
-            Vector<String> modResidue = new Vector();
-            for (int j=0 ; j < modifs.size() ; j++) {
-                if(modifs.get(j).getModNumber() == fixedModifications.get(i).intValue()) {
-                    modType = modifs.get(j).getModName();
-                    modResidue = modifs.get(j).getModResidues();
-                }
-            }
-            for (int j=0 ; j < decomposedSequence.length ; j++) {
-                for (int k=0 ; k < modResidue.size() ; k++) {
-                    if (decomposedSequence[j].compareTo(modResidue.get(k))==0) {
-                        decomposedSequence[j] = modResidue.get(k) + "<" + modType + ">";
+        for (int i = 0; i < fixedModifications.size(); i++) {
+            OmssaModification currentmodification = modifs.get(fixedModifications.get(i).intValue());
+            String modType = currentmodification.getModName();
+            Vector<String> modResidue = currentmodification.getModResidues();
+            /* The following cases are not taken into account:
+            - modifications at the begining or end of a protein
+            - multiple modifications on the same AA or terminus.
+             */
+            boolean nModified = false;
+            boolean cModified = false;
+            if (currentmodification.getModType() == OmssaModification.MODAA) {
+                for (int j = 0; j < decomposedSequence.length; j++) {
+                    for (int k = 0; k < modResidue.size(); k++) {
+                        if (decomposedSequence[j].compareTo(modResidue.get(k)) == 0) {
+                            decomposedSequence[j] = modResidue.get(k) + "<" + modType + ">";
+                        }
                     }
                 }
+            } else if (currentmodification.getModType() == OmssaModification.MODNP) {
+                if (nModified) {
+                    decomposedSequence[0] += "<" + modType + ">";
+                } else {
+                    decomposedSequence[0] = "<" + modType + ">";
+                    nModified = true;
+                }
+            } else if (currentmodification.getModType() == OmssaModification.MODNPAA && decomposedSequence[0].compareTo(modResidue.get(0)) == 0) {
+                if (nModified) {
+                    decomposedSequence[0] += "<" + modType + ">";
+                } else {
+                    decomposedSequence[0] = "<" + modType + ">";
+                }
+            } else if (currentmodification.getModType() == OmssaModification.MODCP) {
+                if (cModified) {
+                    decomposedSequence[decomposedSequence.length - 1] += "<" + modType + ">";
+                } else {
+                    decomposedSequence[decomposedSequence.length - 1] = "<" + modType + ">";
+                    cModified = true;
+                }
+            } else if (currentmodification.getModType() == OmssaModification.MODCPAA && decomposedSequence[decomposedSequence.length - 1].compareTo(modResidue.get(0)) == 0) {
+                decomposedSequence[decomposedSequence.length - 1] = decomposedSequence[decomposedSequence.length - 1] + "<" + modType + ">";
             }
         }
 
         // Then the variable modifications found in this hit
         List<MSModHit> hitModifs = msHits.MSHits_mods.MSModHit;
-        for (int i=0 ; i < hitModifs.size() ; i++) {
+        for (int i = 0; i < hitModifs.size(); i++) {
             int mod = hitModifs.get(i).MSModHit_modtype.MSMod;
-            String modType = new String();
-            for (int j=0 ; j < modifs.size() ; j++) {
-                if (modifs.get(j).getModNumber() == mod) {
-                    modType = modifs.get(j).getModName();
-                }
-            }
-            decomposedSequence[hitModifs.get(i).MSModHit_site] += "<"+modType+">";
+            String modName = modifs.get(mod).getModName();
+            decomposedSequence[hitModifs.get(i).MSModHit_site] += "<" + modName + ">";
         }
 
 
         // Concat everything
         String modifiedSequence = "NH2-";
-        for (int i=0 ; i < decomposedSequence.length ; i++) {
+        for (int i = 0; i < decomposedSequence.length; i++) {
             modifiedSequence += decomposedSequence[i];
         }
         modifiedSequence += "-COOH";
@@ -114,41 +137,45 @@ public class OmssaPeptideHit implements PeptizerPeptideHit, Serializable {
         // First handle the fixed modifications
         List<Integer> fixedModifications = msSearchSettings.MSSearchSettings_fixed.MSMod;
 
-        for (int i=0 ; i < fixedModifications.size() ; i++) {
-            String modType = new String();
-            Vector<String> modResidue = new Vector();
-            for (int j=0 ; j < modifs.size() ; j++) {
-                if(modifs.get(j).getModNumber() == fixedModifications.get(i).intValue()) {
-                    modType = modifs.get(j).getModName();
-                    modResidue = modifs.get(j).getModResidues();
-                }
-            }
-            for (int j=0 ; j < decomposedSequence.length ; j++) {
-                for (int k=0 ; k < modResidue.size() ; k++) {
-                    if (decomposedSequence[j].compareTo(modResidue.get(k))==0) {
-                        decomposedSequence[j] = modResidue.get(k) + "<" + modType + ">";
+        for (int i = 0; i < fixedModifications.size(); i++) {
+            OmssaModification currentmodification = modifs.get(fixedModifications.get(i).intValue());
+            String modType = currentmodification.getModName();
+            Vector<String> modResidue = currentmodification.getModResidues();
+            /* The following cases are not taken into account:
+            - modifications at the begining or end of a protein
+            - multiple modifications on the same AA or terminus.
+             */
+            if (currentmodification.getModType() == OmssaModification.MODAA) {
+                for (int j = 0; j < decomposedSequence.length; j++) {
+                    for (int k = 0; k < modResidue.size(); k++) {
+                        if (decomposedSequence[j].compareTo(modResidue.get(k)) == 0) {
+                            decomposedSequence[j] = modResidue.get(k) + "<" + modType + ">";
+                        }
                     }
                 }
+            } else if (currentmodification.getModType() == OmssaModification.MODNP) {
+                decomposedSequence[0] = decomposedSequence[0] + "<" + modType + ">";
+            } else if (currentmodification.getModType() == OmssaModification.MODNPAA && decomposedSequence[0].compareTo(modResidue.get(0)) == 0) {
+                decomposedSequence[0] = decomposedSequence[0] + "<" + modType + ">";
+            } else if (currentmodification.getModType() == OmssaModification.MODCP) {
+                decomposedSequence[decomposedSequence.length - 1] = decomposedSequence[decomposedSequence.length - 1] + "<" + modType + ">";
+            } else if (currentmodification.getModType() == OmssaModification.MODCPAA && decomposedSequence[decomposedSequence.length - 1].compareTo(modResidue.get(0)) == 0) {
+                decomposedSequence[decomposedSequence.length - 1] = decomposedSequence[decomposedSequence.length - 1] + "<" + modType + ">";
             }
         }
 
         // Then the variable modifications found in this hit
         List<MSModHit> hitModifs = msHits.MSHits_mods.MSModHit;
-        for (int i=0 ; i < hitModifs.size() ; i++) {
+        for (int i = 0; i < hitModifs.size(); i++) {
             int mod = hitModifs.get(i).MSModHit_modtype.MSMod;
-            String modType = new String();
-            for (int j=0 ; j < modifs.size() ; j++) {
-                if (modifs.get(j).getModNumber() == mod) {
-                    modType = modifs.get(j).getModName();
-                }
-            }
-            decomposedSequence[hitModifs.get(i).MSModHit_site] += "<"+modType+">";
+            String modName = modifs.get(mod).getModName();
+            decomposedSequence[hitModifs.get(i).MSModHit_site] += "<" + modName + ">";
         }
 
 
         // Concat everything
         String modifiedSequence = "NH2-";
-        for (int i=0 ; i < decomposedSequence.length ; i++) {
+        for (int i = 0; i < decomposedSequence.length; i++) {
             modifiedSequence += decomposedSequence[i];
         }
         modifiedSequence += "-COOH";
@@ -158,41 +185,41 @@ public class OmssaPeptideHit implements PeptizerPeptideHit, Serializable {
         boolean[] bHits = new boolean[decomposedSequence.length];
         boolean[] yHits = new boolean[decomposedSequence.length];
         List<MSMZHit> ionHits = msHits.MSHits_mzhits.MSMZHit;
-        for (int i=0 ; i < ionHits.size() ; i++) {
+        for (int i = 0; i < ionHits.size(); i++) {
             if (ionHits.get(i).MSMZHit_ion.MSIonType == 1) {
-                bHits[ionHits.get(i).MSMZHit_number]=true;
+                bHits[ionHits.get(i).MSMZHit_number] = true;
             }
             if (ionHits.get(i).MSMZHit_ion.MSIonType == 4) {
-                yHits[ionHits.get(i).MSMZHit_number]=true;
+                yHits[ionHits.get(i).MSMZHit_number] = true;
             }
         }
 
         decomposedSequence[0] = "NH2-" + decomposedSequence[0];
-        decomposedSequence[decomposedSequence.length-1] += "-COOH";
+        decomposedSequence[decomposedSequence.length - 1] += "-COOH";
 
         // Color or underline according to the coverage
         if (bHits[0] && bHits[1]) {
             decomposedSequence[0] = "<u>" + decomposedSequence[0] + "</u>";
         }
-        if (bHits[decomposedSequence.length-1] && bHits[decomposedSequence.length-2]) {
+        if (bHits[decomposedSequence.length - 1] && bHits[decomposedSequence.length - 2]) {
             decomposedSequence[0] = "<font color=\"red\">" + decomposedSequence[0] + "</font>";
         }
-        if (bHits[decomposedSequence.length-1] && bHits[decomposedSequence.length-2]) {
-            decomposedSequence[decomposedSequence.length-1] = "<u>" + decomposedSequence[decomposedSequence.length-1] + "</u>";
+        if (bHits[decomposedSequence.length - 1] && bHits[decomposedSequence.length - 2]) {
+            decomposedSequence[decomposedSequence.length - 1] = "<u>" + decomposedSequence[decomposedSequence.length - 1] + "</u>";
         }
         if (bHits[0] && bHits[1]) {
-            decomposedSequence[decomposedSequence.length-1] = "<font color=\"red\">" + decomposedSequence[decomposedSequence.length-1] + "</font>";
+            decomposedSequence[decomposedSequence.length - 1] = "<font color=\"red\">" + decomposedSequence[decomposedSequence.length - 1] + "</font>";
         }
-        for (int i=1 ; i < decomposedSequence.length-1 ; i++) {
-            if (bHits[i] && bHits[i-1]) {
+        for (int i = 1; i < decomposedSequence.length - 1; i++) {
+            if (bHits[i] && bHits[i - 1]) {
                 decomposedSequence[i] = "<u>" + decomposedSequence[i] + "</u>";
             }
-            if (yHits[decomposedSequence.length-i-1] && yHits[decomposedSequence.length-i-2]) {
+            if (yHits[decomposedSequence.length - i - 1] && yHits[decomposedSequence.length - i - 2]) {
                 decomposedSequence[i] = "<font color=\"red\">" + decomposedSequence[i] + "</font>";
             }
         }
         String coloredSequence = "<html>";
-        for (int i=0 ; i < decomposedSequence.length ; i++) {
+        for (int i = 0; i < decomposedSequence.length; i++) {
             coloredSequence += decomposedSequence[i];
         }
         modifiedSequence += "</html>";
@@ -200,14 +227,6 @@ public class OmssaPeptideHit implements PeptizerPeptideHit, Serializable {
         // Create label and set text.
         JLabel label = new JLabelImpl(coloredSequence.toString(), getSequence());
         return label;
-    }
-
-    public SearchEngineEnum getSearchEngineEnum() {
-        return iSearchEngineEnum;
-    }
-
-    public Object getOriginalPeptideHit() {
-        return msHits;
     }
 
     public int getBTag(PeptideIdentification aPeptideIdentification) {
@@ -219,30 +238,29 @@ public class OmssaPeptideHit implements PeptizerPeptideHit, Serializable {
     }
 
     public int getIonTag(int type) {
-        int ionTag=0;
+        int ionTag = 0;
         // Get the Ions found by OMSSA
         List<MSMZHit> ions = msHits.MSHits_mzhits.MSMZHit;
         // Select and sort the ions
         Vector<Boolean> goodIons = new Vector(getSequence().length());
-        for (int i=0 ; i < getSequence().length() ; i++) {
+        for (int i = 0; i < getSequence().length(); i++) {
             goodIons.add(i, false);
         }
-        for (int i=0 ; i<ions.size() ; i++) {
+        for (int i = 0; i < ions.size(); i++) {
             if (ions.get(i).MSMZHit_ion.MSIonType == type) {
-                int l=getSequence().length();
-                int n=ions.get(i).MSMZHit_number;
+                int l = getSequence().length();
+                int n = ions.get(i).MSMZHit_number;
                 goodIons.set(ions.get(i).MSMZHit_number, true);
             }
         }
-        int tempMax=0;
-        for (int i=0 ; i<goodIons.size() ; i++) {
+        int tempMax = 0;
+        for (int i = 0; i < goodIons.size(); i++) {
             if (goodIons.get(i)) {
-                tempMax ++;
+                tempMax++;
                 if (tempMax > ionTag) {
-                    ionTag=tempMax;
+                    ionTag = tempMax;
                 }
-            }
-            else tempMax = 0;
+            } else tempMax = 0;
         }
         return ionTag;
     }
@@ -250,7 +268,7 @@ public class OmssaPeptideHit implements PeptizerPeptideHit, Serializable {
     public int[] getSequenceCoverage(PeptideIdentification aPeptideIdentification) {
         int[] result = new int[3];
         List<MSMZHit> ions = msHits.MSHits_mzhits.MSMZHit;
-        for (int i=0 ; i<ions.size() ; i++) {
+        for (int i = 0; i < ions.size(); i++) {
             if (ions.get(i).MSMZHit_ion.MSIonType == 1) result[0]++;
             if (ions.get(i).MSMZHit_ion.MSIonType == 4) result[1]++;
             else result[2]++;
@@ -259,21 +277,21 @@ public class OmssaPeptideHit implements PeptizerPeptideHit, Serializable {
     }
 
     public double getExpectancy(double aConfidenceInterval) {
-        return msHits.MSHits_evalue ;
+        return msHits.MSHits_evalue;
     }
 
     public double getTheoMass() {
-        return msHits.MSHits_theomass/msResponseScale;
+        return msHits.MSHits_theomass / msResponseScale;
     }
 
     public double getDeltaMass() {
-        return (double) (msHits.MSHits_theomass - msHits.MSHits_mass)/msResponseScale;
+        return (double) (msHits.MSHits_mass - msHits.MSHits_theomass) / msResponseScale;
     }
 
     public ArrayList getProteinHits() {
         List<MSPepHit> omssaProteinHits = msHits.MSHits_pephits.MSPepHit;
         ArrayList peptizerProteinHits = new ArrayList();
-        for (int i=0 ; i < omssaProteinHits.size() ; i++) {
+        for (int i = 0; i < omssaProteinHits.size(); i++) {
             peptizerProteinHits.add(new OmssaProteinHit(omssaProteinHits.get(i)));
         }
         return peptizerProteinHits;
@@ -290,10 +308,10 @@ public class OmssaPeptideHit implements PeptizerPeptideHit, Serializable {
 
 
         Vector lAnnotations = new Vector(mzHits.size());
-        for (int i=0 ; i < mzHits.size() ; i++) {
+        for (int i = 0; i < mzHits.size(); i++) {
             lAnnotations.add(new OmssaFragmentIon((MSMZHit) mzHits.get(i), getIonPeak((MSMZHit) mzHits.get(i), peakList)));
         }
-        lAnnotationsMap.put(iAnnotationType.get(0).getIndex() + "" + (id + 1), lAnnotations);
+        lAnnotationsMap.put(iAnnotationType.get(0).getIndex() + "" + SearchEngineEnum.OMSSA.getId() + "" + (id + 1), lAnnotations);
         /*
         lAnnotations.clear();
         for (int i=0 ; i < mzHits.size() ; i++) {
@@ -312,21 +330,21 @@ public class OmssaPeptideHit implements PeptizerPeptideHit, Serializable {
 
     private OmssaPeak getIonPeak(MSMZHit ion, PeptizerPeak[] peakList) {
         OmssaPeak peak = new OmssaPeak();
-        double distanceMin = (peakList[0].getMZ() - ion.MSMZHit_mz/msResponseScale)*(peakList[0].getMZ() - ion.MSMZHit_mz/msResponseScale);
+        double distanceMin = (peakList[0].getMZ() - ion.MSMZHit_mz / msResponseScale) * (peakList[0].getMZ() - ion.MSMZHit_mz / msResponseScale);
         double distance;
-        for (int i=0 ; i < peakList.length ; i++) {
-            distance = (peakList[i].getMZ() - ion.MSMZHit_mz/msResponseScale)*(peakList[i].getMZ() - ion.MSMZHit_mz/msResponseScale);
-            if (distance < distanceMin ) {
-                peak = (OmssaPeak) peakList[i];
+        for (int i = 0; i < peakList.length; i++) {
+            distance = (peakList[i].getMZ() - ion.MSMZHit_mz / msResponseScale) * (peakList[i].getMZ() - ion.MSMZHit_mz / msResponseScale);
+            if (distance < distanceMin) {
+                peak = new OmssaPeak(peakList[i].getMZ(), peakList[i].getIntensity());
                 distanceMin = distance;
             } else if (distance == distanceMin && peakList[i].getIntensity() > peak.getIntensity()) {
-                peak = (OmssaPeak) peakList[i];
+                peak = new OmssaPeak(peakList[i].getMZ(), peakList[i].getIntensity());
             }
         }
         return peak;
     }
 
-    public ArrayList<AnnotationType> getAnnotationType() {
+    private ArrayList<AnnotationType> getOMSSAAnnotationType() {
         return iAnnotationType;
     }
 
@@ -375,7 +393,6 @@ public class OmssaPeptideHit implements PeptizerPeptideHit, Serializable {
          * Returns a string representation of this component and its values.
          *
          * @return a string representation of this component
-         *
          * @since JDK1.0
          */
         @Override

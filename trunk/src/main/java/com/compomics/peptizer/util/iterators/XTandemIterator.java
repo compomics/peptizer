@@ -41,7 +41,7 @@ public class XTandemIterator implements PeptideIdentificationIterator {
         iOutputFile = aOutputFile;
     }
 
-    public Object next() {
+    public PeptideIdentification next() {
         if (hasNext()) {
             // Get the information of the next.
             // QueryList is a Vector, 0 returns Query 1 whereas the QueryToPeptideMap returns Query 1 for if 1 is given as a parameter.

@@ -21,7 +21,7 @@ public interface PeptideIdentificationIterator extends Iterator {
      *
      * @return the next PeptideIdentification. null if no more left.
      */
-    public abstract Object next();
+    public abstract PeptideIdentification next();
 
     /**
      * Returns true if more PeptideIdentifications are left.

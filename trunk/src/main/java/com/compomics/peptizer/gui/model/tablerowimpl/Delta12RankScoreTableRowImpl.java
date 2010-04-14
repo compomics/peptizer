@@ -20,54 +20,55 @@ import java.util.Properties;
  */
 public class Delta12RankScoreTableRowImpl extends AbstractTableRow {
 
-	/**
-	 * {@inheritDoc}
-	 */
+    /**
+     * {@inheritDoc}
+     */
 
-	public Delta12RankScoreTableRowImpl() {
-		super();
-		Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
-		super.setName(prop.getProperty("name"));
-		super.setActive(new Boolean(prop.getProperty("active")));
-	}
+    public Delta12RankScoreTableRowImpl() {
+        super();
+        Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
+        super.setName(prop.getProperty("name"));
+        super.setActive(new Boolean(prop.getProperty("active")));
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
+    /**
+     * {@inheritDoc}
+     */
 
-	public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
-		String result;
-		if (aPeptideHitNumber + 1 < aPeptideIdentification.getNumberOfPeptideHits()) {
+    public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+        String result;
+        if (aPeptideHitNumber + 1 < aPeptideIdentification.getNumberOfPeptideHits()) {
 
-			// To keep things clear, the getPeptideHit method returns items from a Vector.
-			// Where "0" returns the first peptidehit.
-			// Seems unlogical now, though it was a design decision during MascotDatfile development where
-			// 0 gives you the first element in the Vector.
+            // To keep things clear, the getPeptideHit method returns items from a Vector.
+            // Where "0" returns the first peptidehit.
+            // Seems unlogical now, though it was a design decision during MascotDatfile development where
+            // 0 gives you the first element in the Vector.
 
-			int aFirstPeptideHit = aPeptideHitNumber - 1;
-			int aSecondPeptideHit = aPeptideHitNumber;
+            int aFirstPeptideHit = aPeptideHitNumber - 1;
+            int aSecondPeptideHit = aPeptideHitNumber;
 
-			double lScore1 = aPeptideIdentification.getPeptideHit(aFirstPeptideHit).getIonsScore();
-			double lScore2 = aPeptideIdentification.getPeptideHit(aSecondPeptideHit).getIonsScore();
-			double delta = lScore1 - lScore2;
-			if (lScore1 >= 0 && lScore2 >= 0) result = "" + new BigDecimal(delta).setScale(2, BigDecimal.ROUND_HALF_DOWN);
+            double lScore1 = aPeptideIdentification.getPeptideHit(aFirstPeptideHit).getIonsScore();
+            double lScore2 = aPeptideIdentification.getPeptideHit(aSecondPeptideHit).getIonsScore();
+            double delta = lScore1 - lScore2;
+            if (lScore1 >= 0 && lScore2 >= 0)
+                result = "" + new BigDecimal(delta).setScale(2, BigDecimal.ROUND_HALF_DOWN);
             else result = "NA";
 
-		} else {
-			result = "NA";
-		}
-		return result;
-	}
+        } else {
+            result = "NA";
+        }
+        return result;
+    }
 
-	/**
-	 * Returns a description for the TableRow.
-	 * Use for tooltips and configuration.
-	 *
-	 * @return String description of the TableRow.
-	 */
-	@Override
-	public String getDescription() {
-		String s = "Generalrow - The difference in identityscore between peptidehit n and peptidehit n+1.";
-		return s;
-	}
+    /**
+     * Returns a description for the TableRow.
+     * Use for tooltips and configuration.
+     *
+     * @return String description of the TableRow.
+     */
+    @Override
+    public String getDescription() {
+        String s = "Generalrow - The difference in identityscore between peptidehit n and peptidehit n+1.";
+        return s;
+    }
 }

@@ -19,36 +19,36 @@ import java.util.Properties;
  */
 public class ModifiedSequenceTableRowImpl extends AbstractTableRow {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public ModifiedSequenceTableRowImpl() {
-		super();
-		Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
-		super.setName(prop.getProperty("name"));
-		super.setActive(new Boolean(prop.getProperty("active")));
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public ModifiedSequenceTableRowImpl() {
+        super();
+        Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
+        super.setName(prop.getProperty("name"));
+        super.setActive(new Boolean(prop.getProperty("active")));
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
-		String s = "";
-		s = aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getModifiedSequence();
-		return s;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+        String s = "";
+        s = aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getModifiedSequence();
+        return s;
+    }
 
-	/**
-	 * Returns a description for the TableRow.
-	 * Use for tooltips and configuration.
-	 *
-	 * @return String description of the TableRow.
-	 */
-	@Override
-	public String getDescription() {
-		String s = "Generalrow - The modified sequence of peptidehit n.";
-		return s;
-	}
+    /**
+     * Returns a description for the TableRow.
+     * Use for tooltips and configuration.
+     *
+     * @return String description of the TableRow.
+     */
+    @Override
+    public String getDescription() {
+        String s = "Generalrow - The modified sequence of peptidehit n.";
+        return s;
+    }
 
 
 }

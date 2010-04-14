@@ -1,10 +1,10 @@
 package com.compomics.peptizer.util.datatools.implementations.mascot;
 
-import com.compomics.peptizer.util.datatools.interfaces.PeptizerSpectrum;
-import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeak;
-import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import com.compomics.mascotdatfile.util.interfaces.Spectrum;
 import com.compomics.mascotdatfile.util.mascot.Peak;
+import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeak;
+import com.compomics.peptizer.util.datatools.interfaces.PeptizerSpectrum;
+import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 
 import java.io.Serializable;
 
@@ -24,7 +24,7 @@ public class MascotSpectrum implements PeptizerSpectrum, Serializable {
     }
 
     public MascotSpectrum(Spectrum aSpectrum) {
-        this.aSpectrum=aSpectrum;
+        this.aSpectrum = aSpectrum;
     }
 
     public void setSpectrum(Spectrum aSpectrum) {
@@ -33,14 +33,14 @@ public class MascotSpectrum implements PeptizerSpectrum, Serializable {
 
     public PeptizerPeak[] getPeakList() {
         Peak[] mascotPeakList = aSpectrum.getPeakList();
-        MascotPeak[] peptizerPeakList =  new MascotPeak[mascotPeakList.length];
+        MascotPeak[] peptizerPeakList = new MascotPeak[mascotPeakList.length];
         for (int i = 0; i < peptizerPeakList.length; i++) {
-            peptizerPeakList[i]= new MascotPeak(mascotPeakList[i]);
+            peptizerPeakList[i] = new MascotPeak(mascotPeakList[i]);
         }
         return peptizerPeakList;
     }
 
-    public String getFilename() {
+    public String getName() {
         return aSpectrum.getFilename();
     }
 
@@ -57,7 +57,7 @@ public class MascotSpectrum implements PeptizerSpectrum, Serializable {
     }
 
     public double getMinIntensity() {
-        return aSpectrum.getMinIntensity() ;
+        return aSpectrum.getMinIntensity();
     }
 
     public double getMaxIntensity() {

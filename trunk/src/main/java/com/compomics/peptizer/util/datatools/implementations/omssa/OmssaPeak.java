@@ -13,7 +13,7 @@ import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 public class OmssaPeak extends PeptizerPeak {
     private final SearchEngineEnum iSearchEngineEnum = SearchEngineEnum.OMSSA;
 
-    public OmssaPeak() {        
+    public OmssaPeak() {
     }
 
     public OmssaPeak(double mz, double abundance) {
@@ -24,5 +24,5 @@ public class OmssaPeak extends PeptizerPeak {
     public SearchEngineEnum getSearchEngineEnum() {
         return iSearchEngineEnum;
     }
-    
+
 }

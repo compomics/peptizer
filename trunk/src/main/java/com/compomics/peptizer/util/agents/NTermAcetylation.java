@@ -5,11 +5,10 @@ import com.compomics.mascotdatfile.util.mascot.PeptideHit;
 import com.compomics.peptizer.interfaces.Agent;
 import com.compomics.peptizer.util.AgentReport;
 import com.compomics.peptizer.util.PeptideIdentification;
-import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.datatools.implementations.omssa.OmssaPeptideHit;
+import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
-
 import de.proteinms.omxparser.util.MSHits;
 
 /**
@@ -23,7 +22,7 @@ public class NTermAcetylation extends Agent {
     public NTermAcetylation() {
         // Init the general Agent settings.
         initialize();
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA };
+        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA};
         compatibleSearchEngine = searchEngines;
     }
 
@@ -73,8 +72,12 @@ public class NTermAcetylation extends Agent {
      * @return boolean - true if <aPH> has an N-terminal acetylation.
      */
     private boolean getAcetylationStatus(PeptizerPeptideHit aPh) {
-        if (aPh.getSearchEngineEnum() == SearchEngineEnum.Mascot) {
-            PeptideHit aMPh = (PeptideHit) aPh.getOriginalPeptideHit();
+
+        boolean identifiedByMascot = aPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
+        boolean identifiedByOMSSA = aPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.OMSSA);
+
+        if (identifiedByMascot) {
+            PeptideHit aMPh = (PeptideHit) aPh.getOriginalPeptideHit(SearchEngineEnum.Mascot);
             // N-terminal residue is [0] in the Modification array.
             Modification lMod = aMPh.getModifications()[0];
             // If lMod exists, check if it is an acetylation.
@@ -83,30 +86,22 @@ public class NTermAcetylation extends Agent {
                     return true;
                 }
             }
-        } else if (aPh.getSearchEngineEnum() == SearchEngineEnum.OMSSA) {
+        } else if (identifiedByOMSSA) {
             OmssaPeptideHit anOPh = (OmssaPeptideHit) aPh;
 
-            // Get the id of this modification
-            int id = -1;
-            for (int i=0 ; i < anOPh.modifs.size() ; i++) {
-                for (int j=0 ; j < anOPh.modifs.get(i).getModResidues().size() ; j++) {
-                    if (anOPh.modifs.get(i).getModName().compareTo("acetylation of protein n-term")==0) {
-                        id=anOPh.modifs.get(i).getModType().intValue();
-                        break;
-                    }
-                }
-            }
+            // id of this modification
+            int id = 10;
 
             // inspect if this modification was found in the fixed modifications
-            for (int i=0 ; i < anOPh.getFixedModifications().size() ; i++) {
+            for (int i = 0; i < anOPh.getFixedModifications().size(); i++) {
                 if (anOPh.getFixedModifications().get(i).intValue() == id) {
                     return true;
                 }
             }
 
             // inspect if this modification was found in the variable modifications
-            MSHits aPH = (MSHits) anOPh.getOriginalPeptideHit();
-            for (int i=0 ; i < aPH.MSHits_mods.MSModHit.size() ; i++) {
+            MSHits aPH = (MSHits) anOPh.getOriginalPeptideHit(SearchEngineEnum.OMSSA);
+            for (int i = 0; i < aPH.MSHits_mods.MSModHit.size(); i++) {
                 if (aPH.MSHits_mods.MSModHit.get(i).MSModHit_modtype.MSMod == id) {
                     return true;
                 }

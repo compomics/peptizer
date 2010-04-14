@@ -15,13 +15,13 @@ import com.compomics.peptizer.util.PeptideIdentification;
  * This class was developed to
  */
 public class ValidationTreeFilter implements TreeFilter {
-	/**
-	 * Returns a boolean whether a peptideidentification is allowed to pass the filter.
-	 *
-	 * @param aPeptideIdentification PeptideIdentification
-	 * @return boolean with status
-	 */
-	public boolean pass(PeptideIdentification aPeptideIdentification) {
-		return !aPeptideIdentification.getValidationReport().isValidated();
-	}
+    /**
+     * Returns a boolean whether a peptideidentification is allowed to pass the filter.
+     *
+     * @param aPeptideIdentification PeptideIdentification
+     * @return boolean with status
+     */
+    public boolean pass(PeptideIdentification aPeptideIdentification) {
+        return !aPeptideIdentification.getValidationReport().isValidated();
+    }
 }

@@ -9,9 +9,9 @@ import com.compomics.mascotdatfile.util.mascot.factory.MascotDatfileFactory;
 import com.compomics.peptizer.interfaces.PeptideIdentificationIterator;
 import com.compomics.peptizer.util.MetaKey;
 import com.compomics.peptizer.util.PeptideIdentification;
-import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import com.compomics.peptizer.util.datatools.implementations.mascot.MascotPeptideHit;
 import com.compomics.peptizer.util.datatools.implementations.mascot.MascotSpectrum;
+import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +36,7 @@ public class DatfileIterator implements PeptideIdentificationIterator {
 
     /**
      * The MascotDatfile type of the Iterator.
-     */        
+     */
     private MascotDatfileType iMascotDatfileType;
 
     /**
@@ -88,7 +88,7 @@ public class DatfileIterator implements PeptideIdentificationIterator {
         }
     }
 
-     /**
+    /**
      * Getter for property 'mascotDatfileType'.
      *
      * @return Value for property 'mascotDatfileType'.
@@ -100,7 +100,7 @@ public class DatfileIterator implements PeptideIdentificationIterator {
     /**
      * {@inheritDoc}
      */
-    public Object next() {
+    public PeptideIdentification next() {
         if (hasNext()) {
             // Get the information of the next.
             // QueryList is a Vector, 0 returns Query 1 whereas the QueryToPeptideMap returns Query 1 for if 1 is given as a parameter.

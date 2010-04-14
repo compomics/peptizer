@@ -50,6 +50,7 @@ public class TabPanel extends JPanel {
      * The spectrum of the identification.
      */
     private SpectrumPanel jpanSpectrum = null;
+    JPanel jpanBottom;
     /**
      * The inner spectrum of the sequence annotation.
      */
@@ -103,15 +104,15 @@ public class TabPanel extends JPanel {
         jpanSpectrum = getSpectrumPanel();
 
         // Build the annotations and get the annotation type.
-        iAnnotations = getAnnotations();
         iAnnotationType = aPeptideIdentification.getPeptideHit(0).getAnnotationType();
+        iAnnotations = getAnnotations();
 
         // Build the SequenceFragmentationPanel.
         boolModifedSequenceFragmentation =
                 Boolean.parseBoolean(MatConfig.getInstance().getGeneralProperty("MODIFEDSEQUENCE_FRAGMENTATION_PANEL"));
         String lSequence = getSequenceForFragmentationPanel(0);
         jpanFragmentsInner =
-                new PeptizerSequenceFragmentationPanel(lSequence, (Vector) iAnnotations.get(iAnnotationType.get(0).getIndex() + "" + 1), boolModifedSequenceFragmentation);
+                new PeptizerSequenceFragmentationPanel(lSequence, (Vector) iAnnotations.get(iAnnotationType.get(0).getIndex() + "" + iAnnotationType.get(0).getSearchEngine().getId() + "" + 1), boolModifedSequenceFragmentation);
         jpanFragmentsInner.setBackground(Color.white);
 
         /**
@@ -130,72 +131,31 @@ public class TabPanel extends JPanel {
         jpanFragments.add(jpanFragmentsInner, BorderLayout.CENTER);
 
         // If necessary build the radiobuttongroup to switch the annotations on the spectrumpanel.
-        JPanel jpanBottom = new JPanel();
-        if (iAnnotationType != null) {
-            if (iAnnotationType.size() >= 1) {
-                ButtonGroup bg1 = new ButtonGroup();
-                for (int i = 0; i < iAnnotationType.size(); i++) {
-                    JRadioButton tempButton = new JRadioButton(iAnnotationType.get(i).getName());
-                    tempButton.addChangeListener(new ChangeListener() {
-                        public void stateChanged(ChangeEvent e) {
-                            int annotationTypeNumber = 0;
-                            if (TabPanel.this.rbtAnnotation != null) {
-                                annotationTypeNumber = TabPanel.this.rbtAnnotation.size();
-                            }
-                            for (int j = 0; j < annotationTypeNumber; j++) {
-                                if (TabPanel.this.rbtAnnotation.get(j).isSelected()) {
-                                    bgSelectedIndex = TabPanel.this.iAnnotationType.get(j).getIndex();
-                                    TabPanel.this.updateAnnotations();
-                                    break;
-                                }
-                            }
-                        }
-                    });
-                    tempButton.setBackground(Color.white);
-                    tempButton.setMnemonic(KeyEvent.VK_A);
-                    rbtAnnotation.add(tempButton);
-                }
+        jpanBottom = new JPanel();
+        updateAnnotationTypeButtons(0);
 
-                int selected;
-                // Load the variable from the property file if it has not been set before.
-                if (bgSelectedIndex >= 0) {
-                    selected = bgSelectedIndex;
-                } else {
-                    selected = Integer.parseInt(MatConfig.getInstance().getGeneralProperty("RDB_ANNOTATION"));
-                }
+        // Update the annotations on the spectrum.
+        updateAnnotations();
 
-                // Select the correct radiobutton.
-                selectCorrectRadioButton(selected);
-
-                /**
-                 * Add a componentListener that get's invoked when the component has been made visible.
-                 */
-                this.addComponentListener(new ComponentAdapter() {
-                    /**
-                     * .
-                     */
-                    public void componentShown(ComponentEvent e) {
-                        selectCorrectRadioButton(bgSelectedIndex);
-                    }
-                });
-
-                // Put the buttons in a group & panel
-                for (int i = 0; i < rbtAnnotation.size(); i++) {
-                    bg1.add(rbtAnnotation.get(i));
-                }
+        /**
+         * Add a componentListener that get's invoked when the component has been made visible.
+         */
+        this.addComponentListener(new ComponentAdapter() {
+            /**
+             * .
+             */
+            public void componentShown(ComponentEvent e) {
+                selectCorrectRadioButton(bgSelectedIndex);
             }
+        });
 
-            // Update the annotations on the spectrum.
-            updateAnnotations();
-
-            jpanBottom.setLayout(new BoxLayout(jpanBottom, BoxLayout.LINE_AXIS));
-            jpanBottom.add(Box.createHorizontalGlue());
-            for (int i = 0; i < rbtAnnotation.size(); i++) {
-                jpanBottom.add(rbtAnnotation.get(i));
-                jpanBottom.add(Box.createRigidArea(new Dimension(15 - 5 * i, rbtAnnotation.get(i).getSize().height)));
-            }
-            jpanBottom.setBackground(Color.white);
+        jpanBottom.setLayout(new BoxLayout(jpanBottom, BoxLayout.LINE_AXIS));
+        jpanBottom.add(Box.createHorizontalGlue());
+        for (int i = 0; i < rbtAnnotation.size(); i++) {
+            jpanBottom.add(rbtAnnotation.get(i));
+            jpanBottom.add(Box.createRigidArea(new Dimension(15 - 5 * i, rbtAnnotation.get(i).getSize().height)));
         }
+        jpanBottom.setBackground(Color.white);
 
         /**
          * The SequenceFragmentationPanel.
@@ -206,9 +166,9 @@ public class TabPanel extends JPanel {
 
         // Add TopPanel and SpectrumPanel into a Main JPanel.
         jpanSpectrum.setLayout(new BoxLayout(jpanSpectrum, BoxLayout.Y_AXIS));
-        if (rbtAnnotation != null) {
-            jpanSpectrum.add(jpanBottom);
-        }
+
+        jpanSpectrum.add(jpanBottom);
+
         jpanSpectrum.setBackground(Color.white);
 
         JSplitPane split1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false, jpanFragments, jpanSpectrum);
@@ -233,8 +193,8 @@ public class TabPanel extends JPanel {
             jpanFragmentsInner.setSequence(lSequence, boolModifedSequenceFragmentation);
             for (int i = 0; i < iAnnotationType.size(); i++) {
                 if (bgSelectedIndex == iAnnotationType.get(i).getIndex()) {
-                    jpanSpectrum.setAnnotations((Vector) iAnnotations.get(iAnnotationType.get(i).getIndex() + "" + lSelectedTableColumn));
-                    jpanFragmentsInner.setFragmentions((Vector) iAnnotations.get(iAnnotationType.get(i).getIndex() + "" + lSelectedTableColumn));
+                    jpanSpectrum.setAnnotations((Vector) iAnnotations.get(iAnnotationType.get(i).getIndex() + "" + iAnnotationType.get(i).getSearchEngine().getId() + "" + lSelectedTableColumn));
+                    jpanFragmentsInner.setFragmentions((Vector) iAnnotations.get(iAnnotationType.get(i).getIndex() + "" + iAnnotationType.get(i).getSearchEngine().getId() + "" + lSelectedTableColumn));
                 }
                 jpanSpectrum.validate();
                 jpanSpectrum.repaint();
@@ -247,7 +207,7 @@ public class TabPanel extends JPanel {
             Vector annotations = new Vector();
             for (int i = 0; i < iAnnotationType.size(); i++) {
                 if (bgSelectedIndex == iAnnotationType.get(i).getIndex()) {
-                    Vector tempVector = (Vector) iAnnotations.get(iAnnotationType.get(i).getIndex() + "" + 1);
+                    Vector tempVector = (Vector) iAnnotations.get(iAnnotationType.get(i).getIndex() + "" + iAnnotationType.get(i).getSearchEngine().getId() + "" + 1);
                     if (tempVector != null) {
                         for (int j = 0; j < tempVector.size(); j++) {
                             annotations.add(tempVector.get(j));
@@ -260,6 +220,52 @@ public class TabPanel extends JPanel {
             jpanSpectrum.validate();
             jpanSpectrum.repaint();
             jpanFragmentsInner.repaint();
+        }
+    }
+
+    public void updateAnnotationTypeButtons(int peptideNumber) {
+        for (int i = 0; i < rbtAnnotation.size(); i++) {
+            jpanBottom.remove(rbtAnnotation.get(i));
+        }
+        iAnnotationType = iPeptideIdentification.getPeptideHit(peptideNumber).getAnnotationType();
+        rbtAnnotation = new ArrayList<JRadioButton>();
+        if (iAnnotationType.size() >= 1) {
+            for (int i = 0; i < iAnnotationType.size(); i++) {
+                JRadioButton tempButton = new JRadioButton(iAnnotationType.get(i).getName());
+                tempButton.addChangeListener(new ChangeListener() {
+                    public void stateChanged(ChangeEvent e) {
+                        if (((JRadioButton) e.getSource()).isSelected()) {
+                            for (int j = 0; j < rbtAnnotation.size(); j++) {
+                                if (TabPanel.this.rbtAnnotation.get(j).isSelected()) {
+                                    if (TabPanel.this.rbtAnnotation.get(j) == e.getSource()) {
+                                        bgSelectedIndex = TabPanel.this.iAnnotationType.get(j).getIndex();
+                                        TabPanel.this.updateAnnotations();
+                                    } else {
+                                        TabPanel.this.rbtAnnotation.get(j).setSelected(false);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                tempButton.setBackground(Color.white);
+                tempButton.setMnemonic(KeyEvent.VK_A);
+                rbtAnnotation.add(tempButton);
+            }
+
+            int selected;
+            // Load the variable from the property file if it has not been set before.
+            if (bgSelectedIndex >= 0) {
+                selected = bgSelectedIndex;
+            } else {
+                selected = Integer.parseInt(MatConfig.getInstance().getGeneralProperty("RDB_ANNOTATION"));
+            }
+
+            for (int i = 0; i < rbtAnnotation.size(); i++) {
+                jpanBottom.add(rbtAnnotation.get(i));
+            }
+            // Select the correct radiobutton.
+            selectCorrectRadioButton(selected);
         }
     }
 
@@ -287,7 +293,7 @@ public class TabPanel extends JPanel {
         // Get spectrum and set local variables.
         PeptizerSpectrum lSpectrum = iPeptideIdentification.getSpectrum();
         PeptizerPeak[] lPeaks = lSpectrum.getPeakList();
-        String lFilename = lSpectrum.getFilename();
+        String lSpectrumname = lSpectrum.getName();
         String lCharge = "not defined";
         double lPrecursor = 0.0;
 
@@ -308,7 +314,7 @@ public class TabPanel extends JPanel {
             lIntensity[i] = lPeak.getIntensity();
         }
         // Return a new SpectrumPanel constructed with the local variables.
-        return new SpectrumPanel(lMZ, lIntensity, lPrecursor, lCharge, lFilename);
+        return new SpectrumPanel(lMZ, lIntensity, lPrecursor, lCharge, lSpectrumname);
     }
 
     /**
@@ -324,7 +330,7 @@ public class TabPanel extends JPanel {
         // Do this for every identification above threshold.
         for (int i = 0; i < iPeptideIdentification.getNumberOfConfidentPeptideHits(); i++) {
             lPeptideHit = this.iPeptideIdentification.getPeptideHit(i);
-            lAnnotationsMap.putAll(lPeptideHit.getAnnotation(iPeptideIdentification, i));
+            lAnnotationsMap.putAll(lPeptideHit.getAllAnnotation(iPeptideIdentification, i));
         }
         // Returns the HashMap with annotation.
         return lAnnotationsMap;

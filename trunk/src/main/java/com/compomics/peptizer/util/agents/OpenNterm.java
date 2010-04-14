@@ -101,12 +101,15 @@ public class OpenNterm extends Agent {
 
     private String getModificationType(PeptizerPeptideHit aPH) {
         String modificationType = null;
-        if (aPH.getSearchEngineEnum() == SearchEngineEnum.Mascot) {
-            Modification lModification = ((PeptideHit) aPH.getOriginalPeptideHit()).getModifications()[0];
+        boolean identifiedByMascot = aPH.getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
+        boolean identifiedByOMSSA = aPH.getAdvocate().getAdvocates().contains(SearchEngineEnum.OMSSA);
+
+        if (identifiedByMascot) {
+            Modification lModification = ((PeptideHit) aPH.getOriginalPeptideHit(SearchEngineEnum.Mascot)).getModifications()[0];
             if (lModification != null) {
                 modificationType = lModification.getShortType();
             }
-        } else if (aPH.getSearchEngineEnum() == SearchEngineEnum.OMSSA) {
+        } else if (identifiedByOMSSA) {
             OmssaPeptideHit anOPh = (OmssaPeptideHit) aPH;
 
             // see if there is a fixed modification :
@@ -135,7 +138,7 @@ public class OpenNterm extends Agent {
             }
 
             // see if there is a variable modification
-            List<MSModHit> modifications = ((MSHits) anOPh.getOriginalPeptideHit()).MSHits_mods.MSModHit;
+            List<MSModHit> modifications = ((MSHits) anOPh.getOriginalPeptideHit(SearchEngineEnum.OMSSA)).MSHits_mods.MSModHit;
             for (int j = 0; j < modifications.size(); j++)
                 if (modifications.get(j).MSModHit_site == 0) {
                     modificationType = modifications.get(j).MSModHit_modtype.toString();

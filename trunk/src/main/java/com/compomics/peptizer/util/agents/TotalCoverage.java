@@ -29,7 +29,7 @@ public class TotalCoverage extends Agent {
     public TotalCoverage() {
         // Init the general Agent settings.
         initialize(PERCENTAGE);
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA };
+        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA};
         compatibleSearchEngine = searchEngines;
     }
 
