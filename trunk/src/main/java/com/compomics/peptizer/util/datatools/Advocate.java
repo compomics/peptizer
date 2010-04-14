@@ -37,9 +37,16 @@ public class Advocate implements Serializable {
     }
 
     public String getName() {
-        String result = "" + advocates.get(0).getName().charAt(0);
+        String result = "";
+        if (advocates.size()>1) {
+            result += "[";
+        }
+        result += advocates.get(0).getName().charAt(0);
         for (int i = 1; i < advocates.size(); i++) {
             result += " - " + advocates.get(i).getName().charAt(0);
+        }
+        if (advocates.size()>1) {
+            result += "]";    
         }
         return result;
     }

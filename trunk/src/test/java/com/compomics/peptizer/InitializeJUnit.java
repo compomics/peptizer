@@ -43,6 +43,7 @@ public class InitializeJUnit {
                 if (File.separatorChar != '/') {
                     // Windows platform. Delete the leading '/'
                     result = result.substring(1);
+                    result = result.replace("%20", " ");
                 }
             }
             File lAgentTestConfiguration = new File(result);

@@ -25,7 +25,6 @@ import java.util.List;
 public class FileToolsFactory {
     private static FileToolsFactory iSingleton = null;
     private List<ParsingType> iParsingType;
-    private File[] otherFiles;
 
     public static FileToolsFactory getInstance() {
         if (iSingleton == null) {
@@ -36,7 +35,6 @@ public class FileToolsFactory {
 
     private FileToolsFactory() {
         iParsingType = new ArrayList<ParsingType>();
-        otherFiles = new File[0];
     }
 
     // -- Working with files --

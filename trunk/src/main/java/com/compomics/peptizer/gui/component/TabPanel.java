@@ -33,6 +33,7 @@ public class TabPanel extends JPanel {
      * The index of the selectod radiobutton. Static variable so changes in one TabPanel are valid to all TabPanels.
      */
     private static int bgSelectedIndex = -1;
+    private int searchEngineSelectedIndex = -1;
 
     /**
      * The final indexes for annotation type.
@@ -145,7 +146,7 @@ public class TabPanel extends JPanel {
              * .
              */
             public void componentShown(ComponentEvent e) {
-                selectCorrectRadioButton(bgSelectedIndex);
+                selectCorrectRadioButton(bgSelectedIndex, searchEngineSelectedIndex);
             }
         });
 
@@ -192,7 +193,7 @@ public class TabPanel extends JPanel {
             lSequence = getSequenceForFragmentationPanel(lSelectedTableColumn - 1);
             jpanFragmentsInner.setSequence(lSequence, boolModifedSequenceFragmentation);
             for (int i = 0; i < iAnnotationType.size(); i++) {
-                if (bgSelectedIndex == iAnnotationType.get(i).getIndex()) {
+                if (bgSelectedIndex == iAnnotationType.get(i).getIndex() && searchEngineSelectedIndex == iAnnotationType.get(i).getSearchEngine().getId()) {
                     jpanSpectrum.setAnnotations((Vector) iAnnotations.get(iAnnotationType.get(i).getIndex() + "" + iAnnotationType.get(i).getSearchEngine().getId() + "" + lSelectedTableColumn));
                     jpanFragmentsInner.setFragmentions((Vector) iAnnotations.get(iAnnotationType.get(i).getIndex() + "" + iAnnotationType.get(i).getSearchEngine().getId() + "" + lSelectedTableColumn));
                 }
@@ -206,7 +207,7 @@ public class TabPanel extends JPanel {
             jpanFragmentsInner.setSequence(lSequence, boolModifedSequenceFragmentation);
             Vector annotations = new Vector();
             for (int i = 0; i < iAnnotationType.size(); i++) {
-                if (bgSelectedIndex == iAnnotationType.get(i).getIndex()) {
+                if (bgSelectedIndex == iAnnotationType.get(i).getIndex() && iAnnotationType.get(i).getSearchEngine().getId() == iAnnotationType.get(i).getSearchEngine().getId()) {
                     Vector tempVector = (Vector) iAnnotations.get(iAnnotationType.get(i).getIndex() + "" + iAnnotationType.get(i).getSearchEngine().getId() + "" + 1);
                     if (tempVector != null) {
                         for (int j = 0; j < tempVector.size(); j++) {
@@ -224,49 +225,64 @@ public class TabPanel extends JPanel {
     }
 
     public void updateAnnotationTypeButtons(int peptideNumber) {
+        boolean found = false;
+        for (int i = 0; i < iPeptideIdentification.getPeptideHit(peptideNumber).getAdvocate().getAdvocates().size(); i++) {
+            if (iPeptideIdentification.getPeptideHit(peptideNumber).getAdvocate().getAdvocates().get(i).getId() == searchEngineSelectedIndex) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            searchEngineSelectedIndex = iPeptideIdentification.getPeptideHit(peptideNumber).getAdvocate().getAdvocates().get(0).getId();
+            bgSelectedIndex = -1;
+        }
         for (int i = 0; i < rbtAnnotation.size(); i++) {
             jpanBottom.remove(rbtAnnotation.get(i));
         }
         iAnnotationType = iPeptideIdentification.getPeptideHit(peptideNumber).getAnnotationType();
         rbtAnnotation = new ArrayList<JRadioButton>();
-        if (iAnnotationType.size() >= 1) {
-            for (int i = 0; i < iAnnotationType.size(); i++) {
-                JRadioButton tempButton = new JRadioButton(iAnnotationType.get(i).getName());
-                tempButton.addChangeListener(new ChangeListener() {
-                    public void stateChanged(ChangeEvent e) {
-                        if (((JRadioButton) e.getSource()).isSelected()) {
-                            for (int j = 0; j < rbtAnnotation.size(); j++) {
-                                if (TabPanel.this.rbtAnnotation.get(j).isSelected()) {
-                                    if (TabPanel.this.rbtAnnotation.get(j) == e.getSource()) {
-                                        bgSelectedIndex = TabPanel.this.iAnnotationType.get(j).getIndex();
-                                        TabPanel.this.updateAnnotations();
-                                    } else {
-                                        TabPanel.this.rbtAnnotation.get(j).setSelected(false);
-                                    }
+        for (int i = 0; i < iAnnotationType.size(); i++) {
+            JRadioButton tempButton = new JRadioButton(iAnnotationType.get(i).getName());
+            tempButton.addChangeListener(new ChangeListener() {
+                public void stateChanged(ChangeEvent e) {
+                    if (((JRadioButton) e.getSource()).isSelected()) {
+                        for (int j = 0; j < rbtAnnotation.size(); j++) {
+                            if (TabPanel.this.rbtAnnotation.get(j).isSelected()) {
+                                if (TabPanel.this.rbtAnnotation.get(j) == e.getSource()) {
+                                    bgSelectedIndex = TabPanel.this.iAnnotationType.get(j).getIndex();
+                                    searchEngineSelectedIndex = iAnnotationType.get(j).getSearchEngine().getId();
+                                    TabPanel.this.updateAnnotations();
+                                } else {
+                                    TabPanel.this.rbtAnnotation.get(j).setSelected(false);
                                 }
                             }
                         }
                     }
-                });
-                tempButton.setBackground(Color.white);
-                tempButton.setMnemonic(KeyEvent.VK_A);
-                rbtAnnotation.add(tempButton);
-            }
-
-            int selected;
-            // Load the variable from the property file if it has not been set before.
-            if (bgSelectedIndex >= 0) {
-                selected = bgSelectedIndex;
-            } else {
-                selected = Integer.parseInt(MatConfig.getInstance().getGeneralProperty("RDB_ANNOTATION"));
-            }
-
-            for (int i = 0; i < rbtAnnotation.size(); i++) {
-                jpanBottom.add(rbtAnnotation.get(i));
-            }
-            // Select the correct radiobutton.
-            selectCorrectRadioButton(selected);
+                }
+            });
+            tempButton.setBackground(Color.white);
+            tempButton.setMnemonic(KeyEvent.VK_A);
+            rbtAnnotation.add(tempButton);
         }
+
+        int selected;
+        // Load the variable from the property file if it has not been set before.
+        if (bgSelectedIndex >= 0) {
+            selected = bgSelectedIndex;
+        } else {
+            if (searchEngineSelectedIndex == 0) {
+                selected = Integer.parseInt(MatConfig.getInstance().getGeneralProperty("RDB_ANNOTATION"));
+            } else {
+                selected = 0;
+            }
+        }
+
+        for (int i = 0; i < rbtAnnotation.size(); i++) {
+            jpanBottom.add(rbtAnnotation.get(i));
+        }
+        // Select the correct radiobutton.
+        selectCorrectRadioButton(selected, searchEngineSelectedIndex);
+
     }
 
     /**
@@ -431,9 +447,9 @@ public class TabPanel extends JPanel {
      *
      * @param aSelection int with the radio button that should be selected.
      */
-    private void selectCorrectRadioButton(int aSelection) {
+    private void selectCorrectRadioButton(int aSelection, int searchEngine) {
         for (int i = 0; i < iAnnotationType.size(); i++) {
-            if (aSelection == iAnnotationType.get(i).getIndex() && !rbtAnnotation.get(i).isSelected()) {
+            if (aSelection == iAnnotationType.get(i).getIndex() && searchEngine == iAnnotationType.get(i).getSearchEngine().getId() && !rbtAnnotation.get(i).isSelected()) {
                 rbtAnnotation.get(i).setSelected(true);
             }
         }
