@@ -1,10 +1,12 @@
 package com.compomics.peptizer.util.iterators;
 
 import com.compomics.peptizer.interfaces.PeptideIdentificationIterator;
+import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.fileio.MatLogger;
 import com.compomics.peptizer.util.datatools.FileToolsFactory;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 
 /**
@@ -110,11 +112,15 @@ public class FolderIterator implements PeptideIdentificationIterator {
      * @return File[] with the files in the folder.
      */
     private void indexFiles(File aFolder) {
-        iFiles= iFileToolsFactory.getIdentificationFiles(aFolder);
+        iFiles = aFolder.listFiles(new FilenameFilter() {
+            public boolean accept(final File aFile, final String s) {
+                return FileToolsFactory.getInstance().canYouRead(aFile);
+            }
+        });
     }
 
     /** {@inheritDoc} */
-    public Object next() {
+    public PeptideIdentification next() {
         if (iCurrentIterator.hasNext()) {
             return iCurrentIterator.next();
         } else if (this.hasMoreFiles()) {
