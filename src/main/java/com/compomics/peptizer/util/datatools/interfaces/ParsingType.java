@@ -11,6 +11,8 @@ import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
  */
 public interface ParsingType {
     public String toString();
+
     public Object getParsingType();
+
     public SearchEngineEnum getSearchEngineEnum();
 }

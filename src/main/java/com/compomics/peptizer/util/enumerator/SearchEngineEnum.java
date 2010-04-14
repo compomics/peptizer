@@ -19,4 +19,14 @@ public enum SearchEngineEnum {
             return "XTandem";
         } else return null;
     }
+
+    public int getId() {
+        if (this == Mascot) {
+            return 0;
+        } else if (this == OMSSA) {
+            return 1;
+        } else if (this == XTandem) {
+            return 2;
+        } else return -1;
+    }
 }

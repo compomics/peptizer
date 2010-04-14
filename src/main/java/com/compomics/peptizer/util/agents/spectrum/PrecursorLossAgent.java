@@ -92,7 +92,10 @@ public class PrecursorLossAgent extends Agent {
 
     private double match(PeptideIdentification aPeptideIdentification, double lPrecursorLoss) {
 
-        if (aPeptideIdentification.getSearchEngineEnum() == SearchEngineEnum.Mascot) {
+        boolean identifiedByMascot = aPeptideIdentification.getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
+        boolean identifiedByOMSSA = aPeptideIdentification.getAdvocate().getAdvocates().contains(SearchEngineEnum.OMSSA);
+
+        if (identifiedByMascot) {
             double lPrecursor = aPeptideIdentification.getSpectrum().getPrecursorMZ();
             double lCharge = Double.parseDouble(aPeptideIdentification.getSpectrum().getChargeString().substring(0, 1));
             double lPrecursorWithLoss = lPrecursor - (lPrecursorLoss / lCharge);
@@ -105,7 +108,7 @@ public class PrecursorLossAgent extends Agent {
             } else {
                 return -1;
             }
-        } else if (aPeptideIdentification.getSearchEngineEnum() == SearchEngineEnum.OMSSA) {
+        } else if (identifiedByOMSSA) {
             // ITOL in OMSSA ?
         }
         return -1;

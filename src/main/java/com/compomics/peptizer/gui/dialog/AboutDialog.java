@@ -20,34 +20,54 @@ import java.net.URL;
  */
 public class AboutDialog extends JDialog {
 
-    /** The textarea that will display the help text. */
+    /**
+     * The textarea that will display the help text.
+     */
     private JTextArea txtHelp = null;
 
-    /** This button can be pressed to exit the dialog. */
+    /**
+     * This button can be pressed to exit the dialog.
+     */
     private JButton btnOK = null;
 
-    /** The labels with information on top. */
+    /**
+     * The labels with information on top.
+     */
     private JLabel[] lblLabels = null;
 
-    /** The label with the toolkit image icon. */
+    /**
+     * The label with the toolkit image icon.
+     */
     private static JLabel lblImageTools = null;
 
-    /** The label with the ugent image icon. */
+    /**
+     * The label with the ugent image icon.
+     */
     private static JLabel lblImageUGENT = null;
 
-    /** The ImageIcon with the ugent image icon. */
+    /**
+     * The ImageIcon with the ugent image icon.
+     */
     private static ImageIcon iUGENT = null;
 
-    /** The label with the IWT image icon. */
+    /**
+     * The label with the IWT image icon.
+     */
     private static JLabel lblImageIWT = null;
 
-    /** The ImageIcon with the iwt logo. */
+    /**
+     * The ImageIcon with the iwt logo.
+     */
     private static ImageIcon iIWT = null;
 
-    /** The helptext to display in the textarea. */
+    /**
+     * The helptext to display in the textarea.
+     */
     private static String iHelpText = null;
 
-    /** The name for the textfile. */
+    /**
+     * The name for the textfile.
+     */
     private static final String TEXTFILE = "about.txt";
 
 
@@ -74,7 +94,9 @@ public class AboutDialog extends JDialog {
         this.constructScreen();
     }
 
-    /** This method constructs all components and lays them out on the screen. */
+    /**
+     * This method constructs all components and lays them out on the screen.
+     */
     private void constructScreen() {
         // Components.
         // The textarea.
@@ -181,13 +203,17 @@ public class AboutDialog extends JDialog {
         this.pack();
     }
 
-    /** Closes this dialog in a nice way. */
+    /**
+     * Closes this dialog in a nice way.
+     */
     private void close() {
         this.setVisible(false);
         this.dispose();
     }
 
-    /** This method will attempt to load the helptext from the classpath. */
+    /**
+     * This method will attempt to load the helptext from the classpath.
+     */
     private void loadHelpText() {
         try {
             // First of all, try it via the classloader for this file.
@@ -215,7 +241,9 @@ public class AboutDialog extends JDialog {
         }
     }
 
-    /** This method loads the appropriate image for displaying it in the imagelabel and icon. */
+    /**
+     * This method loads the appropriate image for displaying it in the imagelabel and icon.
+     */
     private void loadImages() {
         // Toolkit icon for the label.
         lblImageTools = new JLabel("No image found!");

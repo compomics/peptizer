@@ -1,20 +1,21 @@
 package com.compomics.peptizer.util.datatools.implementations.mascot;
 
-import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
-import com.compomics.peptizer.util.datatools.AnnotationType;
-import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import com.compomics.mascotdatfile.util.interfaces.FragmentIon;
+import com.compomics.mascotdatfile.util.interfaces.Spectrum;
+import com.compomics.mascotdatfile.util.mascot.*;
+import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.util.MetaKey;
 import com.compomics.peptizer.util.PeptideIdentification;
-import com.compomics.peptizer.MatConfig;
-import com.compomics.mascotdatfile.util.mascot.*;
-import com.compomics.mascotdatfile.util.interfaces.Spectrum;
-import com.compomics.mascotdatfile.util.interfaces.FragmentIon;
+import com.compomics.peptizer.util.datatools.Advocate;
+import com.compomics.peptizer.util.datatools.AnnotationType;
+import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
+import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 
 import javax.swing.*;
-import java.util.Vector;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.io.Serializable;
+import java.util.Vector;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,23 +24,16 @@ import java.io.Serializable;
  * Time: 16:34:22
  * To change this template use File | Settings | File Templates.
  */
-public class MascotPeptideHit implements PeptizerPeptideHit, Serializable {
-    /**
-     * The search engine
-     */
-    private final SearchEngineEnum iSearchEngineEnum = SearchEngineEnum.Mascot;
-    /**
-     * The original peptideHit
-     */
+public class MascotPeptideHit extends PeptizerPeptideHit implements Serializable {
+
     private PeptideHit iPeptideHit;
-    /**
-     * The final annotation types available.
-     */
-    private final ArrayList<AnnotationType> iAnnotationType = createAnnotationType() ;
 
 
     public MascotPeptideHit(PeptideHit aPeptideHit) {
-        iPeptideHit=aPeptideHit;
+        originalPeptideHits.put(SearchEngineEnum.Mascot, aPeptideHit);
+        advocate = new Advocate(SearchEngineEnum.Mascot);
+        annotationType = createAnnotationType();
+        iPeptideHit = aPeptideHit;
     }
 
     public String getSequence() {
@@ -52,9 +46,10 @@ public class MascotPeptideHit implements PeptizerPeptideHit, Serializable {
 
     private ArrayList<AnnotationType> createAnnotationType() {
         ArrayList<AnnotationType> result = new ArrayList();
-        AnnotationType mascot = new AnnotationType("Mascot", 0);
-        AnnotationType fuse = new AnnotationType("Fuse", 1);
-        result.add(mascot); result.add(fuse);
+        AnnotationType mascot = new AnnotationType("Mascot", 0, SearchEngineEnum.Mascot);
+        AnnotationType fuse = new AnnotationType("Fuse", 1, SearchEngineEnum.Mascot);
+        result.add(mascot);
+        result.add(fuse);
         return result;
     }
 
@@ -157,10 +152,6 @@ public class MascotPeptideHit implements PeptizerPeptideHit, Serializable {
         return label;
     }
 
-    public SearchEngineEnum getSearchEngineEnum() {
-        return iSearchEngineEnum;
-    }
-
     public Object getOriginalPeptideHit() {
         return iPeptideHit;
     }
@@ -170,7 +161,7 @@ public class MascotPeptideHit implements PeptizerPeptideHit, Serializable {
         PeptideHitAnnotation pha =
                 iPeptideHit.getPeptideHitAnnotation((Masses) aPeptideIdentification.getMetaData(MetaKey.Masses_section), (Parameters) aPeptideIdentification.getMetaData(MetaKey.Parameter_section));
         // Match Mascot ions.
-        Vector ions = pha.getMatchedIonsByMascot(((Spectrum) aPeptideIdentification.getSpectrum().getOriginalSpectrum()).getPeakList() , iPeptideHit.getPeaksUsedFromIons1());
+        Vector ions = pha.getMatchedIonsByMascot(((Spectrum) aPeptideIdentification.getSpectrum().getOriginalSpectrum()).getPeakList(), iPeptideHit.getPeaksUsedFromIons1());
         // Peptide sequence + length.
         String sequence = iPeptideHit.getSequence();
         int length = sequence.length();
@@ -216,7 +207,7 @@ public class MascotPeptideHit implements PeptizerPeptideHit, Serializable {
         PeptideHitAnnotation pha =
                 iPeptideHit.getPeptideHitAnnotation((Masses) aPeptideIdentification.getMetaData(MetaKey.Masses_section), (Parameters) aPeptideIdentification.getMetaData(MetaKey.Parameter_section));
         // Match Mascot ions.
-        Vector ions = pha.getMatchedIonsByMascot(((Spectrum) aPeptideIdentification.getSpectrum().getOriginalSpectrum()).getPeakList() , iPeptideHit.getPeaksUsedFromIons1());
+        Vector ions = pha.getMatchedIonsByMascot(((Spectrum) aPeptideIdentification.getSpectrum().getOriginalSpectrum()).getPeakList(), iPeptideHit.getPeaksUsedFromIons1());
         // Peptide sequence + length.
         String sequence = iPeptideHit.getSequence();
         int length = sequence.length();
@@ -273,10 +264,10 @@ public class MascotPeptideHit implements PeptizerPeptideHit, Serializable {
         return ((Parameters) aPeptideIdentification.getMetaData(MetaKey.Parameter_section)).getDatabase();
     }
 
-    public ArrayList getProteinHits(){
+    public ArrayList getProteinHits() {
         ArrayList mascotProteinHits = iPeptideHit.getProteinHits();
         ArrayList peptizerProteinHits = new ArrayList();
-        for (int i=0 ; i < mascotProteinHits.size() ; i++) {
+        for (int i = 0; i < mascotProteinHits.size(); i++) {
             peptizerProteinHits.add(new MascotProteinHit((ProteinHit) mascotProteinHits.get(i)));
         }
         return peptizerProteinHits;
@@ -284,11 +275,7 @@ public class MascotPeptideHit implements PeptizerPeptideHit, Serializable {
 
     public int[] getSequenceCoverage(PeptideIdentification aPeptideIdentification) {
         return iPeptideHit.getPeptideHitAnnotation((Masses) aPeptideIdentification.getMetaData(MetaKey.Masses_section), (Parameters) aPeptideIdentification.getMetaData(MetaKey.Parameter_section))
-                        .getMascotIonCoverage(((Spectrum) aPeptideIdentification.getSpectrum().getOriginalSpectrum()).getPeakList(), iPeptideHit.getPeaksUsedFromIons1());
-    }
-
-    public ArrayList<AnnotationType> getAnnotationType() {
-        return iAnnotationType;
+                .getMascotIonCoverage(((Spectrum) aPeptideIdentification.getSpectrum().getOriginalSpectrum()).getPeakList(), iPeptideHit.getPeaksUsedFromIons1());
     }
 
     public HashMap getAnnotation(PeptideIdentification aPeptideIdentification, int id) {
@@ -312,11 +299,11 @@ public class MascotPeptideHit implements PeptizerPeptideHit, Serializable {
             mlength = mAnnotations.size();
         }
         Vector pAnnotations = new Vector(mlength);
-        for (int i=0 ; i < mlength ; i++) {
+        for (int i = 0; i < mlength; i++) {
             pAnnotations.add(i, new MascotFragmentIon((FragmentIon) mAnnotations.get(i)));
         }
 
-        lAnnotationsMap.put(iAnnotationType.get(0).getIndex() + "" + (id + 1), pAnnotations);
+        lAnnotationsMap.put(annotationType.get(0).getIndex() + "" + SearchEngineEnum.Mascot.getId() + "" + (id + 1), pAnnotations);
 
         /*
         // B/Y ions
@@ -337,10 +324,10 @@ public class MascotPeptideHit implements PeptizerPeptideHit, Serializable {
             mlength = mAnnotations.size();
         }
         pAnnotations = new Vector(mlength);
-        for (int i=0 ; i < mlength ; i++) {
+        for (int i = 0; i < mlength; i++) {
             pAnnotations.add(i, new MascotFragmentIon((FragmentIon) mAnnotations.get(i)));
         }
-        lAnnotationsMap.put(iAnnotationType.get(1).getIndex() + "" + (id + 1), pAnnotations);
+        lAnnotationsMap.put(annotationType.get(1).getIndex() + "" + SearchEngineEnum.Mascot.getId() + "" + (id + 1), pAnnotations);
         // Returns the HashMap with annotation.
         return lAnnotationsMap;
     }
@@ -385,7 +372,6 @@ public class MascotPeptideHit implements PeptizerPeptideHit, Serializable {
          * Returns a string representation of this component and its values.
          *
          * @return a string representation of this component
-         *
          * @since JDK1.0
          */
         @Override

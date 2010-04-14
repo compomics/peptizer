@@ -6,17 +6,25 @@ package com.compomics.peptizer.util;
  */
 public enum MetaKey {
 
-    /** This key tags an ms_lims identification id. */
+    /**
+     * This key tags an ms_lims identification id.
+     */
     Identification_id,
 
-    /** This key tags an ms_lims identification id. */
+    /**
+     * This key tags an ms_lims identification id.
+     */
     Datfile_id,
 
 
-    /** This key tags the masses section of a Mascot identification file. */
+    /**
+     * This key tags the masses section of a Mascot identification file.
+     */
     Masses_section,
 
-    /** This key tags the parameter section of a Mascot identification file. */
+    /**
+     * This key tags the parameter section of a Mascot identification file.
+     */
     Parameter_section,;
 
 

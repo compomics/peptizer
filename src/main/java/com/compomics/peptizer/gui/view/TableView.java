@@ -202,5 +202,5 @@ public class TableView extends JTable {
      */
     public AbstractTableRow getTableRow(int aRowIndex) {
         return iTableRowManager.getTableRow(aRowIndex);
-	}
+    }
 }

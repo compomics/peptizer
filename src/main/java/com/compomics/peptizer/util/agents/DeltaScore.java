@@ -63,30 +63,43 @@ public class DeltaScore extends Agent {
 
             // Make Agent Report!
             iReport = new AgentReport(getUniqueID());
+            boolean identifiedByMascot = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
 
-            // 1. Get the nth confident PeptideHit.
-            PeptideHit lPeptideHit = (PeptideHit) aPeptideIdentification.getPeptideHit(i).getOriginalPeptideHit();
+            if (identifiedByMascot) {
+                // 1. Get the nth confident PeptideHit.
+                PeptideHit lPeptideHit = (PeptideHit) aPeptideIdentification.getPeptideHit(i).getOriginalPeptideHit(SearchEngineEnum.Mascot);
+                //2. Process delta score.
+                double lDeltaScore = lPeptideHit.getIonsScore() - lPeptideHit.calculateIdentityThreshold(iAlpha);
+                // Assign scores!
+                if (lDeltaScore <= lDelta) {
+                    // If delta score is less then given iDelta, Agent
+                    lScore[i] = AgentVote.POSITIVE_FOR_SELECTION;
+                } else {
+                    lScore[i] = AgentVote.NEUTRAL_FOR_SELECTION;
+                }
 
-            //2. Process delta score.
-            double lDeltaScore = lPeptideHit.getIonsScore() - lPeptideHit.calculateIdentityThreshold(iAlpha);
+                // Build the report!
+                // Agent Result.
+                iReport.addReport(AgentReport.RK_RESULT, lScore[i]);
 
-            // Assign scores!
-            if (lDeltaScore <= lDelta) {
-                // If delta score is less then given iDelta, Agent
-                lScore[i] = AgentVote.POSITIVE_FOR_SELECTION;
+                // TableRow information.
+                iReport.addReport(AgentReport.RK_TABLEDATA, (new BigDecimal(lDeltaScore)).setScale(2, BigDecimal.ROUND_HALF_DOWN));
+
+                // Attribute Relation File Format
+                iReport.addReport(AgentReport.RK_ARFF, lDeltaScore);
+
             } else {
                 lScore[i] = AgentVote.NEUTRAL_FOR_SELECTION;
+                // Agent Result.
+                iReport.addReport(AgentReport.RK_RESULT, lScore[i]);
+
+                // TableRow information.
+                iReport.addReport(AgentReport.RK_TABLEDATA, (new BigDecimal(0)).setScale(2, BigDecimal.ROUND_HALF_DOWN));
+
+                // Attribute Relation File Format
+                iReport.addReport(AgentReport.RK_ARFF, 0.0);
             }
 
-            // Build the report!
-            // Agent Result.
-            iReport.addReport(AgentReport.RK_RESULT, lScore[i]);
-
-            // TableRow information.
-            iReport.addReport(AgentReport.RK_TABLEDATA, (new BigDecimal(lDeltaScore)).setScale(2, BigDecimal.ROUND_HALF_DOWN));
-
-            // Attribute Relation File Format
-            iReport.addReport(AgentReport.RK_ARFF, lDeltaScore);
 
             aPeptideIdentification.addAgentReport(i + 1, getUniqueID(), iReport);
         }

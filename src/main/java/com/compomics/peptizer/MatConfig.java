@@ -654,6 +654,6 @@ public class MatConfig {
      * @param aProperties
      */
     public void addAgent(String aAgentID, Properties aProperties) {
-        agent.put(aAgentID,  aProperties);
+        agent.put(aAgentID, aProperties);
     }
 }

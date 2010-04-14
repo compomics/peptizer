@@ -19,42 +19,42 @@ import java.util.Properties;
  */
 public class IsAboveCustomConfidenceTableRowImpl extends AbstractTableRow {
 
-	private double iAlpha;
+    private double iAlpha;
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public IsAboveCustomConfidenceTableRowImpl() {
-		super();
-		Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
-		super.setName(prop.getProperty("name"));
-		super.setActive(Boolean.valueOf(prop.getProperty("active")));
-		setAlpha(Double.parseDouble(prop.getProperty("alpha")));
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public IsAboveCustomConfidenceTableRowImpl() {
+        super();
+        Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
+        super.setName(prop.getProperty("name"));
+        super.setActive(Boolean.valueOf(prop.getProperty("active")));
+        setAlpha(Double.parseDouble(prop.getProperty("alpha")));
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
-		return aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).scoresAboveThreshold(iAlpha) ? "true" : "false";
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+        return aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).scoresAboveThreshold(iAlpha) ? "true" : "false";
+    }
 
-	/**
-	 * Returns a description for the TableRow.
-	 * Use for tooltips and configuration.
-	 *
-	 * @return String description of the TableRow.
-	 */
-	public String getDescription() {
-		return "Hi, i am a custum confidence tablerow. I display whether the hit is more confident than the threshold at alpha value \"" + iAlpha + "\".";
-	}
+    /**
+     * Returns a description for the TableRow.
+     * Use for tooltips and configuration.
+     *
+     * @return String description of the TableRow.
+     */
+    public String getDescription() {
+        return "Hi, i am a custum confidence tablerow. I display whether the hit is more confident than the threshold at alpha value \"" + iAlpha + "\".";
+    }
 
-	/**
-	 * Set the alpha for this tablerow.
-	 *
-	 * @param aAlpha
-	 */
-	public void setAlpha(double aAlpha) {
-		iAlpha = aAlpha;
-	}
+    /**
+     * Set the alpha for this tablerow.
+     *
+     * @param aAlpha
+     */
+    public void setAlpha(double aAlpha) {
+        iAlpha = aAlpha;
+    }
 }

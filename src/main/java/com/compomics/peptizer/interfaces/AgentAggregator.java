@@ -14,16 +14,24 @@ import com.compomics.peptizer.util.fileio.MatLogger;
 import java.util.Collection;
 import java.util.Properties;
 
-/** This interface must be implemented by classes that want to score PeptideHits by their properties. */
+/**
+ * This interface must be implemented by classes that want to score PeptideHits by their properties.
+ */
 public abstract class AgentAggregator implements Comparable {
 
-    /** The Agent's used by the AgentAggregator. */
+    /**
+     * The Agent's used by the AgentAggregator.
+     */
     protected Collection<Agent> iAgentsCollection = null;
 
-    /** The properties of the Aggregator. */
+    /**
+     * The properties of the Aggregator.
+     */
     protected Properties iProperties = new Properties();
 
-    /** The name for the AgentAggregator. */
+    /**
+     * The name for the AgentAggregator.
+     */
     private String iName = null;
 
 
@@ -54,7 +62,9 @@ public abstract class AgentAggregator implements Comparable {
         initProperty(aSpecificProperty);
     }
 
-    /** Initializes the general properties of an Agent without any specific properties. */
+    /**
+     * Initializes the general properties of an Agent without any specific properties.
+     */
     protected void initialize() {
         // General properties.
         Properties prop = MatConfig.getInstance().getAggregatorProperties(this.getUniqueID());
@@ -81,7 +91,6 @@ public abstract class AgentAggregator implements Comparable {
      * Matches the PeptideIdentification against the AgentAggregator's values by a series of independent Agents.
      *
      * @param aPeptideIdentification PeptideIdentification that has to be matched.
-     *
      * @return </dl>AgentAggregationResult if the PeptideIdentifications suits the profile values.<br> <dl>
      *         <dt>AgentAggregationResult.MATCH<dd> The PeptideIdentification is <b>confident</b> and is a <b>true
      *         match</b> against the profile. <dt>AgentAggregationResult.NON_MATCH<dd> The PeptideIdentification is
@@ -181,10 +190,8 @@ public abstract class AgentAggregator implements Comparable {
      * negative, zero or positive.
      *
      * @param o the object to be compared.
-     *
      * @return a negative integer, zero, or a positive integer as this object is less than, equal to, or greater than
      *         the specified object.
-     *
      * @throws ClassCastException if the specified object's type prevents it from being compared to this object.
      */
     public int compareTo(Object o) {

@@ -5,10 +5,12 @@ import com.compomics.peptizer.gui.component.AgentAggregatorPanel;
 import com.compomics.peptizer.gui.component.AgentPanel;
 import com.compomics.peptizer.gui.component.ConfidencePanel;
 import com.compomics.peptizer.gui.component.DataSourcePanel;
+import com.compomics.peptizer.gui.interfaces.ImportPanel;
 import com.compomics.peptizer.gui.progressbars.DefaultProgressBar;
 import com.compomics.peptizer.interfaces.AgentAggregator;
 import com.compomics.peptizer.interfaces.PeptideIdentificationIterator;
 import com.compomics.peptizer.util.AgentFactory;
+import com.compomics.peptizer.util.datatools.IdentificationFactory;
 import com.compomics.peptizer.util.fileio.MatLogger;
 import com.compomics.peptizer.util.worker.ArffWorker;
 
@@ -26,10 +28,14 @@ import java.io.File;
  * Time: 11:26:14
  */
 
-/** Class description: ------------------ This class was developed to */
+/**
+ * Class description: ------------------ This class was developed to
+ */
 public class CreateArffDialog extends JDialog {
 
-    /** The main frame. */
+    /**
+     * The main frame.
+     */
     PeptizerGUI iPeptizerGUI = null;
 
     // GUI components.
@@ -60,7 +66,9 @@ public class CreateArffDialog extends JDialog {
         this.setVisible(true);
     }
 
-    /** Construct the dialog. */
+    /**
+     * Construct the dialog.
+     */
     private void construct() {
 
         // 0. Dialog settings
@@ -169,12 +177,16 @@ public class CreateArffDialog extends JDialog {
     }
 
 
-    /** Cancel the Task creation. */
+    /**
+     * Cancel the Task creation.
+     */
     private void cancelPressed() {
         this.dispose();
     }
 
-    /** Start the task. */
+    /**
+     * Start the task.
+     */
     private void startPressed() {
         MatLogger.logNormalEvent("New Attribute Relation File Format output started.");
         PeptideIdentificationIterator iter = null;
@@ -185,7 +197,10 @@ public class CreateArffDialog extends JDialog {
 
         // 1. Initiate a PeptideIdentificationIterator, read the source.
 
-        if ((iter = jpanSource.getSelectedIterator()) == null) {
+        DefaultProgressBar lProgress = new DefaultProgressBar(iPeptizerGUI, "Loading identifications", 0, 100);
+        ImportPanel importPanel = jpanSource.getSelectedImport();
+        importPanel.loadIdentifications(lProgress);
+        if ((iter = IdentificationFactory.getInstance().getIterator()) == null) {
             // Iterator is null;
             status = false;
         }
@@ -252,7 +267,7 @@ public class CreateArffDialog extends JDialog {
 
         if (status) {
             lAggregator = jpanAggregator.getAgentAggregator();
-            DefaultProgressBar lProgress = new DefaultProgressBar(iPeptizerGUI, "Task progress", 0, 2);
+            lProgress = new DefaultProgressBar(iPeptizerGUI, "Task progress", 0, 2);
 
             ArffWorker worker = new ArffWorker(iter, lAggregator, lTargetFile, lProgress, lDetailOutputType);
             worker.start();

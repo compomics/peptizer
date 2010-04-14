@@ -20,20 +20,20 @@ import java.awt.*;
  */
 public interface TableColor {
 
-	// The Table makes use of 4 colors.
-	// a dark and light shade for alternating rows.
-	// and a selected and non-selected color folowing the selection of columns.
+    // The Table makes use of 4 colors.
+    // a dark and light shade for alternating rows.
+    // and a selected and non-selected color folowing the selection of columns.
 
-	public Color getSelectedLight();
+    public Color getSelectedLight();
 
-	public Color getSelectedDark();
+    public Color getSelectedDark();
 
-	public Color getNonSelectedLight();
+    public Color getNonSelectedLight();
 
-	public Color getNonSelectedDark();
+    public Color getNonSelectedDark();
 
-	public Color getHeaderLight();
+    public Color getHeaderLight();
 
-	public Color getHeaderDark();
+    public Color getHeaderDark();
 
 }

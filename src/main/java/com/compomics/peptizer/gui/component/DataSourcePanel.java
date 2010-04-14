@@ -1,7 +1,6 @@
 package com.compomics.peptizer.gui.component;
 
-import com.compomics.peptizer.gui.interfaces.IteratorPanel;
-import com.compomics.peptizer.interfaces.PeptideIdentificationIterator;
+import com.compomics.peptizer.gui.interfaces.ImportPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,11 +27,10 @@ public class DataSourcePanel extends JPanel {
         setBorder(BorderFactory.createTitledBorder("1. Data Source"));
         setToolTipText("Define the datasource be configuring a PeptideIdentificationIterator.");
 
-        Vector<IteratorPanel> iters = new Vector();
-        iters.add(IteratorPanel_Folder.getInstance());
-        iters.add(IteratorPanel_File.getInstance());
-        iters.add(IteratorPanel_Ms_Lims_Project.getInstance());
-        iters.add(IteratorPanel_Ms_Lims_IdentificationIDList.getInstance());
+        Vector<ImportPanel> iters = new Vector();
+        iters.add(ImportPanel_File.getInstance());
+        iters.add(ImportPanel_Ms_Lims_Project.getInstance());
+        iters.add(ImportPanel_Ms_Lims_IdentificationIDList.getInstance());
         cmbIterators = new JComboBox(iters);
 
         cmbIterators.addActionListener(new ActionListener() {
@@ -56,20 +54,20 @@ public class DataSourcePanel extends JPanel {
     }
 
     /**
-     * Get the selected PeptideIdentificationIterator.
+     * Get the selected import type.
      *
      * @return
      */
-    public PeptideIdentificationIterator getSelectedIterator() {
-        return ((IteratorPanel) (cmbIterators.getSelectedItem())).getIterator();
+    public ImportPanel getSelectedImport() {
+        return (ImportPanel) (cmbIterators.getSelectedItem());
     }
 
     /**
      * Set the given iterator panel to the combobox.
      *
-     * @param aIteratorPanel The iterator panel to be set.
+     * @param anImportPanel The panel to be set.
      */
-    public void setSelectedIterator(IteratorPanel aIteratorPanel) {
-        cmbIterators.setSelectedItem(aIteratorPanel);
+    public void setSelectedIterator(ImportPanel anImportPanel) {
+        cmbIterators.setSelectedItem(anImportPanel);
     }
 }

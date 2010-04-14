@@ -1,12 +1,12 @@
 package com.compomics.peptizer.util.datatools;
 
-import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
-import com.compomics.peptizer.util.enumerator.IonTypeEnum;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerFragmentIon;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeak;
+import com.compomics.peptizer.util.enumerator.IonTypeEnum;
+import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 
-import static java.lang.Math.abs;
 import java.awt.*;
+import static java.lang.Math.abs;
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,10 +17,10 @@ import java.awt.*;
  */
 public class Ion extends PeptizerFragmentIon {
 
-    private double mz ;
-    private double intensity ;
-    private int number ;
-    private IonTypeEnum type ;
+    private double mz;
+    private double intensity;
+    private int number;
+    private IonTypeEnum type;
     private SearchEngineEnum iSearchEngineEnum;
 
     public Ion() {
@@ -70,9 +70,9 @@ public class Ion extends PeptizerFragmentIon {
 
     public boolean isMatch(PeptizerPeak[] peakList, double errorMargin) {
         boolean match = false;
-        for (int i=0 ; i < peakList.length ; i++) {
+        for (int i = 0; i < peakList.length; i++) {
             if (abs(peakList[i].getMZ() - this.getMZ()) <= errorMargin) {
-                match=true;
+                match = true;
             }
         }
         return match;

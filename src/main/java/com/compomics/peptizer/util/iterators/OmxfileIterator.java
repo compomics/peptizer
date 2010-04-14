@@ -1,16 +1,21 @@
 package com.compomics.peptizer.util.iterators;
 
+import com.compomics.peptizer.interfaces.PeptideIdentificationIterator;
+import com.compomics.peptizer.util.PeptideIdentification;
+import com.compomics.peptizer.util.datatools.implementations.omssa.OmssaPeptideHit;
+import com.compomics.peptizer.util.datatools.implementations.omssa.OmssaSpectrum;
+import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import com.compomics.util.io.FilenameExtensionFilter;
 import de.proteinms.omxparser.OmssaOmxFile;
-import de.proteinms.omxparser.util.*;
+import de.proteinms.omxparser.util.MSHitSet;
+import de.proteinms.omxparser.util.MSSearchSettings;
+import de.proteinms.omxparser.util.MSSpectrum;
 
 import java.io.File;
-import java.util.*;
-
-import com.compomics.peptizer.util.PeptideIdentification;
-import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
-import com.compomics.peptizer.util.datatools.implementations.omssa.OmssaSpectrum;
-import com.compomics.peptizer.util.datatools.implementations.omssa.OmssaPeptideHit;
-import com.compomics.peptizer.interfaces.PeptideIdentificationIterator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Vector;
 
 /**
  * Created by IntelliJ IDEA.
@@ -56,19 +61,32 @@ public class OmxfileIterator implements PeptideIdentificationIterator {
     /**
      * This constructor takes an Omssa file instance and a Omssa mods.xml file as parameters.
      *
-     * @param aFile              File targets the Ommsa file.
-     * @param anotherFile        File targets the Omssa mods.xml file.
-     * @param alastFile          File targets the Omssa usermods.xml file.
+     * @param idFile File targets the Ommsa file.
      */
-    public OmxfileIterator(File aFile, File anotherFile, File alastFile) {
-        if (anotherFile != null && alastFile != null) {
-            setOmxfile(aFile, anotherFile, alastFile);
-        } else if (anotherFile == null && alastFile != null) {
-            setOmxfile(aFile, null, alastFile);
-        } else if (anotherFile != null && alastFile == null) {
-            setOmxfile(aFile, anotherFile, null);
+    public OmxfileIterator(File idFile) {
+
+        File modsFile = null;
+        File userModsFile = null;
+        File currentFolder = new File(idFile.getParent());
+        File[] modsResult = currentFolder.listFiles(new FilenameExtensionFilter(".xml"));
+        if (modsResult != null) {
+            for (int i = 0; i < modsResult.length; i++) {
+                if (modsResult[i].getName().compareToIgnoreCase("mods.xml") == 0) {
+                    modsFile = modsResult[i];
+                }
+                if (modsResult[i].getName().compareToIgnoreCase("usermods.xml") == 0) {
+                    userModsFile = modsResult[i];
+                }
+            }
+        }
+        if (modsFile != null && userModsFile != null) {
+            setOmxfile(idFile, modsFile, userModsFile);
+        } else if (modsFile == null && userModsFile != null) {
+            setOmxfile(idFile, null, userModsFile);
+        } else if (modsFile != null && userModsFile == null) {
+            setOmxfile(idFile, modsFile, null);
         } else {
-            setOmxfile(aFile, null, null);
+            setOmxfile(idFile, null, null);
         }
     }
 
@@ -81,18 +99,18 @@ public class OmxfileIterator implements PeptideIdentificationIterator {
     /**
      * Sets the OmssaOmxFile instance
      *
-     * @param aFile              File targets the Ommsa file.
-     * @param anotherFile        File targets the Omssa mods.xml file.
-     * @param alastFile          File targets the Omssa usermods.xml file.
+     * @param aFile       File targets the Ommsa file.
+     * @param anotherFile File targets the Omssa mods.xml file.
+     * @param alastFile   File targets the Omssa usermods.xml file.
      */
     public void setOmxfile(File aFile, File anotherFile, File alastFile) {
         if (aFile != null) {
             String toPrint = "NEW OMXFILE \' " + aFile.getName() + "\' INITIATED AT " + new Date(System.currentTimeMillis());
             if (anotherFile != null) {
-                toPrint = toPrint + "(" + anotherFile.getName();
+                toPrint = toPrint + " (" + anotherFile.getName();
             }
             if (alastFile != null) {
-                toPrint = toPrint  + ", " + alastFile.getName();
+                toPrint = toPrint + ", " + alastFile.getName();
             }
             toPrint = toPrint + ").";
             System.out.println(toPrint);
@@ -107,7 +125,7 @@ public class OmxfileIterator implements PeptideIdentificationIterator {
     /**
      * returns the search settings used for the identification of the peptideHit
      *
-     * @return  the settings used
+     * @return the settings used
      */
     public MSSearchSettings getSettings() {
         return iOmssaOmxFile.getParserResult().MSSearch_request.MSRequest.get(0).MSRequest_settings.MSSearchSettings;
@@ -126,7 +144,7 @@ public class OmxfileIterator implements PeptideIdentificationIterator {
     /**
      * {@inheritDoc}
      */
-    public Object next() {
+    public PeptideIdentification next() {
         if (hasNext()) {
             // Get the information of the next.
             HashMap<MSSpectrum, MSHitSet> aSpectrumToHitSetMap = iOmssaOmxFile.getSpectrumToHitSetMap();
@@ -134,7 +152,7 @@ public class OmxfileIterator implements PeptideIdentificationIterator {
             OmssaSpectrum aSpectrum = new OmssaSpectrum(getMSResponseScale());
             while (iterator.hasNext()) {
                 MSSpectrum tempSpectrum = iterator.next();
-                if (tempSpectrum.MSSpectrum_number == iCountIndex + 1) {
+                if (tempSpectrum.MSSpectrum_number == iCountIndex) {
                     aSpectrum.setMSSpectrum(tempSpectrum);
                     break;
                 }
@@ -147,12 +165,17 @@ public class OmxfileIterator implements PeptideIdentificationIterator {
                 if (sHitSet != null) {
                     hitsNumber = sHitSet.MSHitSet_hits.MSHits.size();
                 }
-                Vector peptizerPeptideHits = new Vector(hitsNumber);
-                for (int i = 0 ; i < hitsNumber ; i++) {
-                    peptizerPeptideHits.add(i, new OmssaPeptideHit(sHitSet.MSHitSet_hits.MSHits.get(i), iOmssaOmxFile.getModifications(), getSettings(), getMSResponseScale()));
+                Vector peptizerPeptideHits = new Vector();
+                if (hitsNumber > 0) {
+                    peptizerPeptideHits.add(0, new OmssaPeptideHit(sHitSet.MSHitSet_hits.MSHits.get(0), iOmssaOmxFile.getModifications(), getSettings(), getMSResponseScale()));
+                    for (int i = 1; i < hitsNumber; i++) {
+                        if (sHitSet.MSHitSet_hits.MSHits.get(i - 1).MSHits_pepstring.compareTo(sHitSet.MSHitSet_hits.MSHits.get(i).MSHits_pepstring) != 0) {
+                            peptizerPeptideHits.add(new OmssaPeptideHit(sHitSet.MSHitSet_hits.MSHits.get(i), iOmssaOmxFile.getModifications(), getSettings(), getMSResponseScale()));
+                        }
+                    }
                 }
                 PeptideIdentification lPeptideIdentification = new PeptideIdentification(aSpectrum, peptizerPeptideHits, SearchEngineEnum.OMSSA);
-                iCountIndex ++;
+                iCountIndex++;
                 return lPeptideIdentification;
             } else {
                 return null;
@@ -169,18 +192,19 @@ public class OmxfileIterator implements PeptideIdentificationIterator {
     public boolean hasNext() {
         if (!hasConstructedOmssaOmxFile) {
             if (modsFile != null && usermodsFile != null) {
-            OmssaOmxFile anOmssaOmxFile = new OmssaOmxFile(omxFile.getPath(), modsFile.getPath(), usermodsFile.getPath());
-            iOmssaOmxFile = anOmssaOmxFile;
+                OmssaOmxFile anOmssaOmxFile = new OmssaOmxFile(omxFile.getPath(), modsFile.getPath(), usermodsFile.getPath());
+                iOmssaOmxFile = anOmssaOmxFile;
             } else if (modsFile == null && usermodsFile != null) {
-            OmssaOmxFile anOmssaOmxFile = new OmssaOmxFile(omxFile.getPath(), null, usermodsFile.getPath());
-            iOmssaOmxFile = anOmssaOmxFile;
+                OmssaOmxFile anOmssaOmxFile = new OmssaOmxFile(omxFile.getPath(), null, usermodsFile.getPath());
+                iOmssaOmxFile = anOmssaOmxFile;
             } else if (modsFile != null && usermodsFile == null) {
-            OmssaOmxFile anOmssaOmxFile = new OmssaOmxFile(omxFile.getPath(), modsFile.getPath(), null);
-            iOmssaOmxFile = anOmssaOmxFile;
+                OmssaOmxFile anOmssaOmxFile = new OmssaOmxFile(omxFile.getPath(), modsFile.getPath(), null);
+                iOmssaOmxFile = anOmssaOmxFile;
             } else {
-            OmssaOmxFile anOmssaOmxFile = new OmssaOmxFile(omxFile.getPath(), null, null);
-            iOmssaOmxFile = anOmssaOmxFile;
+                OmssaOmxFile anOmssaOmxFile = new OmssaOmxFile(omxFile.getPath(), null, null);
+                iOmssaOmxFile = anOmssaOmxFile;
             }
+            hasConstructedOmssaOmxFile = true;
         }
 
         boolean lResult = false;

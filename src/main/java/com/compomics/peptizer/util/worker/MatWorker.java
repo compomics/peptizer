@@ -60,6 +60,7 @@ public class MatWorker extends SwingWorker {
     private File iFileNonConfident_oos;
     private boolean hasOjectStream_good;
     private boolean hasObjectStream_bad;
+    private boolean serializationError = false;
 
     /**
      * This constructor takes a PeptideIdentificationIterator and an AgentAggregator as parameters.
@@ -264,7 +265,10 @@ public class MatWorker extends SwingWorker {
                     break;
             }
         } catch (Exception e) {
-            MatLogger.logExceptionalEvent("Serialization failure.\n" + e.getMessage() + "\n" + e.getStackTrace());
+            if (!serializationError) {
+                MatLogger.logExceptionalEvent("Serialization failure.\n" + e.getMessage() + "\n" + e.getStackTrace());
+                serializationError = true;
+            }
         }
     }
 }

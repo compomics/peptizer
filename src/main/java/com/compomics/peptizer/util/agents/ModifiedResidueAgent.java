@@ -115,9 +115,12 @@ public class ModifiedResidueAgent extends Agent {
      * @return boolean - true if peptidehit contains the Modification as described by aModificationName.
      */
     private char isModified(PeptizerPeptideHit aPPh, String aModificationName) {
+        boolean identifiedByMascot = aPPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
+        boolean identifiedByOMSSA = aPPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.OMSSA);
+
         // Method for Mascot PeptideHits
-        if (aPPh.getSearchEngineEnum() == SearchEngineEnum.Mascot) {
-            PeptideHit aPh = (PeptideHit) aPPh.getOriginalPeptideHit();
+        if (identifiedByMascot) {
+            PeptideHit aPh = (PeptideHit) aPPh.getOriginalPeptideHit(SearchEngineEnum.Mascot);
             boolean lModified = false;
             char lResidue = 'x';
             int lCount = 0;
@@ -140,7 +143,7 @@ public class ModifiedResidueAgent extends Agent {
             }
             return lResidue;
             // Method for OmssaPeptideHits
-        } else if (aPPh.getSearchEngineEnum() == SearchEngineEnum.OMSSA) {
+        } else if (identifiedByOMSSA) {
             OmssaPeptideHit anOPH = (OmssaPeptideHit) aPPh;
             char lResidue = 'x';
             // Get the id of the modification
@@ -173,7 +176,7 @@ public class ModifiedResidueAgent extends Agent {
             }
 
             // inspect variable modifications
-            MSHits aPH = (MSHits) anOPH.getOriginalPeptideHit();
+            MSHits aPH = (MSHits) anOPH.getOriginalPeptideHit(SearchEngineEnum.OMSSA);
             for (int i = 0; i < aPH.MSHits_mods.MSModHit.size(); i++) {
                 // if we have the concerned modification return the modified residue
                 if (aPH.MSHits_mods.MSModHit.get(i).MSModHit_modtype.MSMod == id) {

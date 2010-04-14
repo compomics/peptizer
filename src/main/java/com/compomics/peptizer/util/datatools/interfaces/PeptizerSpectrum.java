@@ -13,8 +13,8 @@ import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 public interface PeptizerSpectrum {
     public PeptizerPeak[] getPeakList();
 
-    
-    public String getFilename();
+
+    public String getName();
 
     public String getChargeString();
 

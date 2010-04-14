@@ -1,15 +1,13 @@
 package com.compomics.peptizer.util;
 
-import com.compomics.peptizer.util.datatools.interfaces.PeptizerSpectrum;
-import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
-import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import com.compomics.peptizer.MatConfig;
+import com.compomics.peptizer.util.datatools.Advocate;
+import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
+import com.compomics.peptizer.util.datatools.interfaces.PeptizerSpectrum;
+import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -17,16 +15,20 @@ import java.util.Vector;
  * Time: 10:43:56
  */
 
-/** Class description: ------------------ This class was developed to wrap a MS/MS spectrum and its identifications. */
+/**
+ * Class description: ------------------ This class was developed to wrap a MS/MS spectrum and its identifications.
+ */
 public class PeptideIdentification implements Comparable, Serializable {
 
-    /** The MS/MS Spectrum. */
+    /**
+     * The MS/MS Spectrum.
+     */
     private PeptizerSpectrum iSpectrum = null;
 
     /**
      * The PeptideHits.
      */
-    private Vector iPeptideHits = null;
+    private Vector<PeptizerPeptideHit> iPeptideHits = null;
 
     /**
      * The metadata on this PeptideIdentification in a HashMap.
@@ -59,8 +61,10 @@ public class PeptideIdentification implements Comparable, Serializable {
      */
     private double iAlpha = -1;
 
-    /** The search engine which has been used */
-    private SearchEngineEnum iSearchEngineEnum;
+    /**
+     * advocates of the peptidehits of this identification
+     */
+    private Advocate advocate;
 
     /**
      * This constructor takes a Spectrum and a single PeptideHit as parameters.
@@ -70,9 +74,9 @@ public class PeptideIdentification implements Comparable, Serializable {
      */
     public PeptideIdentification(PeptizerSpectrum aSpectrum, PeptizerPeptideHit aPeptideHit, SearchEngineEnum aSearchEngineEnum) {
         iSpectrum = aSpectrum;
-        iPeptideHits = new Vector();
+        iPeptideHits = new Vector<PeptizerPeptideHit>();
         iPeptideHits.add(aPeptideHit);
-        iSearchEngineEnum=aSearchEngineEnum;
+        advocate = new Advocate(aSearchEngineEnum);
     }
 
     /**
@@ -81,10 +85,10 @@ public class PeptideIdentification implements Comparable, Serializable {
      * @param aSpectrum    of the PeptideIdentification
      * @param aPeptideHits of the PeptideIdentification.
      */
-    public PeptideIdentification(PeptizerSpectrum aSpectrum, Vector aPeptideHits, SearchEngineEnum aSearchEngineEnum) {
+    public PeptideIdentification(PeptizerSpectrum aSpectrum, Vector<PeptizerPeptideHit> aPeptideHits, SearchEngineEnum aSearchEngineEnum) {
         iSpectrum = aSpectrum;
         iPeptideHits = aPeptideHits;
-        iSearchEngineEnum=aSearchEngineEnum;
+        advocate = new Advocate(aSearchEngineEnum);
     }
 
     /**
@@ -101,12 +105,12 @@ public class PeptideIdentification implements Comparable, Serializable {
      *
      * @return Vector with the PeptideHit(s).
      */
-    public Vector getPeptideHits() {
+    public Vector<PeptizerPeptideHit> getPeptideHits() {
         return iPeptideHits;
     }
 
     /**
-     * Returns PeptideHit by INDEX. <b>0' will return the first PeptideHit. '1' the seconde etc..</b>'
+     * Returns PeptideHit by INDEX. <b>0' will return the first PeptideHit. '1' the second etc..</b>'
      *
      * @param aIndex of the PeptideHit.
      * @return PeptideHit at aIndex.
@@ -219,13 +223,12 @@ public class PeptideIdentification implements Comparable, Serializable {
      * Tells if a key is in the metadata
      *
      * @param aKey for the meta data.
-     *
      * @return boolean true if yes, false if no
      */
 
     public boolean metaDataContainsKey(Object aKey) {
         if (this.iMetaData != null) {
-        return this.iMetaData.containsKey(aKey);
+            return this.iMetaData.containsKey(aKey);
         } else {
             return false;
         }
@@ -239,6 +242,10 @@ public class PeptideIdentification implements Comparable, Serializable {
      */
     public Object getMetaData(Object aKey) {
         return this.iMetaData.get(aKey);
+    }
+
+    public HashMap getAllMetaData() {
+        return iMetaData;
     }
 
     /**
@@ -373,12 +380,12 @@ public class PeptideIdentification implements Comparable, Serializable {
     }
 
     /**
-     * Returns the search engine which has been used
+     * Returns the search engine(s) which has/have been used
      *
-     * @return SearchEngineEnum iSearchEngineEnum
+     * @return Advocate iAdvocates
      */
-    public SearchEngineEnum getSearchEngineEnum() {
-        return iSearchEngineEnum;
+    public Advocate getAdvocate() {
+        return advocate;
     }
 
     /**
@@ -388,7 +395,7 @@ public class PeptideIdentification implements Comparable, Serializable {
      */
     public String getName() {
         if (iName == null) {
-            return iSpectrum.getFilename();
+            return iSpectrum.getName();
         } else {
             return iName;
         }
@@ -416,4 +423,34 @@ public class PeptideIdentification implements Comparable, Serializable {
         }
         return getPeptideHit(lPeptideHitNumber - 1);
     }
+
+    /**
+     * Will fuse two peptideIdentifications made by different search engines on the same spectrum
+     */
+
+    public void fuse(PeptideIdentification aPeptideIdentification) {
+        advocate.addAdvocate(aPeptideIdentification.getAdvocate());
+        boolean found;
+        for (int i = 0; i < aPeptideIdentification.getPeptideHits().size(); i++) {
+            found = false;
+            for (int j = 0; j < iPeptideHits.size(); j++) {
+                if (iPeptideHits.get(j).isSameAs(aPeptideIdentification.getPeptideHits().get(i))) {
+                    iPeptideHits.get(j).fuse(aPeptideIdentification.getPeptideHits().get(i));
+                    HashMap newMetaData = aPeptideIdentification.getAllMetaData();
+                    if (newMetaData != null) {
+                        Iterator it = newMetaData.keySet().iterator();
+                        while (it.hasNext()) {
+                            Object newKey = it.next();
+                            addMetaData(newKey, newMetaData.get(newKey));
+                        }
+                    }                   
+                    found = true;
+                }
+            }
+            if (!found) {
+                iPeptideHits.add(aPeptideIdentification.getPeptideHits().get(i));
+            }
+        }
+    }
+
 }

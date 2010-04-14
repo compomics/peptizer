@@ -16,14 +16,20 @@ import java.awt.*;
 public abstract class PeptizerFragmentIon implements SpectrumAnnotation {
 
     abstract public SearchEngineEnum getSearchEngineEnum();
+
     abstract public double getIntensity();
+
     abstract public int getNumber();
+
     abstract public IonTypeEnum getType();
 
     // Methods used for the display of the annotations on the spectrum
     abstract public double getMZ();
+
     abstract public double getErrorMargin();
+
     abstract public Color getColor();
+
     abstract public String getLabel();
 
 }

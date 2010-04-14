@@ -14,10 +14,10 @@ import com.compomics.peptizer.interfaces.ValidationSaver;
  * This Interface was developed to be implemented by JPanels that can construct a ValidationSaver instance by gui input.
  */
 public interface SaveValidationPanel {
-	/**
-	 * Returns an instance to save selected identifications and validation.
-	 *
-	 * @return ValidationSaver to save validation of selected identifications.
-	 */
-	public ValidationSaver getValidationSaver();
+    /**
+     * Returns an instance to save selected identifications and validation.
+     *
+     * @return ValidationSaver to save validation of selected identifications.
+     */
+    public ValidationSaver getValidationSaver();
 }

@@ -70,7 +70,7 @@ public abstract class Agent implements Comparable {
      */
     public AgentVote[] inspectIfPossible(PeptideIdentification aPeptideIdentification) {
         for (int i = 0; i < compatibleSearchEngine.length; i++) {
-            if (compatibleSearchEngine[i] == aPeptideIdentification.getSearchEngineEnum()) {
+            if (aPeptideIdentification.getAdvocate().getAdvocates().contains(compatibleSearchEngine[i])) {
                 return inspect(aPeptideIdentification);
             }
         }

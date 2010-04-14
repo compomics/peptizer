@@ -1,11 +1,11 @@
 package com.compomics.peptizer.util.iterators;
 
-import com.compomics.mslims.db.accessors.Datfile;
 import com.compomics.mascotdatfile.util.interfaces.MascotDatfileInf;
 import com.compomics.mascotdatfile.util.interfaces.Spectrum;
 import com.compomics.mascotdatfile.util.mascot.PeptideHit;
 import com.compomics.mascotdatfile.util.mascot.enumeration.MascotDatfileType;
 import com.compomics.mascotdatfile.util.mascot.factory.MascotDatfileFactory;
+import com.compomics.mslims.db.accessors.Datfile;
 import com.compomics.peptizer.interfaces.PeptideIdentificationIterator;
 import com.compomics.peptizer.util.MetaKey;
 import com.compomics.peptizer.util.PeptideIdentification;
@@ -58,7 +58,7 @@ public abstract class Ms_Lims_Iterator implements PeptideIdentificationIterator 
     /**
      * {@inheritDoc}
      */
-    public Object next() {
+    public PeptideIdentification next() {
 
         if (iCurrentIterationUnit.hasNext()) {
             // Get the next filename for the current IterationUnit.

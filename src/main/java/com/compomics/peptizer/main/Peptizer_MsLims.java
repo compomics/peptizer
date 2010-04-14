@@ -7,7 +7,7 @@ import com.compomics.peptizer.interfaces.AgentAggregator;
 import com.compomics.peptizer.interfaces.PeptideIdentificationIterator;
 import com.compomics.peptizer.util.AgentAggregatorFactory;
 import com.compomics.peptizer.util.AgentFactory;
-import com.compomics.peptizer.util.datatools.FileToolsFactory;
+import com.compomics.peptizer.util.datatools.IdentificationFactory;
 import com.compomics.peptizer.util.fileio.MatLogger;
 import com.compomics.peptizer.util.fileio.ValidationSaveToCSV;
 import com.compomics.peptizer.util.worker.MatWorker;
@@ -28,14 +28,15 @@ import java.util.Properties;
  * Time: 16:45:58
  */
 
-/** Class description: ------------------ This class was developed to start peptizer by command line. */
+/**
+ * Class description: ------------------ This class was developed to start peptizer by command line.
+ */
 public class Peptizer_MsLims {
 
-    private static final int iFileSource = 1;
-    private static final int iFolderSource = 2;
-    private static FileToolsFactory iFileToolsFactory = FileToolsFactory.getInstance();
 
-    /** Default Constructor. */
+    /**
+     * Default Constructor.
+     */
     public Peptizer_MsLims() {
     }
 
@@ -48,28 +49,28 @@ public class Peptizer_MsLims {
         // First see if we should output anything useful.
         if (args == null || args.length == 0) {
             flagError("Usage:\n\tPeptizer  " +
-                      "--project <projectid> " +
-                      "--driver <'ms_lims database driver'> " +
-                      "--url <'ms_lims database url'> " +
-                      "--user <'ms_lims username'> " +
-                      "--pass <'ms_lims password for username'> " +
-                      "--target <target_file_name>" +
-                      "--table <table_setting_xml_file>" +
-                      "--agent <agent_setting_xml_file>" +
-                      "--aggregator <aggregator_setting_xml_file>" +
-                      "--general <general_setting_xml_file>" +
-                      "\n" +
-                      "\n\t--project requires a ms_lims project id to be profiled." +
-                      "\n\t--driver is a Java classpath to the Driver class. ex: 'com.mysql.jdbc.Driver'." +
-                      "\n\t--url is the path to the databse. ex: 'jdbc:mysql://localhost/ms_lims/" +
-                      "\n\t--user is the username for the ms_lims database." +
-                      "\n\t--pass is the authentication for the specified username." +
-                      "\n\t--target is the csv output of the profiling." +
-                      "\n\t--agent is the configuration file for agents that define the profile. Each agent will be a csv column." +
-                      "\n\t--aggregator is the configuration file for the aggregator that must judge a peptideidentification based on the agents. The first aggregator in the configuration file will be active!!" +
-                      "\n\t--general is the general configuration file that contains parameters such as confidence." +
-                      "\n\t--table is configures the tablerows, wherein each tablerow will be a csv column." +
-                      "\n\n\tNote that an existing target file will be silently overwritten!!");
+                    "--project <projectid> " +
+                    "--driver <'ms_lims database driver'> " +
+                    "--url <'ms_lims database url'> " +
+                    "--user <'ms_lims username'> " +
+                    "--pass <'ms_lims password for username'> " +
+                    "--target <target_file_name>" +
+                    "--table <table_setting_xml_file>" +
+                    "--agent <agent_setting_xml_file>" +
+                    "--aggregator <aggregator_setting_xml_file>" +
+                    "--general <general_setting_xml_file>" +
+                    "\n" +
+                    "\n\t--project requires a ms_lims project id to be profiled." +
+                    "\n\t--driver is a Java classpath to the Driver class. ex: 'com.mysql.jdbc.Driver'." +
+                    "\n\t--url is the path to the databse. ex: 'jdbc:mysql://localhost/ms_lims/" +
+                    "\n\t--user is the username for the ms_lims database." +
+                    "\n\t--pass is the authentication for the specified username." +
+                    "\n\t--target is the csv output of the profiling." +
+                    "\n\t--agent is the configuration file for agents that define the profile. Each agent will be a csv column." +
+                    "\n\t--aggregator is the configuration file for the aggregator that must judge a peptideidentification based on the agents. The first aggregator in the configuration file will be active!!" +
+                    "\n\t--general is the general configuration file that contains parameters such as confidence." +
+                    "\n\t--table is configures the tablerows, wherein each tablerow will be a csv column." +
+                    "\n\n\tNote that an existing target file will be silently overwritten!!");
         }
         CommandLineParser clp =
                 new CommandLineParser(args, new String[]{"project", "driver", "url", "user", "pass", "target", "table", "agent", "aggregator", "general",});
@@ -182,7 +183,8 @@ public class Peptizer_MsLims {
                 MatLogger.setSystemOut(true);
 
                 // Set the iterator we will be using.
-                PeptideIdentificationIterator iter = iFileToolsFactory.getIterator(lConnection, lProjectID);
+                IdentificationFactory.getInstance().load(lConnection, lProjectID);
+                PeptideIdentificationIterator iter = IdentificationFactory.getInstance().getIterator();
 
                 // Create a holder for the selected peptideidentifications.
                 SelectedPeptideIdentifications results = new SelectedPeptideIdentifications();

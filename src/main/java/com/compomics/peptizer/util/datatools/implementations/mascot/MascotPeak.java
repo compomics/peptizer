@@ -1,8 +1,8 @@
 package com.compomics.peptizer.util.datatools.implementations.mascot;
 
+import com.compomics.mascotdatfile.util.mascot.Peak;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeak;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
-import com.compomics.mascotdatfile.util.mascot.Peak;
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,7 +19,7 @@ public class MascotPeak extends PeptizerPeak {
         super.iMZ = iPeak.getMZ();
         super.iIntensity = iPeak.getIntensity();
     }
-    
+
     public SearchEngineEnum getSearchEngineEnum() {
         return iSearchEngineEnum;
     }

@@ -26,22 +26,34 @@ import java.io.*;
  */
 public class ArffWorker extends SwingWorker {
 
-    /** The Iterator with PeptideIdentifications. */
+    /**
+     * The Iterator with PeptideIdentifications.
+     */
     private PeptideIdentificationIterator iIter = null;
 
-    /** The AgentAggregator. */
+    /**
+     * The AgentAggregator.
+     */
     private AgentAggregator iAgentAggregator = null;
 
-    /** The File for results output. */
+    /**
+     * The File for results output.
+     */
     private File iTargetFile = null;
 
-    /** The BufferedWriter for output. */
+    /**
+     * The BufferedWriter for output.
+     */
     private BufferedWriter iBufferedWriter = null;
 
-    /** The progress bar. */
+    /**
+     * The progress bar.
+     */
     private DefaultProgressBar iProgress = null;
 
-    /** The Agent's references that are in use. */
+    /**
+     * The Agent's references that are in use.
+     */
     private String[] iAgentUniqueIDs = null;
 
     private boolean iDetailOutputType;
@@ -116,8 +128,8 @@ public class ArffWorker extends SwingWorker {
             iMessage.append("Profiling on " + iAgentUniqueIDs.length + " information points completed!");
             iMessage.append("\n");
             iMessage.append("\t-" + lConfidentMatch + " confident matched identifications\n" +
-                            "\t-" + lConfidentNOMatch + " confident NOT matched identifications\n" +
-                            "\t-" + lNonConfident + " Non confident ");
+                    "\t-" + lConfidentNOMatch + " confident NOT matched identifications\n" +
+                    "\t-" + lNonConfident + " Non confident ");
             iMessage.append("\n");
             iMessage.append("Results written to " + iTargetFile.getCanonicalFile() + "!");
 
@@ -136,7 +148,9 @@ public class ArffWorker extends SwingWorker {
         return "";
     }
 
-    /** Prints the Header of the arff file to the BufferedWriter. */
+    /**
+     * Prints the Header of the arff file to the BufferedWriter.
+     */
     private void printHeader() throws IOException {
         if (iBufferedWriter != null) {
             iBufferedWriter.write("@RELATION" + " " + "MatARFF");

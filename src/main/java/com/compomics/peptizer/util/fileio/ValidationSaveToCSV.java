@@ -328,7 +328,7 @@ public class ValidationSaveToCSV extends ValidationSaver {
             }
 
             // 1. Spectrumfile
-            iBufferedWriter.write(aPeptideIdentification.getSpectrum().getFilename() + iSeparator);
+            iBufferedWriter.write(aPeptideIdentification.getSpectrum().getName() + iSeparator);
 
             // 2. Inspected boolean
             boolean isValidated = aPeptideIdentification.getValidationReport().isValidated();
@@ -376,7 +376,7 @@ public class ValidationSaveToCSV extends ValidationSaver {
         // A. Fixed print of certain values.
 
         // 1. Spectrumfile
-        iBufferedWriter.write(aPeptideIdentification.getSpectrum().getFilename() + iSeparator);
+        iBufferedWriter.write(aPeptideIdentification.getSpectrum().getName() + iSeparator);
         // 2. Inspected boolean
         boolean isValidated = aPeptideIdentification.getValidationReport().isValidated();
 

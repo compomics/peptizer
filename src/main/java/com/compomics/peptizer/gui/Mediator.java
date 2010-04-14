@@ -297,7 +297,7 @@ public class Mediator extends JPanel {
                     item.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
                             int lPeptideHit = Mediator.this.getSelectedTableColumn();
-                            String s = Mediator.this.getActivePeptideIdentification().getSpectrum().getFilename();
+                            String s = Mediator.this.getActivePeptideIdentification().getSpectrum().getName();
                             // This method writes a string to the system clipboard.
                             StringSelection ss = new StringSelection(s);
                             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(ss, null);
@@ -503,7 +503,7 @@ public class Mediator extends JPanel {
     public void columnSelected() {
         // Sync the annotations on the TabPanel
         if (Mediator.this.getSelectedTableColumn() > 0) {
-            iTabbedPane.updateSpectrumAnnotation();
+            iTabbedPane.updateSpectrumAnnotation(Mediator.this.getSelectedTableColumn());
         }
     }
 

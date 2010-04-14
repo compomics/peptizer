@@ -19,34 +19,34 @@ import java.util.Properties;
  */
 public class IonScoreTableRowImpl extends AbstractTableRow {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public IonScoreTableRowImpl() {
-		super();
-		Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
-		super.setName(prop.getProperty("name"));
-		super.setActive(new Boolean(prop.getProperty("active")));
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public IonScoreTableRowImpl() {
+        super();
+        Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
+        super.setName(prop.getProperty("name"));
+        super.setActive(new Boolean(prop.getProperty("active")));
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
-		if (aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getIonsScore() >= 0)
-        return "" + aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getIonsScore();
+    /**
+     * {@inheritDoc}
+     */
+    public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+        if (aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getIonsScore() >= 0)
+            return "" + aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getIonsScore();
         else return "";
-	}
+    }
 
-	/**
-	 * Returns a description for the TableRow.
-	 * Use for tooltips and configuration.
-	 *
-	 * @return String description of the TableRow.
-	 */
-	@Override
-	public String getDescription() {
-		String s = "Generalrow - The ionscore of peptidehit n.";
-		return s;
-	}
+    /**
+     * Returns a description for the TableRow.
+     * Use for tooltips and configuration.
+     *
+     * @return String description of the TableRow.
+     */
+    @Override
+    public String getDescription() {
+        String s = "Generalrow - The ionscore of peptidehit n.";
+        return s;
+    }
 }

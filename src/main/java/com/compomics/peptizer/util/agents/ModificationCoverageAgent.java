@@ -10,17 +10,16 @@ import com.compomics.peptizer.interfaces.Agent;
 import com.compomics.peptizer.util.AgentReport;
 import com.compomics.peptizer.util.MetaKey;
 import com.compomics.peptizer.util.PeptideIdentification;
-import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
-import com.compomics.peptizer.util.datatools.interfaces.PeptizerSpectrum;
 import com.compomics.peptizer.util.datatools.Ion;
 import com.compomics.peptizer.util.datatools.implementations.omssa.OmssaPeptideHit;
+import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
+import com.compomics.peptizer.util.datatools.interfaces.PeptizerSpectrum;
 import com.compomics.peptizer.util.enumerator.AgentVote;
-import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import com.compomics.peptizer.util.enumerator.IonTypeEnum;
+import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import de.proteinms.omxparser.util.MSHits;
 
 import java.util.Vector;
-
-import de.proteinms.omxparser.util.MSHits;
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -43,7 +42,7 @@ public class ModificationCoverageAgent extends Agent {
     public ModificationCoverageAgent() {
         // Init the general Agent settings.
         initialize(new String[]{MODIFICATION_NAME, MODIFIED_RESIDUE});
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA };
+        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA};
         compatibleSearchEngine = searchEngines;
     }
 
@@ -89,10 +88,12 @@ public class ModificationCoverageAgent extends Agent {
 
             if (lModificationLocation != -1) {
                 Vector<Ion> lMatchedIons = new Vector();
-                if (lPeptideHit.getSearchEngineEnum() == SearchEngineEnum.Mascot) {
-                    lMatchedIons = findNeighbourIons(aPeptideIdentification.getSpectrum(), (PeptideHit) lPeptideHit.getOriginalPeptideHit(), lModificationLocation, (Masses) aPeptideIdentification.getMetaData(MetaKey.Masses_section), (Parameters) aPeptideIdentification.getMetaData(MetaKey.Parameter_section));
-                } else if (lPeptideHit.getSearchEngineEnum() == SearchEngineEnum.OMSSA) {
-                    lMatchedIons = findNeighbourIons((MSHits) lPeptideHit.getOriginalPeptideHit(), lModificationLocation);
+                boolean identifiedByMascot = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
+                boolean identifiedByOMSSA = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocates().contains(SearchEngineEnum.OMSSA);
+                if (identifiedByMascot) {
+                    lMatchedIons = findNeighbourIons(aPeptideIdentification.getSpectrum(), (PeptideHit) lPeptideHit.getOriginalPeptideHit(SearchEngineEnum.Mascot), lModificationLocation, (Masses) aPeptideIdentification.getMetaData(MetaKey.Masses_section), (Parameters) aPeptideIdentification.getMetaData(MetaKey.Parameter_section));
+                } else if (identifiedByOMSSA) {
+                    lMatchedIons = findNeighbourIons((MSHits) lPeptideHit.getOriginalPeptideHit(SearchEngineEnum.OMSSA), lModificationLocation);
                 }
                 for (int j = 0; j < lMatchedIons.size(); j++) {
                     Ion lIon = lMatchedIons.elementAt(j);
@@ -200,36 +201,36 @@ public class ModificationCoverageAgent extends Agent {
         ions = lPeptideHitAnnotation.getBions();
         if (aModificationLocation > 0) {
             // Fence post! If modification at nterm, only b1 is of any value since 'b0' is the precursor..
-            tempFragmentIonImpl=ions[aModificationLocation - 1];
+            tempFragmentIonImpl = ions[aModificationLocation - 1];
             lNeighbourIons.add(new Ion(tempFragmentIonImpl.getMZ(), tempFragmentIonImpl.getIntensity(), IonTypeEnum.b, tempFragmentIonImpl.getNumber(), SearchEngineEnum.Mascot));
         }
-        tempFragmentIonImpl=ions[aModificationLocation];
+        tempFragmentIonImpl = ions[aModificationLocation];
         lNeighbourIons.add(new Ion(tempFragmentIonImpl.getMZ(), tempFragmentIonImpl.getIntensity(), IonTypeEnum.b, tempFragmentIonImpl.getNumber(), SearchEngineEnum.Mascot));
 
         ions = lPeptideHitAnnotation.getBDoubleions();
         if (aModificationLocation > 0) {
-            tempFragmentIonImpl=ions[aModificationLocation - 1];
+            tempFragmentIonImpl = ions[aModificationLocation - 1];
             lNeighbourIons.add(new Ion(tempFragmentIonImpl.getMZ(), tempFragmentIonImpl.getIntensity(), IonTypeEnum.b, tempFragmentIonImpl.getNumber(), SearchEngineEnum.Mascot));
         }
-        tempFragmentIonImpl=ions[aModificationLocation];
+        tempFragmentIonImpl = ions[aModificationLocation];
         lNeighbourIons.add(new Ion(tempFragmentIonImpl.getMZ(), tempFragmentIonImpl.getIntensity(), IonTypeEnum.b, tempFragmentIonImpl.getNumber(), SearchEngineEnum.Mascot));
 
         // Add the flanking y and y++ ions.
         int lLengh = aPeptideHit.getSequence().length() - 1;
 
         ions = lPeptideHitAnnotation.getYions();
-        tempFragmentIonImpl=ions[lLengh - (aModificationLocation + 1)];
+        tempFragmentIonImpl = ions[lLengh - (aModificationLocation + 1)];
         lNeighbourIons.add(new Ion(tempFragmentIonImpl.getMZ(), tempFragmentIonImpl.getIntensity(), IonTypeEnum.y, tempFragmentIonImpl.getNumber(), SearchEngineEnum.Mascot));
         if (aModificationLocation > 0) {
-            tempFragmentIonImpl=ions[lLengh - aModificationLocation];
+            tempFragmentIonImpl = ions[lLengh - aModificationLocation];
             lNeighbourIons.add(new Ion(tempFragmentIonImpl.getMZ(), tempFragmentIonImpl.getIntensity(), IonTypeEnum.y, tempFragmentIonImpl.getNumber(), SearchEngineEnum.Mascot));
         }
 
         ions = lPeptideHitAnnotation.getYDoubleions();
-        tempFragmentIonImpl=ions[lLengh - (aModificationLocation + 1)];
+        tempFragmentIonImpl = ions[lLengh - (aModificationLocation + 1)];
         lNeighbourIons.add(new Ion(tempFragmentIonImpl.getMZ(), tempFragmentIonImpl.getIntensity(), IonTypeEnum.y, tempFragmentIonImpl.getNumber(), SearchEngineEnum.Mascot));
         if (aModificationLocation > 0) {
-            tempFragmentIonImpl=ions[lLengh - aModificationLocation];
+            tempFragmentIonImpl = ions[lLengh - aModificationLocation];
             lNeighbourIons.add(new Ion(tempFragmentIonImpl.getMZ(), tempFragmentIonImpl.getIntensity(), IonTypeEnum.y, tempFragmentIonImpl.getNumber(), SearchEngineEnum.Mascot));
         }
 
@@ -248,11 +249,11 @@ public class ModificationCoverageAgent extends Agent {
     /**
      * Returns a Vector with matched neighbour fragmentions. Function dedicated to Omssa result.
      *
-     * @param anOPh the Omssa peptide hit
+     * @param anOPh                 the Omssa peptide hit
      * @param aModificationLocation
      * @return
      */
-    private Vector<Ion> findNeighbourIons( final MSHits anOPh, int aModificationLocation) {
+    private Vector<Ion> findNeighbourIons(final MSHits anOPh, int aModificationLocation) {
         Vector<Ion> lResult = new Vector<Ion>();
 
         // The modificationlocation variable is 1-based.
@@ -260,21 +261,21 @@ public class ModificationCoverageAgent extends Agent {
         aModificationLocation = aModificationLocation - 1;
 
         // Inspect ions found by Omssa
-        for (int i=0 ; i < anOPh.MSHits_mzhits.MSMZHit.size() ; i++) {
+        for (int i = 0; i < anOPh.MSHits_mzhits.MSMZHit.size(); i++) {
             IonTypeEnum ionType = IonTypeEnum.other;
             int lengh = anOPh.MSHits_pepstring.length() - 1;
             switch (anOPh.MSHits_mzhits.MSMZHit.get(i).MSMZHit_ion.MSIonType) {
-                case 1 : {
+                case 1: {
                     ionType = IonTypeEnum.b;
                     if (aModificationLocation > 0) {
-                        if (anOPh.MSHits_mzhits.MSMZHit.get(i).MSMZHit_number == aModificationLocation-1) {
+                        if (anOPh.MSHits_mzhits.MSMZHit.get(i).MSMZHit_number == aModificationLocation - 1) {
                             lResult.add(new Ion(anOPh.MSHits_mzhits.MSMZHit.get(i).MSMZHit_mz, ionType, anOPh.MSHits_mzhits.MSMZHit.get(i).MSMZHit_number, SearchEngineEnum.OMSSA));
                         } else if (anOPh.MSHits_mzhits.MSMZHit.get(i).MSMZHit_number == aModificationLocation) {
                             lResult.add(new Ion(anOPh.MSHits_mzhits.MSMZHit.get(i).MSMZHit_mz, ionType, anOPh.MSHits_mzhits.MSMZHit.get(i).MSMZHit_number, SearchEngineEnum.OMSSA));
                         }
                     }
                 }
-                case 4 : {
+                case 4: {
                     ionType = IonTypeEnum.y;
                     if (aModificationLocation > 0) {
                         if (anOPh.MSHits_mzhits.MSMZHit.get(i).MSMZHit_number == lengh - aModificationLocation) {
@@ -308,8 +309,10 @@ public class ModificationCoverageAgent extends Agent {
      */
     private int isModified(PeptizerPeptideHit aPh, String aModificationName, String aModifiedResidue) {
         boolean lModified = false;
-        if (aPh.getSearchEngineEnum() == SearchEngineEnum.Mascot) {
-            PeptideHit aMPh = (PeptideHit) aPh.getOriginalPeptideHit();
+        boolean identifiedByMascot = aPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
+        boolean identifiedByOMSSA = aPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.OMSSA);
+        if (identifiedByMascot) {
+            PeptideHit aMPh = (PeptideHit) aPh.getOriginalPeptideHit(SearchEngineEnum.Mascot);
             int lLocation = 0;
             while (!lModified && lLocation < (aMPh.getSequence().length() + 2)) {
                 Modification lMod = aMPh.getModifications()[lLocation];
@@ -325,33 +328,33 @@ public class ModificationCoverageAgent extends Agent {
             }
             // no match!
             return -1;
-        } else if (aPh.getSearchEngineEnum() == SearchEngineEnum.OMSSA) {
+        } else if (identifiedByOMSSA) {
             OmssaPeptideHit anOPH = (OmssaPeptideHit) aPh;
 // Get the id of the modification
             int id = -1;
             Vector<String> modResidues = new Vector();
-            for (int i=0 ; i < anOPH.modifs.size() ; i++) {
-                if (anOPH.modifs.get(i).getModName().compareTo(aModificationName)==0) {
-                    id=anOPH.modifs.get(i).getModType().intValue();
-                    modResidues=anOPH.modifs.get(i).getModResidues();
+            for (int i = 0; i < anOPH.modifs.size(); i++) {
+                if (anOPH.modifs.get(i).getModName().compareTo(aModificationName) == 0) {
+                    id = anOPH.modifs.get(i).getModType().intValue();
+                    modResidues = anOPH.modifs.get(i).getModResidues();
                     break;
                 }
             }
 
             // inspect fixed modifications
             String[] decomposedSequence = anOPH.decomposeSequence(anOPH.getSequence());
-            for (int j=0 ; j < decomposedSequence.length-1 ; j++) {
-                for (int k=0 ; k < modResidues.size() ; k++) {
+            for (int j = 0; j < decomposedSequence.length - 1; j++) {
+                for (int k = 0; k < modResidues.size(); k++) {
                     // if we have the concerned residue return true
-                    if (decomposedSequence[j].compareTo(modResidues.get(k))==0) {
+                    if (decomposedSequence[j].compareTo(modResidues.get(k)) == 0) {
                         return j;
                     }
                 }
             }
 
             // inspect variable modifications
-            MSHits aPH = (MSHits) anOPH.getOriginalPeptideHit();
-            for (int i=0 ; i < aPH.MSHits_mods.MSModHit.size() ; i++) {
+            MSHits aPH = (MSHits) anOPH.getOriginalPeptideHit(SearchEngineEnum.OMSSA);
+            for (int i = 0; i < aPH.MSHits_mods.MSModHit.size(); i++) {
                 // if we have the concerned modification return true
                 if (aPH.MSHits_mods.MSModHit.get(i).MSModHit_modtype.MSMod == id) {
                     return aPH.MSHits_mods.MSModHit.get(i).MSModHit_site;

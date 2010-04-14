@@ -4,14 +4,13 @@ import com.compomics.mascotdatfile.util.mascot.PeptideHit;
 import com.compomics.peptizer.interfaces.Agent;
 import com.compomics.peptizer.util.AgentReport;
 import com.compomics.peptizer.util.PeptideIdentification;
-import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.datatools.implementations.omssa.OmssaPeptideHit;
+import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import de.proteinms.omxparser.util.MSHits;
 
 import java.util.List;
-
-import de.proteinms.omxparser.util.MSHits;
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -27,7 +26,7 @@ public class SialylationAgent extends Agent {
     public SialylationAgent() {
         // Init the general Agent settings.
         initialize();
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA };
+        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA};
         compatibleSearchEngine = searchEngines;
     }
 
@@ -106,25 +105,28 @@ public class SialylationAgent extends Agent {
     /**
      * This Method Checks the modification status of a PeptideHit, the purpose
      *
-     * @param aPPh               - PeptizerPeptideHit upon inspection.
-     * @param index              - Position to inspect
+     * @param aPPh  - PeptizerPeptideHit upon inspection.
+     * @param index - Position to inspect
      * @return boolean           - true if peptide deaminated at this position
      */
     private boolean isDeaminated(PeptizerPeptideHit aPPh, int index) {
-        if (aPPh.getSearchEngineEnum() == SearchEngineEnum.Mascot) {
-            PeptideHit aMPh = (PeptideHit) aPPh.getOriginalPeptideHit();
+        boolean identifiedByMascot = aPPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
+        boolean identifiedByOMSSA = aPPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.OMSSA);
+
+        if (identifiedByMascot) {
+            PeptideHit aMPh = (PeptideHit) aPPh.getOriginalPeptideHit(SearchEngineEnum.Mascot);
             String lModificationShortType = aMPh.getModifications()[index].getShortType();
             if (lModificationShortType.equalsIgnoreCase("dam")) {
                 return true;
             }
-        } else if (aPPh.getSearchEngineEnum() == SearchEngineEnum.OMSSA) {
+        } else if (identifiedByOMSSA) {
             OmssaPeptideHit anOPh = (OmssaPeptideHit) aPPh;
-            MSHits msHits = (MSHits) aPPh.getOriginalPeptideHit();
+            MSHits msHits = (MSHits) aPPh.getOriginalPeptideHit(SearchEngineEnum.OMSSA);
 
             // Look for the id of the deamination
             int id = -1;
-            for (int i=0 ; i < anOPh.modifs.size() ; i++) {
-                if (anOPh.modifs.get(i).getModName().compareTo("deamidation of N and Q")==0) {
+            for (int i = 0; i < anOPh.modifs.size(); i++) {
+                if (anOPh.modifs.get(i).getModName().compareTo("deamidation of N and Q") == 0) {
                     id = anOPh.modifs.get(i).getModNumber();
                     break;
                 }
@@ -132,14 +134,14 @@ public class SialylationAgent extends Agent {
 
             // Inspect fixed modifications
             List<Integer> fixedMods = anOPh.getFixedModifications();
-            for (int i=0 ; i < fixedMods.size() ; i++) {
+            for (int i = 0; i < fixedMods.size(); i++) {
                 if (fixedMods.get(i).intValue() == id) {
                     return true;
                 }
             }
 
             // Inspect variable modifications
-            for (int i=0 ; i < msHits.MSHits_mods.MSModHit.size() ; i++) {
+            for (int i = 0; i < msHits.MSHits_mods.MSModHit.size(); i++) {
                 if (msHits.MSHits_mods.MSModHit.get(i).MSModHit_site == index && msHits.MSHits_mods.MSModHit.get(i).MSModHit_modtype.MSMod == id) {
                     return true;
                 }
@@ -147,6 +149,7 @@ public class SialylationAgent extends Agent {
         }
         return false;
     }
+
     /**
      * Returns a description for the Agent. Use in tooltips and configuration settings.
      * Fill in an agent description. Report on purpose and a minor on actual implementation.

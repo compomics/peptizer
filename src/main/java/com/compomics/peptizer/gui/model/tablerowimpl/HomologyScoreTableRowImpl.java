@@ -20,33 +20,33 @@ import java.util.Properties;
  */
 public class HomologyScoreTableRowImpl extends AbstractTableRow {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public HomologyScoreTableRowImpl() {
-		super();
-		Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
-		super.setName(prop.getProperty("name"));
-		super.setActive(new Boolean(prop.getProperty("active")));
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public HomologyScoreTableRowImpl() {
+        super();
+        Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
+        super.setName(prop.getProperty("name"));
+        super.setActive(new Boolean(prop.getProperty("active")));
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
-		BigDecimal lBigDecimal = new BigDecimal(aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getHomologyThreshold());
-		lBigDecimal = lBigDecimal.setScale(2, BigDecimal.ROUND_HALF_DOWN);
+    /**
+     * {@inheritDoc}
+     */
+    public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+        BigDecimal lBigDecimal = new BigDecimal(aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getHomologyThreshold());
+        lBigDecimal = lBigDecimal.setScale(2, BigDecimal.ROUND_HALF_DOWN);
 
-		return lBigDecimal.toString();
-	}
+        return lBigDecimal.toString();
+    }
 
-	/**
-	 * Returns a description for the TableRow.
-	 * Use for tooltips and configuration.
-	 *
-	 * @return String description of the TableRow.
-	 */
-	public String getDescription() {
-		return "Generalrow - The homology threshold";
-	}
+    /**
+     * Returns a description for the TableRow.
+     * Use for tooltips and configuration.
+     *
+     * @return String description of the TableRow.
+     */
+    public String getDescription() {
+        return "Generalrow - The homology threshold";
+    }
 }

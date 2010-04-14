@@ -1,16 +1,15 @@
 package com.compomics.peptizer.util.agents;
 
+import com.compomics.mascotdatfile.util.interfaces.Spectrum;
 import com.compomics.mascotdatfile.util.mascot.Masses;
 import com.compomics.mascotdatfile.util.mascot.Parameters;
 import com.compomics.mascotdatfile.util.mascot.PeptideHit;
 import com.compomics.mascotdatfile.util.mascot.PeptideHitAnnotation;
-import com.compomics.mascotdatfile.util.interfaces.Spectrum;
 import com.compomics.peptizer.interfaces.Agent;
 import com.compomics.peptizer.util.AgentReport;
 import com.compomics.peptizer.util.MetaKey;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
-import com.compomics.peptizer.util.datatools.implementations.omssa.OmssaPeptideHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import de.proteinms.omxparser.util.MSHits;
@@ -37,7 +36,7 @@ public class ProlineAgent extends Agent {
     public ProlineAgent() {
         // Init the general Agent settings.
         initialize(INTENSITY);
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA };
+        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA};
         compatibleSearchEngine = searchEngines;
     }
 
@@ -148,13 +147,16 @@ public class ProlineAgent extends Agent {
     /**
      * This Method Checks the relevance of b(index)
      *
-     * @param aPPh              - PeptizerPeptideHit upon inspection.
+     * @param aPPh - PeptizerPeptideHit upon inspection.
      * @return boolean          - true if proline B ion peak is found
      */
     private boolean getBoolB(PeptizerPeptideHit aPPh, PeptideIdentification aPeptideIdentification, int index) {
         boolean result = false;
-        if (aPPh.getSearchEngineEnum()== SearchEngineEnum.Mascot) {
-            PeptideHit aMPh = (PeptideHit) aPPh.getOriginalPeptideHit();
+        boolean identifiedByMascot = aPPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
+        boolean identifiedByOMSSA = aPPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.OMSSA);
+
+        if (identifiedByMascot) {
+            PeptideHit aMPh = (PeptideHit) aPPh.getOriginalPeptideHit(SearchEngineEnum.Mascot);
             PeptideHitAnnotation lPeptideHitAnnotation =
                     aMPh.getPeptideHitAnnotation((Masses) aPeptideIdentification.getMetaData(MetaKey.Masses_section), (Parameters) aPeptideIdentification.getMetaData(MetaKey.Parameter_section));
 
@@ -173,17 +175,16 @@ public class ProlineAgent extends Agent {
                         iIntensity,
                         Double.parseDouble(((Parameters) aPeptideIdentification.getMetaData(MetaKey.Parameter_section)).getITOL()));
             }
-        } else if (aPPh.getSearchEngineEnum()== SearchEngineEnum.OMSSA) {
-            OmssaPeptideHit anOPh = (OmssaPeptideHit) aPPh;
-            MSHits msHits = (MSHits) aPPh.getOriginalPeptideHit();
-            for (int i=0 ; i < msHits.MSHits_mzhits.MSMZHit.size() ; i++) {
-                if (msHits.MSHits_mzhits.MSMZHit.get(i).MSMZHit_ion.MSIonType == 1 && msHits.MSHits_mzhits.MSMZHit.get(i).MSMZHit_number == index -1) {
+        } else if (identifiedByOMSSA) {
+            MSHits msHits = (MSHits) aPPh.getOriginalPeptideHit(SearchEngineEnum.OMSSA);
+            for (int i = 0; i < msHits.MSHits_mzhits.MSMZHit.size(); i++) {
+                if (msHits.MSHits_mzhits.MSMZHit.get(i).MSMZHit_ion.MSIonType == 1 && msHits.MSHits_mzhits.MSMZHit.get(i).MSMZHit_number == index - 1) {
                     double mz = msHits.MSHits_mzhits.MSMZHit.get(i).MSMZHit_mz;
                     double intensity = -1;
                     double intensityMax = aPeptideIdentification.getSpectrum().getMaxIntensity();
-                    for (int j=0 ; j < aPeptideIdentification.getSpectrum().getPeakList().length ; j++) {
-                        if (aPeptideIdentification.getSpectrum().getPeakList()[j].getMZ()==mz) {
-                            intensity=aPeptideIdentification.getSpectrum().getPeakList()[j].getIntensity();
+                    for (int j = 0; j < aPeptideIdentification.getSpectrum().getPeakList().length; j++) {
+                        if (aPeptideIdentification.getSpectrum().getPeakList()[j].getMZ() == mz) {
+                            intensity = aPeptideIdentification.getSpectrum().getPeakList()[j].getIntensity();
                         }
                         break;
                     }
@@ -199,13 +200,15 @@ public class ProlineAgent extends Agent {
     /**
      * This Method Checks the relevance of y(index)
      *
-     * @param aPPh              - PeptizerPeptideHit upon inspection.
+     * @param aPPh - PeptizerPeptideHit upon inspection.
      * @return boolean          - true if proline Y ion peak is found
      */
     private boolean getBoolY(PeptizerPeptideHit aPPh, PeptideIdentification aPeptideIdentification, int index) {
         boolean result = false;
-        if (aPPh.getSearchEngineEnum()== SearchEngineEnum.Mascot) {
-            PeptideHit aMPh = (PeptideHit) aPPh.getOriginalPeptideHit();
+        boolean identifiedByMascot = aPPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
+        boolean identifiedByOMSSA = aPPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.OMSSA);
+        if (identifiedByMascot) {
+            PeptideHit aMPh = (PeptideHit) aPPh.getOriginalPeptideHit(SearchEngineEnum.Mascot);
             PeptideHitAnnotation lPeptideHitAnnotation =
                     aMPh.getPeptideHitAnnotation((Masses) aPeptideIdentification.getMetaData(MetaKey.Masses_section), (Parameters) aPeptideIdentification.getMetaData(MetaKey.Parameter_section));
 
@@ -225,16 +228,16 @@ public class ProlineAgent extends Agent {
                         iIntensity,
                         Double.parseDouble(((Parameters) aPeptideIdentification.getMetaData(MetaKey.Parameter_section)).getITOL()));
             }
-        } else if (aPPh.getSearchEngineEnum()== SearchEngineEnum.OMSSA) {
-            MSHits msHits = (MSHits) aPPh.getOriginalPeptideHit();
-            for (int i=0 ; i < msHits.MSHits_mzhits.MSMZHit.size() ; i++) {
-                if (msHits.MSHits_mzhits.MSMZHit.get(i).MSMZHit_ion.MSIonType == 4 && msHits.MSHits_mzhits.MSMZHit.get(i).MSMZHit_number == msHits.MSHits_pepstring.length() -index -1) {
+        } else if (identifiedByOMSSA) {
+            MSHits msHits = (MSHits) aPPh.getOriginalPeptideHit(SearchEngineEnum.OMSSA);
+            for (int i = 0; i < msHits.MSHits_mzhits.MSMZHit.size(); i++) {
+                if (msHits.MSHits_mzhits.MSMZHit.get(i).MSMZHit_ion.MSIonType == 4 && msHits.MSHits_mzhits.MSMZHit.get(i).MSMZHit_number == msHits.MSHits_pepstring.length() - index - 1) {
                     double mz = msHits.MSHits_mzhits.MSMZHit.get(i).MSMZHit_mz;
                     double intensity = -1;
                     double intensityMax = aPeptideIdentification.getSpectrum().getMaxIntensity();
-                    for (int j=0 ; j < aPeptideIdentification.getSpectrum().getPeakList().length ; j++) {
-                        if (aPeptideIdentification.getSpectrum().getPeakList()[j].getMZ()==mz) {
-                            intensity=aPeptideIdentification.getSpectrum().getPeakList()[j].getIntensity();
+                    for (int j = 0; j < aPeptideIdentification.getSpectrum().getPeakList().length; j++) {
+                        if (aPeptideIdentification.getSpectrum().getPeakList()[j].getMZ() == mz) {
+                            intensity = aPeptideIdentification.getSpectrum().getPeakList()[j].getIntensity();
                         }
                         break;
                     }

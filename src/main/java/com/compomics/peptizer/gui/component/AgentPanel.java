@@ -399,13 +399,13 @@ public class AgentPanel extends JPanel implements Updateable {
             } else if (s.equals(COMPATIBILITY)) {
                 StringBuffer sb = new StringBuffer();
                 SearchEngineEnum[] compatibleEngines = lAgent.getCompatibleEngines();
-               for (int i=0 ; i < compatibleEngines.length ; i++) {
-                   sb.append(compatibleEngines[i].getName());
-                   if (i == compatibleEngines.length-1) {
-                       sb.append(".");
-                   } else {
-                       sb.append(", ");
-                   }
+                for (int i = 0; i < compatibleEngines.length; i++) {
+                    sb.append(compatibleEngines[i].getName());
+                    if (i == compatibleEngines.length - 1) {
+                        sb.append(".");
+                    } else {
+                        sb.append(", ");
+                    }
                 }
                 // Return the String processing.
                 o = sb.toString();

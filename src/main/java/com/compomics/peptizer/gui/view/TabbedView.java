@@ -23,90 +23,90 @@ import java.awt.*;
  */
 public class TabbedView extends JTabbedPane {
 
-	/**
-	 * The parent super-controller.
-	 */
-	private Mediator iMediator;
+    /**
+     * The parent super-controller.
+     */
+    private Mediator iMediator;
 
-	/**
-	 * The custom SingleSelectionmodel.
-	 */
-	private SingleSelectionModel iSingleSelectionModel;
+    /**
+     * The custom SingleSelectionmodel.
+     */
+    private SingleSelectionModel iSingleSelectionModel;
 
-	/**
-	 * This constructor takes a parent Mediator as a single parameter.
-	 *
-	 * @param aMediator Mediator parent super-controller of the gui.
-	 */
-	public TabbedView(Mediator aMediator) {
-		// Call JTabbedPane empty constructor.
-		super();
-		this.iMediator = aMediator;
-		iSingleSelectionModel = new SingleSelectionModelImpl(this);
-		this.setModel(iSingleSelectionModel);
-	}
+    /**
+     * This constructor takes a parent Mediator as a single parameter.
+     *
+     * @param aMediator Mediator parent super-controller of the gui.
+     */
+    public TabbedView(Mediator aMediator) {
+        // Call JTabbedPane empty constructor.
+        super();
+        this.iMediator = aMediator;
+        iSingleSelectionModel = new SingleSelectionModelImpl(this);
+        this.setModel(iSingleSelectionModel);
+    }
 
-	/**
-	 * Adds a Tab to the Tabbedview
-	 *
-	 * @param aPeptideIdentification PeptideIdentification to be added in a new Tab.
-	 */
-	public void addTabID(PeptideIdentification aPeptideIdentification) {
-		String lName = aPeptideIdentification.getName();
-		boolean isPresent = false;
-		int i = 0;
-		for (; i < this.getComponentCount(); i++) {
-			if (((TabPanel) this.getComponentAt(i)).getPeptideIdentification().getName().equals(lName)) {
-				isPresent = true;
-				break;
-			}
-		}
-		if (!isPresent) {
-			JPanel jpan1 = new JPanel(false);
-			jpan1.setLayout(new GridLayout(1, 1));
-			jpan1 = new TabPanel(aPeptideIdentification, this);
-			this.addTab(lName, jpan1);
-			this.setSelectedIndex(this.getComponentCount() - 1);
-		} else {
-			this.setSelectedIndex(i);
-		}
-	}
+    /**
+     * Adds a Tab to the Tabbedview
+     *
+     * @param aPeptideIdentification PeptideIdentification to be added in a new Tab.
+     */
+    public void addTabID(PeptideIdentification aPeptideIdentification) {
+        String lName = aPeptideIdentification.getName();
+        boolean isPresent = false;
+        int i = 0;
+        for (; i < this.getComponentCount(); i++) {
+            if (((TabPanel) this.getComponentAt(i)).getPeptideIdentification().getName().equals(lName)) {
+                isPresent = true;
+                break;
+            }
+        }
+        if (!isPresent) {
+            JPanel jpan1 = new JPanel(false);
+            jpan1.setLayout(new GridLayout(1, 1));
+            jpan1 = new TabPanel(aPeptideIdentification, this);
+            this.addTab(lName, jpan1);
+            this.setSelectedIndex(this.getComponentCount() - 1);
+        } else {
+            this.setSelectedIndex(i);
+        }
+    }
 
-	/**
-	 * Returns the index of the first selected column,
-	 * -1 if no column is selected.
-	 *
-	 * @return the index of the first selected column
-	 */
-	public int getSelectedTableColumn() {
-		return iMediator.getSelectedTableColumn();
-	}
+    /**
+     * Returns the index of the first selected column,
+     * -1 if no column is selected.
+     *
+     * @return the index of the first selected column
+     */
+    public int getSelectedTableColumn() {
+        return iMediator.getSelectedTableColumn();
+    }
 
-	/**
-	 * Updates the annotations of the currently selected spectrum and peptidehit.
-	 */
-	public void updateSpectrumAnnotation() {
-		((TabPanel) this.getComponentAt(this.getSelectedIndex())).updateAnnotations();
-	}
+    /**
+     * Updates the annotations of the currently selected spectrum and peptidehit.
+     */
+    public void updateSpectrumAnnotation(int selectedColumn) {
+        ((TabPanel) this.getComponentAt(this.getSelectedIndex())).updateAnnotationTypeButtons(selectedColumn - 1); // The annotations will also be updated by this method.
+    }
 
-	/**
-	 * Close TabPanel tab by index.
-	 * Taken care of at Mediator level since it has to be forwarded to the Table.
-	 *
-	 * @param aIndex of Tab to be closed.
-	 */
-	public void closeTab(int aIndex) {
-		iMediator.removeTab(aIndex);
-	}
+    /**
+     * Close TabPanel tab by index.
+     * Taken care of at Mediator level since it has to be forwarded to the Table.
+     *
+     * @param aIndex of Tab to be closed.
+     */
+    public void closeTab(int aIndex) {
+        iMediator.removeTab(aIndex);
+    }
 
-	/**
-	 * Act whenever selecion index of the Tabs has changed.
-	 *
-	 * @param aIndex int index of new selected tab.
-	 */
-	public void selectionChanged(int aIndex) {
-		iMediator.tabSelection(aIndex);
-	}
+    /**
+     * Act whenever selecion index of the Tabs has changed.
+     *
+     * @param aIndex int index of new selected tab.
+     */
+    public void selectionChanged(int aIndex) {
+        iMediator.tabSelection(aIndex);
+    }
 }
 
 

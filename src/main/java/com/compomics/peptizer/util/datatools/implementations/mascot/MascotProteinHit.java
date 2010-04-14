@@ -1,8 +1,8 @@
 package com.compomics.peptizer.util.datatools.implementations.mascot;
 
+import com.compomics.mascotdatfile.util.mascot.ProteinHit;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerProteinHit;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
-import com.compomics.mascotdatfile.util.mascot.ProteinHit;
 
 /**
  * Created by IntelliJ IDEA.
@@ -11,15 +11,16 @@ import com.compomics.mascotdatfile.util.mascot.ProteinHit;
  * Time: 16:49:54
  * To change this template use File | Settings | File Templates.
  */
-public class MascotProteinHit implements PeptizerProteinHit{
+public class MascotProteinHit implements PeptizerProteinHit {
     private final SearchEngineEnum iSearchEngineEnum = SearchEngineEnum.Mascot;
     private ProteinHit iProteinHit;
 
-    public MascotProteinHit(){
+    public MascotProteinHit() {
 
     }
+
     public MascotProteinHit(ProteinHit aProteinHit) {
-        iProteinHit=aProteinHit;
+        iProteinHit = aProteinHit;
     }
 
     public String getAccession() {

@@ -231,7 +231,7 @@ public class CommentValidationDialog extends JDialog {
                     "<DL>");
             sb.append("<DT>peptide:<DD>" + iCorrectPeptidehitNumber +
                     "<DT>sequence:<DD>" + iPeptideIdentification.getPeptideHit(iCorrectPeptidehitNumber - 1).getSequence() +
-                    "<DT>spectrum:<DD>" + iPeptideIdentification.getSpectrum().getFilename() +
+                    "<DT>spectrum:<DD>" + iPeptideIdentification.getSpectrum().getName() +
                     "<DT>peptizer name:<DD>" + iPeptideIdentification.getName() +
                     "</DL>");
         } else {
@@ -240,7 +240,7 @@ public class CommentValidationDialog extends JDialog {
 
             sb.append("<BIG>Reject?</BIG>" +
                     "<DL>");
-            sb.append("<DT>spectrum:<DD>" + iPeptideIdentification.getSpectrum().getFilename() +
+            sb.append("<DT>spectrum:<DD>" + iPeptideIdentification.getSpectrum().getName() +
                     "<DT>peptizer name:<DD>" + iPeptideIdentification.getName() +
                     "</DL>");
 

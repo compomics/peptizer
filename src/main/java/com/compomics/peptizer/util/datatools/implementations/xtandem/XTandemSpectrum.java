@@ -44,7 +44,7 @@ public class XTandemSpectrum implements PeptizerSpectrum, Serializable {
         return peakList;
     }
 
-    public String getFilename() {
+    public String getName() {
         return iSupportData.getFragIonSpectrumDescription();
     }
 

@@ -20,30 +20,30 @@ import java.util.Properties;
 public class TemplateTableRowImpl extends AbstractTableRow {
 
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public TemplateTableRowImpl() {
-		super();
-		Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
-		super.setName(prop.getProperty("name"));
-		super.setActive(Boolean.valueOf(prop.getProperty("active")));
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public TemplateTableRowImpl() {
+        super();
+        Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
+        super.setName(prop.getProperty("name"));
+        super.setActive(Boolean.valueOf(prop.getProperty("active")));
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
-		return "template";
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+        return "template";
+    }
 
-	/**
-	 * Returns a description for the TableRow.
-	 * Use for tooltips and configuration.
-	 *
-	 * @return String description of the TableRow.
-	 */
-	public String getDescription() {
-		return "Hi, i am a Template abstract tablerow implementation.";
-	}
+    /**
+     * Returns a description for the TableRow.
+     * Use for tooltips and configuration.
+     *
+     * @return String description of the TableRow.
+     */
+    public String getDescription() {
+        return "Hi, i am a Template abstract tablerow implementation.";
+    }
 }

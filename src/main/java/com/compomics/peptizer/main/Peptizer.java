@@ -1,6 +1,5 @@
 package com.compomics.peptizer.main;
 
-import com.compomics.mascotdatfile.util.mascot.enumeration.MascotDatfileType;
 import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.SelectedPeptideIdentifications;
 import com.compomics.peptizer.gui.model.AbstractTableRow;
@@ -11,12 +10,10 @@ import com.compomics.peptizer.interfaces.PeptideIdentificationIterator;
 import com.compomics.peptizer.util.AgentAggregatorFactory;
 import com.compomics.peptizer.util.AgentFactory;
 import com.compomics.peptizer.util.PeptideIdentification;
-import com.compomics.peptizer.util.datatools.FileToolsFactory;
+import com.compomics.peptizer.util.datatools.IdentificationFactory;
 import com.compomics.peptizer.util.enumerator.AgentAggregationResult;
 import com.compomics.peptizer.util.fileio.MatLogger;
 import com.compomics.peptizer.util.fileio.ValidationSaveToCSV;
-import com.compomics.peptizer.util.iterators.DatfileIterator;
-import com.compomics.peptizer.util.iterators.FolderIterator;
 import com.compomics.util.general.CommandLineParser;
 
 import java.io.File;
@@ -36,9 +33,6 @@ import java.util.List;
  */
 public class Peptizer {
 
-    private static final int iFileSource = 1;
-    private static final int iFolderSource = 2;
-    private static FileToolsFactory iFileToolsFactory = FileToolsFactory.getInstance();
 
     /**
      * Default Constructor.
@@ -112,12 +106,6 @@ public class Peptizer {
             File table = new File(tablePath);
             boolean toprank = Boolean.parseBoolean(toprankState);
 
-            if (sourcetype.equals("file")) {
-                lSource = iFileSource;
-            } else if (sourcetype.equals("folder")) {
-                lSource = iFolderSource;
-            }
-
 
             if (!input.exists()) {
                 flagError("The input file you specified (" + input + ") does not exist!\nExiting...");
@@ -149,13 +137,9 @@ public class Peptizer {
                 // Enable system.out logging.
                 MatLogger.setSystemOut(true);
 
-                // Create the iterator whether the source is a file or folder.
-                PeptideIdentificationIterator iter = null;
-                if (lSource == iFileSource) {
-                    iter = new DatfileIterator(input, MascotDatfileType.INDEX);
-                } else if (lSource == iFolderSource) {
-                    iter = new FolderIterator(input);
-                }
+                // Create the iterator.
+                IdentificationFactory.getInstance().load(input);
+                PeptideIdentificationIterator iter = IdentificationFactory.getInstance().getIterator();
 
                 // Create a holder for the selected peptideidentifications.
                 SelectedPeptideIdentifications results = new SelectedPeptideIdentifications();

@@ -13,11 +13,15 @@ import java.util.Properties;
  * Time: 15:45:29
  */
 
-/** Class description: ------------------ This class was developed as a TableRow implementation to populate the table. */
+/**
+ * Class description: ------------------ This class was developed as a TableRow implementation to populate the table.
+ */
 public class IdentificationIDTableRowImpl extends AbstractTableRow {
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public IdentificationIDTableRowImpl() {
         super();
         Properties prop = MatConfig.getInstance().getTableRowProperties(this.getUniqueTableRowID());
@@ -25,7 +29,9 @@ public class IdentificationIDTableRowImpl extends AbstractTableRow {
         super.setActive(Boolean.valueOf(prop.getProperty("active")));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
         Object o = null;
         if (aPeptideIdentification.metaDataContainsKey(MetaKey.Identification_id)) {

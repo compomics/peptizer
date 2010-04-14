@@ -5,6 +5,7 @@ import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.interfaces.Agent;
 import com.compomics.peptizer.util.AgentReport;
 import com.compomics.peptizer.util.PeptideIdentification;
+import com.compomics.peptizer.util.datatools.Advocate;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 /**
@@ -30,7 +31,7 @@ public class Homology extends Agent {
     public Homology() {
         // Init the general Agent settings.
         initialize();
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot };
+        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot};
         compatibleSearchEngine = searchEngines;
     }
 
@@ -50,41 +51,47 @@ public class Homology extends Agent {
 
         for (int i = 0; i < lScore.length; i++) {
 
-            // Make Agent Report!
-            iReport = new AgentReport(getUniqueID());
-
-            // 1. Get the nth confident PeptideHit.
-            PeptideHit lPeptideHit = (PeptideHit) aPeptideIdentification.getPeptideHit(i).getOriginalPeptideHit();
-
-            //2. Process homology params.
-            boolean isHomologyHigherThenIdentityThreshold = false;
-            boolean isHomologyHigherThenIonScore = false;
-
-            // 2.a) Check if the HomologyThreshold is bigger then the IdentityThreshold?
-            if (lPeptideHit.getHomologyThreshold() >= lPeptideHit.calculateIdentityThreshold(iAlpha)) {
-                isHomologyHigherThenIdentityThreshold = true;
-            }
-
-            // 2.b) Check if the HomologyThreshold is bigger the peptidehit's ionscore?
-            if (lPeptideHit.getHomologyThreshold() >= lPeptideHit.getIonsScore()) {
-                isHomologyHigherThenIonScore = true;
-            }
-
             String lTableData;
             String lARFFData;
+            if (canAnalyze(aPeptideIdentification.getPeptideHit(i).getAdvocate())) {
+                // Make Agent Report!
+                iReport = new AgentReport(getUniqueID());
 
-            // Assign scores!
-            if (isHomologyHigherThenIdentityThreshold && isHomologyHigherThenIonScore) {
-                // If delta score is less then given iDelta, Agent
-                lScore[i] = AgentVote.POSITIVE_FOR_SELECTION;
-                lTableData = "homology";
-                lARFFData = "1";
+                // 1. Get the nth confident PeptideHit.
+                PeptideHit lPeptideHit = (PeptideHit) aPeptideIdentification.getPeptideHit(i).getOriginalPeptideHit(SearchEngineEnum.Mascot);
+
+                //2. Process homology params.
+                boolean isHomologyHigherThenIdentityThreshold = false;
+                boolean isHomologyHigherThenIonScore = false;
+
+                // 2.a) Check if the HomologyThreshold is bigger then the IdentityThreshold?
+                if (lPeptideHit.getHomologyThreshold() >= lPeptideHit.calculateIdentityThreshold(iAlpha)) {
+                    isHomologyHigherThenIdentityThreshold = true;
+                }
+
+                // 2.b) Check if the HomologyThreshold is bigger the peptidehit's ionscore?
+                if (lPeptideHit.getHomologyThreshold() >= lPeptideHit.getIonsScore()) {
+                    isHomologyHigherThenIonScore = true;
+                }
+
+                // Assign scores!
+                if (isHomologyHigherThenIdentityThreshold && isHomologyHigherThenIonScore) {
+                    // If delta score is less then given iDelta, Agent
+                    lScore[i] = AgentVote.POSITIVE_FOR_SELECTION;
+                    lTableData = "homology";
+                    lARFFData = "1";
+                } else {
+                    lScore[i] = AgentVote.NEUTRAL_FOR_SELECTION;
+                    lTableData = "NA";
+                    lARFFData = "0";
+                }
             } else {
+                iReport = new AgentReport(getUniqueID());
                 lScore[i] = AgentVote.NEUTRAL_FOR_SELECTION;
                 lTableData = "NA";
                 lARFFData = "0";
-            }
 
+            }
             iReport.addReport(AgentReport.RK_RESULT, lScore[i]);
 
             // TableRow information.
@@ -94,6 +101,7 @@ public class Homology extends Agent {
             iReport.addReport(AgentReport.RK_ARFF, Integer.parseInt(lARFFData));
 
             aPeptideIdentification.addAgentReport(i + 1, getUniqueID(), iReport);
+
         }
         return lScore;
     }
@@ -114,5 +122,14 @@ public class Homology extends Agent {
         String s =
                 "<html>Inspects for homology threshold features. <b>Votes 'Positive_for_selection' if both Identity Threshold AND Ionscore are below Homology. </b>. Votes 'Neutral_for_selection' if else.</html>";
         return s;
+    }
+
+    private boolean canAnalyze(Advocate advocate) {
+        for (int i = 0; i < compatibleSearchEngine.length; i++) {
+            if (advocate.getAdvocates().contains(compatibleSearchEngine[i])) {
+                return true;
+            }
+        }
+        return false;
     }
 }

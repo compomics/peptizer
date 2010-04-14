@@ -11,7 +11,9 @@ import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
  */
 public interface PeptizerModification {
     public SearchEngineEnum getSearchEngineEnum();
+
     public int getId();
+
     public String getName();
-    
+
 }
