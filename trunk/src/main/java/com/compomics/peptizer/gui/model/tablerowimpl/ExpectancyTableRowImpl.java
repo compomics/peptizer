@@ -3,8 +3,10 @@ package com.compomics.peptizer.gui.model.tablerowimpl;
 import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.model.AbstractTableRow;
 import com.compomics.peptizer.util.PeptideIdentification;
+import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Properties;
 /**
  * Created by IntelliJ IDEA.
@@ -35,12 +37,15 @@ public class ExpectancyTableRowImpl extends AbstractTableRow {
      * {@inheritDoc}
      */
     public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
-        double lConfidence = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_ALPHA"));
-
-        BigDecimal lBigDecimal = new BigDecimal(aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getExpectancy(lConfidence));
-        lBigDecimal = lBigDecimal.setScale(5, BigDecimal.ROUND_HALF_DOWN);
-
-        return lBigDecimal.toString();
+        ArrayList<SearchEngineEnum> advocates = aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getAdvocate().getAdvocatesList();
+        String result = "";
+        for (int i = 0; i < advocates.size(); i++) {
+            double lConfidence = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_MASCOT_ALPHA"));
+            BigDecimal lBigDecimal = new BigDecimal(aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getPeptidHit(advocates.get(i)).getExpectancy(lConfidence));
+            lBigDecimal = lBigDecimal.setScale(5, BigDecimal.ROUND_HALF_DOWN);
+            result += lBigDecimal + "(" + advocates.get(i).getInitial() + ") ";
+        }
+        return result;
     }
 
     /**
@@ -50,7 +55,7 @@ public class ExpectancyTableRowImpl extends AbstractTableRow {
      * @return String description of the TableRow.
      */
     public String getDescription() {
-        double lConfidence = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_ALPHA"));
+        double lConfidence = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_MASCOT_ALPHA"));
         return "Generalrow - The E-value (for default " + new Double((1.0 - lConfidence) * 100) + "% confidence).";
     }
 }

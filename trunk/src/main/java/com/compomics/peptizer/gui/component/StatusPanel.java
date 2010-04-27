@@ -225,5 +225,5 @@ public class StatusPanel extends JPanel {
      */
     private String getTimestamp() {
         return iSDF.format(new Date());
-	}
+    }
 }

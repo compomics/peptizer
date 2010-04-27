@@ -72,6 +72,7 @@ public class RelativeIntensityAgent extends Agent {
 
             // Make Agent Report!
             iReport = new AgentReport(getUniqueID());
+            SearchEngineEnum searchEngineUsed = SearchEngineEnum.Mascot;
             String lTableData;
             String lARFFData;
             lTableData = "";
@@ -84,11 +85,12 @@ public class RelativeIntensityAgent extends Agent {
             ArrayList<AnnotationType> lAnnotationType = lPeptideHit.getAnnotationType();
 
             Vector v = new Vector();
-            boolean identifiedByMascot = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
-            boolean identifiedByOMSSA = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocates().contains(SearchEngineEnum.OMSSA);
-            boolean identifiedByXTandem = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocates().contains(SearchEngineEnum.XTandem);
+            boolean identifiedByMascot = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocatesList().contains(SearchEngineEnum.Mascot);
+            boolean identifiedByOMSSA = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocatesList().contains(SearchEngineEnum.OMSSA);
+            boolean identifiedByXTandem = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocatesList().contains(SearchEngineEnum.XTandem);
 
             if (identifiedByMascot) {
+                searchEngineUsed = SearchEngineEnum.Mascot;
                 // We will analyze the mascot assigned peaks or the fused ones according to fuse. I guess this could be search engine independant.
                 boolean fused = false;
                 if (fused) {
@@ -109,23 +111,25 @@ public class RelativeIntensityAgent extends Agent {
                     }
                 }
             } else if (identifiedByOMSSA) {
+                searchEngineUsed = SearchEngineEnum.OMSSA;
                 // There is only one annotation type here.
-                    for (int j = 0; j < lAnnotationType.size(); j++) {
-                        if (lAnnotationType.get(j).getSearchEngine() == SearchEngineEnum.OMSSA) {
-                            lPeptideHitAnnotation = lPeptideHit.getAllAnnotation(aPeptideIdentification, i);
-                            v = (Vector) lPeptideHitAnnotation.get(lAnnotationType.get(j).getIndex() + "" + SearchEngineEnum.OMSSA.getId() + "" + i);
-                            break;
-                        }
+                for (int j = 0; j < lAnnotationType.size(); j++) {
+                    if (lAnnotationType.get(j).getSearchEngine() == SearchEngineEnum.OMSSA) {
+                        lPeptideHitAnnotation = lPeptideHit.getAllAnnotation(aPeptideIdentification, i);
+                        v = (Vector) lPeptideHitAnnotation.get(lAnnotationType.get(j).getIndex() + "" + SearchEngineEnum.OMSSA.getId() + "" + i);
+                        break;
                     }
-            }  else if (identifiedByXTandem) {
+                }
+            } else if (identifiedByXTandem) {
+                searchEngineUsed = SearchEngineEnum.XTandem;
                 // There is only one annotation type here.
-                    for (int j = 0; j < lAnnotationType.size(); j++) {
-                        if (lAnnotationType.get(j).getSearchEngine() == SearchEngineEnum.XTandem) {
-                            lPeptideHitAnnotation = lPeptideHit.getAllAnnotation(aPeptideIdentification, i);
-                            v = (Vector) lPeptideHitAnnotation.get(lAnnotationType.get(j).getIndex() + "" + SearchEngineEnum.XTandem.getId() + "" + i);
-                            break;
-                        }
+                for (int j = 0; j < lAnnotationType.size(); j++) {
+                    if (lAnnotationType.get(j).getSearchEngine() == SearchEngineEnum.XTandem) {
+                        lPeptideHitAnnotation = lPeptideHit.getAllAnnotation(aPeptideIdentification, i);
+                        v = (Vector) lPeptideHitAnnotation.get(lAnnotationType.get(j).getIndex() + "" + SearchEngineEnum.XTandem.getId() + "" + i);
+                        break;
                     }
+                }
             }
 
             DescriptiveStatistics lStatistics = new DescriptiveStatistics();
@@ -144,7 +148,7 @@ public class RelativeIntensityAgent extends Agent {
             double lRelativeIntensitySD = lStatistics.getStandardDeviation();
 
 
-            lTableData = lRelativeIntensityMean + "-" + lRelativeIntensitySD;
+            lTableData = lRelativeIntensityMean + "-" + lRelativeIntensitySD + "(" + searchEngineUsed.getInitial() + ")";
             lARFFData = lTableData;
 
             if (lRelativeIntensityMean <= lThreshold) {

@@ -3,6 +3,7 @@ package com.compomics.peptizer.gui.model.tablerowimpl;
 import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.model.AbstractTableRow;
 import com.compomics.peptizer.util.PeptideIdentification;
+import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 
 import java.util.Properties;
 /**
@@ -34,7 +35,7 @@ public class IonScoreTableRowImpl extends AbstractTableRow {
      */
     public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
         if (aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getIonsScore() >= 0)
-            return "" + aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getIonsScore();
+            return "" + aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getPeptidHit(SearchEngineEnum.Mascot).getIonsScore();
         else return "";
     }
 

@@ -8,7 +8,6 @@ import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 
 /**
@@ -35,10 +34,22 @@ public abstract class PeptizerPeptideHit {
         return advocate;
     }
 
+    public boolean identifiedBy(SearchEngineEnum aSearchEngine) {
+        return advocate.getAdvocatesList().contains(aSearchEngine);
+    }
+
+    public PeptizerPeptideHit getPeptidHit(SearchEngineEnum aSearchEngine) {
+        for (int i = 0; i < fusedHits.size(); i++) {
+            if (fusedHits.get(i).identifiedBy(aSearchEngine)) {
+                return fusedHits.get(i);
+            }
+        }
+        return this;
+    }
 
     public void fuse(PeptizerPeptideHit peptideHit) {
-        SearchEngineEnum newSearchEngine = peptideHit.getAdvocate().getAdvocates().get(0);  // There should be only one at this point
-        advocate.addAdvocate(newSearchEngine);
+        SearchEngineEnum newSearchEngine = peptideHit.getAdvocate().getAdvocatesList().get(0);  // There should be only one at this point
+        advocate.addAdvocate(newSearchEngine, peptideHit.getAdvocate().getRank(newSearchEngine));
         originalPeptideHits.put(newSearchEngine, peptideHit.getOriginalPeptideHit(newSearchEngine));
         annotationType.addAll(peptideHit.getAnnotationType());
         fusedHits.add(peptideHit);
@@ -79,7 +90,7 @@ public abstract class PeptizerPeptideHit {
 
     public HashMap getAllAnnotation(PeptideIdentification aPeptideIdentification, int id) {
         HashMap annotationMap = new HashMap();
-        for (int i=0 ; i < fusedHits.size() ; i++) {
+        for (int i = 0; i < fusedHits.size(); i++) {
             PeptizerPeptideHit tempHit = fusedHits.get(i);
             HashMap temp = tempHit.getAllAnnotation(aPeptideIdentification, id);
             annotationMap.putAll(temp);
@@ -99,6 +110,10 @@ public abstract class PeptizerPeptideHit {
     public abstract double calculateThreshold(double aConfidenceInterval);
 
     public abstract boolean scoresAboveThreshold(double aConfidenceInterval);
+
+    public abstract double calculateThreshold();
+
+    public abstract boolean scoresAboveThreshold();
 
     // If the search results can be annotated in different ways, explain it to Peptizer
     public ArrayList<AnnotationType> getAnnotationType() {

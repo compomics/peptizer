@@ -76,7 +76,7 @@ public class PeptideIdentification implements Comparable, Serializable {
         iSpectrum = aSpectrum;
         iPeptideHits = new Vector<PeptizerPeptideHit>();
         iPeptideHits.add(aPeptideHit);
-        advocate = new Advocate(aSearchEngineEnum);
+        advocate = new Advocate(aSearchEngineEnum, 0);
     }
 
     /**
@@ -88,7 +88,7 @@ public class PeptideIdentification implements Comparable, Serializable {
     public PeptideIdentification(PeptizerSpectrum aSpectrum, Vector<PeptizerPeptideHit> aPeptideHits, SearchEngineEnum aSearchEngineEnum) {
         iSpectrum = aSpectrum;
         iPeptideHits = aPeptideHits;
-        advocate = new Advocate(aSearchEngineEnum);
+        advocate = new Advocate(aSearchEngineEnum, 0);
     }
 
     /**
@@ -128,7 +128,7 @@ public class PeptideIdentification implements Comparable, Serializable {
      */
     public PeptizerPeptideHit getBestPeptideHit() {
         if (iPeptideHits != null) {
-            return (PeptizerPeptideHit) iPeptideHits.get(0);
+            return iPeptideHits.get(0);
         } else {
             return null;
         }
@@ -143,7 +143,7 @@ public class PeptideIdentification implements Comparable, Serializable {
         int length = getNumberOfConfidentPeptideHits();
         PeptizerPeptideHit[] lPeptideHits = new PeptizerPeptideHit[length];
         for (int i = 0; i < lPeptideHits.length; i++) {
-            lPeptideHits[i] = (PeptizerPeptideHit) iPeptideHits.get(i);
+            lPeptideHits[i] = iPeptideHits.get(i);
         }
         return lPeptideHits;
     }
@@ -170,7 +170,7 @@ public class PeptideIdentification implements Comparable, Serializable {
     public int getNumberOfConfidentPeptideHits() {
 
         // Confidence alpha from general.properties.
-        double lConfigAlpha = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_ALPHA"));
+        double lConfigAlpha = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_MASCOT_ALPHA"));
 
         // Since this method is used a lot, do calculations when necessary. Two situations,
 
@@ -183,18 +183,16 @@ public class PeptideIdentification implements Comparable, Serializable {
     }
 
     /**
-     * Calculate the number of confident peptidehits according to the MatConfig instance DEFAULT_ALPHA value. Mind this
+     * Calculate the number of confident peptidehits according to the MatConfig instance DEFAULT_MASCOT_ALPHA value. Mind this
      * method is only used when necessairy.
      */
     private void calculateNumberOfConfidentPeptideHits() {
-        // Set iAlpha to the current Alpha from the configuration.
-        iAlpha = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_ALPHA"));
         // If there are PeptideHits and the iNumberOfConfidentPeptideHits is equal to 0, try to calculate the number of confident hits.
         if (iPeptideHits != null) {
             if (iNumberOfConfidentPeptideHits == 0) {
                 for (int i = 0; i < iPeptideHits.size(); i++) {
-                    PeptizerPeptideHit lPeptideHit = (PeptizerPeptideHit) iPeptideHits.elementAt(i);
-                    if (lPeptideHit.scoresAboveThreshold(iAlpha)) {
+                    PeptizerPeptideHit lPeptideHit = iPeptideHits.elementAt(i);
+                    if (lPeptideHit.scoresAboveThreshold()) {
                         iNumberOfConfidentPeptideHits++;
                     } else {
                         break;
@@ -443,7 +441,7 @@ public class PeptideIdentification implements Comparable, Serializable {
                             Object newKey = it.next();
                             addMetaData(newKey, newMetaData.get(newKey));
                         }
-                    }                   
+                    }
                     found = true;
                 }
             }

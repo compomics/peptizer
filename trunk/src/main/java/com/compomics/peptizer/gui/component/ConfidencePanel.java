@@ -20,9 +20,15 @@ import java.awt.event.ActionListener;
  */
 public class ConfidencePanel extends JPanel {
 
-    private JLabel lbl1 = null;
-    private JTextField txt1 = null;
-    private Double iDefaultConfidence;
+    private JLabel lblMascot = null;
+    private JTextField txtMascot = null;
+    private Double iDefaultMascotConfidence;
+    private Double iDefaultOMSSAEValueCutOff;
+    private Double iDefaultXTandemEValueCutOff;
+    private JLabel lblOMSSA = null;
+    private JTextField txtOMSSA = null;
+    private JLabel lblXTandem = null;
+    private JTextField txtXTandem = null;
 
     /**
      * Emptry constructor.
@@ -39,41 +45,95 @@ public class ConfidencePanel extends JPanel {
     private void constructPanel() {
 
         // Save the current confidence before changing settings.
-        iDefaultConfidence = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_ALPHA"));
+        iDefaultMascotConfidence = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_MASCOT_ALPHA"));
+        iDefaultOMSSAEValueCutOff = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_OMSSA_EVALUE"));
+        iDefaultXTandemEValueCutOff = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_XTANDEM_EVALUE"));
 
         // Layout
         //BoxLayout lBoxLayout = new BoxLayout(this, BoxLayout.LINE_AXIS);
         super.setLayout(new FlowLayout(FlowLayout.LEADING, 10, 0));
 
-        // Create Label.
-        lbl1 = new JLabel("<html>Confidence<small> (input alpha value 0.05, results in 95% confidence)</small></html>");
+        // Create Labels.
+        lblMascot = new JLabel("<html>Mascot Confidence<small> (input alpha value 0.05, results in 95% confidence)</small></html>");
+        lblOMSSA = new JLabel("<html>OMSSA maximal E-Value</html>");
+        lblXTandem = new JLabel("<html>X!Tandem maximal E-Value</html>");
         // Create TextField.
-        txt1 = new JTextField(MatConfig.getInstance().getGeneralProperty("DEFAULT_ALPHA"), 5);
+        txtMascot = new JTextField(MatConfig.getInstance().getGeneralProperty("DEFAULT_MASCOT_ALPHA"), 5);
+        txtOMSSA = new JTextField(MatConfig.getInstance().getGeneralProperty("DEFAULT_OMSSA_EVALUE"), 5);
+        txtXTandem = new JTextField(MatConfig.getInstance().getGeneralProperty("DEFAULT_XTANDEM_EVALUE"), 5);
 
-        txt1.addActionListener(new ActionListener() {
+        txtMascot.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
                 Double lNewConfidence = null;
                 try {
-                    lNewConfidence = Double.parseDouble(txt1.getText());
+                    lNewConfidence = Double.parseDouble(txtMascot.getText());
                     if (lNewConfidence > 0) {
-                        MatConfig.getInstance().changeGeneralProperty("DEFAULT_ALPHA", lNewConfidence.toString());
-                        txt1.setForeground(new Color(0, 200, 0));
+                        MatConfig.getInstance().changeGeneralProperty("DEFAULT_MASCOT_ALPHA", lNewConfidence.toString());
+                        txtMascot.setForeground(new Color(0, 200, 0));
                     } else {
-                        JOptionPane.showMessageDialog(ConfidencePanel.this, txt1.getText() + " is not a valid alpha value for Confidence, <html><Strong>it must be positive!!</Strong></html>\nFor example, please insert alpha where input value 0.05, results in 95% confidence.");
+                        JOptionPane.showMessageDialog(ConfidencePanel.this, txtMascot.getText() + " is not a valid alpha value for Confidence, <html><Strong>it must be positive!!</Strong></html>\nFor example, please insert alpha where input value 0.05, results in 95% confidence.");
                         updateTextField();
                     }
                 } catch (NumberFormatException e1) {
-                    JOptionPane.showMessageDialog(ConfidencePanel.this, txt1.getText() + " is not a valid alpha value for Confidence!!\nFor example, please insert alpha where input value 0.05, results in 95% confidence.");
+                    JOptionPane.showMessageDialog(ConfidencePanel.this, txtMascot.getText() + " is not a valid alpha value for Confidence!!\nFor example, please insert alpha where input value 0.05, results in 95% confidence.");
                     updateTextField();
 
                 }
             }
 
         });
+        txtOMSSA.addActionListener(new ActionListener() {
+            public void actionPerformed(final ActionEvent e) {
+                Double lNewEValue = null;
+                try {
+                    lNewEValue = Double.parseDouble(txtOMSSA.getText());
+                    if (lNewEValue > 0) {
+                        MatConfig.getInstance().changeGeneralProperty("DEFAULT_OMSSA_EVALUE", lNewEValue.toString());
+                        txtOMSSA.setForeground(new Color(0, 200, 0));
+                    } else {
+                        JOptionPane.showMessageDialog(ConfidencePanel.this, "An E-Value must be positive.");
+                        updateTextField();
+                    }
+                } catch (NumberFormatException e1) {
+                    JOptionPane.showMessageDialog(ConfidencePanel.this, txtMascot.getText() + " is not recognized as valud input.");
+                    updateTextField();
 
-        this.add(lbl1);
-        this.add(Box.createHorizontalStrut(10));
-        this.add(txt1);
+                }
+            }
+        });
+        txtXTandem.addActionListener(new ActionListener() {
+            public void actionPerformed(final ActionEvent e) {
+                Double lNewEValue = null;
+                try {
+                    lNewEValue = Double.parseDouble(txtXTandem.getText());
+                    if (lNewEValue > 0) {
+                        MatConfig.getInstance().changeGeneralProperty("DEFAULT_XTANDEM_EVALUE", lNewEValue.toString());
+                        txtXTandem.setForeground(new Color(0, 200, 0));
+                    } else {
+                        JOptionPane.showMessageDialog(ConfidencePanel.this, "An E-Value must be positive.");
+                        updateTextField();
+                    }
+                } catch (NumberFormatException e1) {
+                    JOptionPane.showMessageDialog(ConfidencePanel.this, txtMascot.getText() + " is not recognized as valud input.");
+                    updateTextField();
+
+                }
+            }
+        });
+
+        JPanel textPanel = new JPanel();
+        textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
+        textPanel.add(lblMascot);
+        textPanel.add(lblOMSSA);
+        textPanel.add(lblXTandem);
+        JPanel inputPanel = new JPanel();
+        inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
+        inputPanel.add(txtMascot);
+        inputPanel.add(txtOMSSA);
+        inputPanel.add(txtXTandem);
+
+        this.add(textPanel);
+        this.add(inputPanel);
     }
 
 
@@ -81,7 +141,9 @@ public class ConfidencePanel extends JPanel {
      * Update the confidence textfield with the current value in the MatConfig.
      */
     public void updateTextField() {
-        txt1.setText(MatConfig.getInstance().getGeneralProperty("DEFAULT_ALPHA"));
+        txtMascot.setText(MatConfig.getInstance().getGeneralProperty("DEFAULT_MASCOT_ALPHA"));
+        txtOMSSA.setText(MatConfig.getInstance().getGeneralProperty("DEFAULT_OMSSA_EVALUE"));
+        txtXTandem.setText(MatConfig.getInstance().getGeneralProperty("DEFAULT_XTANDEM_EVALUE"));
 
     }
 }

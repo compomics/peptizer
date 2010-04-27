@@ -6,8 +6,12 @@
         <property name="RDB_ANNOTATION">0</property>
         <!-- Set the number of pixels between the tree nodes. -->
         <property name="TREE_HEIGHT">20</property>
-        <!-- Set the alpha value for starting a new selection task. -->
-        <property name="DEFAULT_ALPHA">0.05</property>
+        <!-- Set the Mascot alpha value for starting a new selection task. -->
+        <property name="DEFAULT_MASCOT_ALPHA">0.05</property>
+        <!-- Set the OMSSA E-value for starting a new selection task. -->
+        <property name="DEFAULT_OMSSA_EVALUE">0.01</property>
+        <!-- Set the X!Tandem E-value for starting a new selection task. -->
+        <property name="DEFAULT_XTANDEM_EVALUE">0.05</property>
         <!-- Set the preset folder for the Datfile folder data source. -->
         <property name="ITERATOR_FOLDER_PATH">F:\target\datfiles_324</property>
         <!-- Set the preset file for the Datfile data source. -->

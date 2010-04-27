@@ -116,5 +116,5 @@ public class CustomTableColorImpl {
      */
     public Color getHeaderDark() {
         return iHeaderDark;
-	}
+    }
 }

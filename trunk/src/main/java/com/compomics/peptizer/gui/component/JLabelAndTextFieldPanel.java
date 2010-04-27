@@ -64,7 +64,7 @@ public class JLabelAndTextFieldPanel extends JPanel {
 
                 this.add(jpl, gbcL);
                 this.add(jpt, gbcT);
-			}
-		}
-	}
+            }
+        }
+    }
 }

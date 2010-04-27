@@ -242,7 +242,7 @@ public class ParameterDialog extends JDialog {
     private void cancelTriggered() {
         this.setVisible(false);
         this.dispose();
-	}
+    }
 }
 
 

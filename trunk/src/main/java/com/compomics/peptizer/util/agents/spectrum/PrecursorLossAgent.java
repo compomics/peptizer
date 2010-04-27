@@ -92,8 +92,8 @@ public class PrecursorLossAgent extends Agent {
 
     private double match(PeptideIdentification aPeptideIdentification, double lPrecursorLoss) {
 
-        boolean identifiedByMascot = aPeptideIdentification.getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
-        boolean identifiedByOMSSA = aPeptideIdentification.getAdvocate().getAdvocates().contains(SearchEngineEnum.OMSSA);
+        boolean identifiedByMascot = aPeptideIdentification.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.Mascot);
+        boolean identifiedByOMSSA = aPeptideIdentification.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.OMSSA);
 
         if (identifiedByMascot) {
             double lPrecursor = aPeptideIdentification.getSpectrum().getPrecursorMZ();

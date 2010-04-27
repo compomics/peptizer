@@ -5,7 +5,6 @@ import com.compomics.util.io.PropertiesManager;
 
 import javax.swing.*;
 import java.io.*;
-import java.net.URL;
 import java.util.Properties;
 
 /**

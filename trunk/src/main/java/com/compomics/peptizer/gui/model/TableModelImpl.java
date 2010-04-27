@@ -154,6 +154,6 @@ public class TableModelImpl implements TableModel {
                 // keep false;
             }
         }
-		return bool;
-	}
+        return bool;
+    }
 }

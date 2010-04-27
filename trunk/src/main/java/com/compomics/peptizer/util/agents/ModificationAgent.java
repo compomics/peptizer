@@ -118,9 +118,9 @@ public class ModificationAgent extends Agent {
      * @return boolean - true if peptidehit contains the Modification as described by aModificationName.
      */
     private boolean isModified(PeptizerPeptideHit aPPh, String aModificationName) {
-        boolean identifiedByMascot = aPPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
-        boolean identifiedByOMSSA = aPPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.OMSSA);
-        boolean identifiedByXTandem = aPPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.XTandem);
+        boolean identifiedByMascot = aPPh.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.Mascot);
+        boolean identifiedByOMSSA = aPPh.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.OMSSA);
+        boolean identifiedByXTandem = aPPh.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.XTandem);
 
         if (identifiedByMascot) {
             PeptideHit aPh = (PeptideHit) aPPh.getOriginalPeptideHit(SearchEngineEnum.Mascot);

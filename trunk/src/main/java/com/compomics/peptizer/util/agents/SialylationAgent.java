@@ -110,8 +110,8 @@ public class SialylationAgent extends Agent {
      * @return boolean           - true if peptide deaminated at this position
      */
     private boolean isDeaminated(PeptizerPeptideHit aPPh, int index) {
-        boolean identifiedByMascot = aPPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
-        boolean identifiedByOMSSA = aPPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.OMSSA);
+        boolean identifiedByMascot = aPPh.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.Mascot);
+        boolean identifiedByOMSSA = aPPh.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.OMSSA);
 
         if (identifiedByMascot) {
             PeptideHit aMPh = (PeptideHit) aPPh.getOriginalPeptideHit(SearchEngineEnum.Mascot);

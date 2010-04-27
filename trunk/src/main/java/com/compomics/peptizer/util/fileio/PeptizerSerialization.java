@@ -107,7 +107,7 @@ public class PeptizerSerialization {
             // Do nothing.
         }
         MatLogger.logNormalEvent("Read " + lCount + " Serialized PeptideIdentifications from " + aFile.getCanonicalPath() + ".");
-		return result;
-	}
+        return result;
+    }
 
 }

@@ -50,7 +50,7 @@ public class TestMultipleConfidentHits extends TestCaseLM {
         Vector lPeptideHits = lMascotDatfile.getQueryToPeptideMap().getAllPeptideHits(lQueryNumber);
         Vector lPeptizerPeptideHits = new Vector(lPeptideHits.size());
         for (int i = 0; i < lPeptideHits.size(); i++) {
-            lPeptizerPeptideHits.add(new MascotPeptideHit((PeptideHit) lPeptideHits.get(i)));
+            lPeptizerPeptideHits.add(new MascotPeptideHit((PeptideHit) lPeptideHits.get(i), i+1));
         }
         MascotSpectrum mascotSpectrum = new MascotSpectrum(lMascotDatfile.getQuery(lQueryNumber));
         PeptideIdentification lPeptideIdentification = new PeptideIdentification(mascotSpectrum, lPeptizerPeptideHits, SearchEngineEnum.Mascot);
@@ -63,7 +63,7 @@ public class TestMultipleConfidentHits extends TestCaseLM {
         Assert.assertTrue(lResult.length == 2);
 
         Assert.assertEquals(1, lPeptideIdentification.getAgentReport(1, iMultipleConfidentHits.getUniqueID()).getReport(AgentReport.RK_ARFF));
-        Assert.assertEquals("true", lPeptideIdentification.getAgentReport(1, iMultipleConfidentHits.getUniqueID()).getReport(AgentReport.RK_TABLEDATA).toString());
+        Assert.assertEquals("true(M) ", lPeptideIdentification.getAgentReport(1, iMultipleConfidentHits.getUniqueID()).getReport(AgentReport.RK_TABLEDATA).toString());
         Assert.assertEquals(AgentVote.POSITIVE_FOR_SELECTION, lPeptideIdentification.getAgentReport(1, iMultipleConfidentHits.getUniqueID()).getReport(AgentReport.RK_RESULT));
         Assert.assertEquals(0, lPeptideIdentification.getAgentReport(2, iMultipleConfidentHits.getUniqueID()).getReport(AgentReport.RK_ARFF));
         Assert.assertEquals("NA", lPeptideIdentification.getAgentReport(2, iMultipleConfidentHits.getUniqueID()).getReport(AgentReport.RK_TABLEDATA));

@@ -86,7 +86,7 @@ public class SequenceColorTableRowImpl extends AbstractTableRow {
          */
         @Override
         public String toString() {
-			return iName;
-		}
-	}
+            return iName;
+        }
+    }
 }

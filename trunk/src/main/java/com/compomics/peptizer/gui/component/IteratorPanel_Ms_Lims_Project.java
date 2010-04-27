@@ -1,7 +1,6 @@
 package com.compomics.peptizer.gui.component;
 
 import com.compomics.mslims.db.accessors.Project;
-import com.compomics.util.gui.dialogs.ConnectionDialog;
 import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.interfaces.IteratorPanel;
 import com.compomics.peptizer.gui.renderer.ProjectListRenderer;
@@ -9,6 +8,7 @@ import com.compomics.peptizer.interfaces.PeptideIdentificationIterator;
 import com.compomics.peptizer.util.fileio.ConnectionManager;
 import com.compomics.peptizer.util.fileio.MatLogger;
 import com.compomics.peptizer.util.iterators.Ms_Lims_ProjectIterator;
+import com.compomics.util.gui.dialogs.ConnectionDialog;
 import com.compomics.util.interfaces.Connectable;
 
 import javax.swing.*;

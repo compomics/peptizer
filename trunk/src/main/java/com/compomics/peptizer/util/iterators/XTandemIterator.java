@@ -61,7 +61,7 @@ public class XTandemIterator implements PeptideIdentificationIterator {
                 // translation into peptizer object
                 for (int i = 0; i < hitsNumber; i++) {
                     if (xTandemPeptides.get(i) != null) {
-                        peptizerPeptideHits.add(new XTandemPeptideHit((Peptide) xTandemPeptides.get(i), iXTandemfile));
+                        peptizerPeptideHits.add(new XTandemPeptideHit((Peptide) xTandemPeptides.get(i), iXTandemfile, i + 1));
                     }
                 }
                 // Create a new PeptideIdentification and shift the index.

@@ -49,7 +49,7 @@ public class TestSuspectResidue extends TestCaseLM {
         Vector lPeptideHits = lMascotDatfile.getQueryToPeptideMap().getAllPeptideHits(lQueryNumber);
         Vector lPeptizerPeptideHits = new Vector(lPeptideHits.size());
         for (int i = 0; i < lPeptideHits.size(); i++) {
-            lPeptizerPeptideHits.add(new MascotPeptideHit((PeptideHit) lPeptideHits.get(i)));
+            lPeptizerPeptideHits.add(new MascotPeptideHit((PeptideHit) lPeptideHits.get(i), i+1));
         }
         MascotSpectrum mascotSpectrum = new MascotSpectrum(lMascotDatfile.getQuery(lQueryNumber));
         PeptideIdentification lPeptideIdentification = new PeptideIdentification(mascotSpectrum, lPeptizerPeptideHits, SearchEngineEnum.Mascot);

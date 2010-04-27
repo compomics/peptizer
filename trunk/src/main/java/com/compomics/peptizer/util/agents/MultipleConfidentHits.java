@@ -1,10 +1,13 @@
 package com.compomics.peptizer.util.agents;
 
+import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.interfaces.Agent;
 import com.compomics.peptizer.util.AgentReport;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+
+import java.util.ArrayList;
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -29,7 +32,7 @@ public class MultipleConfidentHits extends Agent {
     public MultipleConfidentHits() {
         // Init the general Agent settings.
         initialize(DELTA);
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot};
+        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA, SearchEngineEnum.XTandem};
         compatibleSearchEngine = searchEngines;
     }
 
@@ -62,13 +65,25 @@ public class MultipleConfidentHits extends Agent {
 
             // The resulting Inspection score.
             // If shorter then the given length, set to 1.
-            boolean identifiedByMascot = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
-
-            if ((i + 1) < lNumberOfConfidentPeptideHits && identifiedByMascot) {
+            ArrayList<SearchEngineEnum> nextHitsAdvocates = new ArrayList();
+            if ((i + 1) < lNumberOfConfidentPeptideHits) {
+                double lConfidence = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_MASCOT_ALPHA"));
                 // If there are more confident peptidehits left after this one, score '+1'.
                 double lDeltaIonscore =
-                        aPeptideIdentification.getPeptideHit(i).getIonsScore() - aPeptideIdentification.getPeptideHit(i + 1).getIonsScore();
+                        aPeptideIdentification.getPeptideHit(i).getExpectancy(lConfidence) - aPeptideIdentification.getPeptideHit(i + 1).getExpectancy(lConfidence);
 
+                for (int j = i + 1; j < lNumberOfConfidentPeptideHits; j++) {
+                    for (int k = 0; k < aPeptideIdentification.getPeptideHit(j).getAdvocate().getAdvocatesList().size(); k++) {
+                        if (!nextHitsAdvocates.contains(aPeptideIdentification.getPeptideHit(j).getAdvocate().getAdvocatesList().get(k))) {
+                            nextHitsAdvocates.add(aPeptideIdentification.getPeptideHit(j).getAdvocate().getAdvocatesList().get(k));
+                        }
+                    }
+                }
+                lTableData += true + "(";
+                for (int j = 0; j < nextHitsAdvocates.size(); j++) {
+                    lTableData += nextHitsAdvocates.get(j).getInitial();
+                }
+                lTableData += ") ";
                 // If (ionscore N - ionscore N-1) is smaller then the parameter threshold, score +1.
                 //
                 // Example A: (peptidhit 1:71- peptidehit 2:42)=29
@@ -97,7 +112,7 @@ public class MultipleConfidentHits extends Agent {
 
             // TableRow information.
             if (lScore[i].score == 1) {
-                iReport.addReport(AgentReport.RK_TABLEDATA, true);
+                iReport.addReport(AgentReport.RK_TABLEDATA, lTableData);
             } else {
                 iReport.addReport(AgentReport.RK_TABLEDATA, "NA");
             }

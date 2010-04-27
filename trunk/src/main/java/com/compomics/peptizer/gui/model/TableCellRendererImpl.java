@@ -141,6 +141,6 @@ public class TableCellRendererImpl implements TableCellRenderer {
      * @param aTableColor TableColor implementing Object.
      */
     public void setTableColor(TableColor aTableColor) {
-		iTableColor = aTableColor;
-	}
+        iTableColor = aTableColor;
+    }
 }

@@ -152,8 +152,8 @@ public class ProlineAgent extends Agent {
      */
     private boolean getBoolB(PeptizerPeptideHit aPPh, PeptideIdentification aPeptideIdentification, int index) {
         boolean result = false;
-        boolean identifiedByMascot = aPPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
-        boolean identifiedByOMSSA = aPPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.OMSSA);
+        boolean identifiedByMascot = aPPh.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.Mascot);
+        boolean identifiedByOMSSA = aPPh.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.OMSSA);
 
         if (identifiedByMascot) {
             PeptideHit aMPh = (PeptideHit) aPPh.getOriginalPeptideHit(SearchEngineEnum.Mascot);
@@ -205,8 +205,8 @@ public class ProlineAgent extends Agent {
      */
     private boolean getBoolY(PeptizerPeptideHit aPPh, PeptideIdentification aPeptideIdentification, int index) {
         boolean result = false;
-        boolean identifiedByMascot = aPPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
-        boolean identifiedByOMSSA = aPPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.OMSSA);
+        boolean identifiedByMascot = aPPh.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.Mascot);
+        boolean identifiedByOMSSA = aPPh.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.OMSSA);
         if (identifiedByMascot) {
             PeptideHit aMPh = (PeptideHit) aPPh.getOriginalPeptideHit(SearchEngineEnum.Mascot);
             PeptideHitAnnotation lPeptideHitAnnotation =

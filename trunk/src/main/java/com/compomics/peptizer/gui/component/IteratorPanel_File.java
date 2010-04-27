@@ -20,7 +20,9 @@ import java.util.List;
  * Time: 21:09:29
  */
 
-/** Class description: ------------------ This class was developed for the CreateAssessment Dialog. */
+/**
+ * Class description: ------------------ This class was developed for the CreateAssessment Dialog.
+ */
 public class IteratorPanel_File extends JPanel implements IteratorPanel {
 
     private static IteratorPanel_File iSingleton = null;
@@ -47,7 +49,9 @@ public class IteratorPanel_File extends JPanel implements IteratorPanel {
         }
     }
 
-    /** Construct this InteratorPanel_File instance. */
+    /**
+     * Construct this InteratorPanel_File instance.
+     */
     private void construct() {
         // Layout
         BoxLayout lBoxLayout = new BoxLayout(this, BoxLayout.LINE_AXIS);
@@ -81,7 +85,9 @@ public class IteratorPanel_File extends JPanel implements IteratorPanel {
 
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public static IteratorPanel_File getInstance() {
         if (iSingleton == null) {
             iSingleton = new IteratorPanel_File();
@@ -90,7 +96,9 @@ public class IteratorPanel_File extends JPanel implements IteratorPanel {
         return iSingleton;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public PeptideIdentificationIterator getIterator() {
         if (iFile != null) {
             if (iFile.exists()) {
@@ -123,16 +131,16 @@ public class IteratorPanel_File extends JPanel implements IteratorPanel {
         // The file filter to use.
         FileFilter filter = new FileFilter() {
             public boolean accept(File myFile) {
-                return iFileToolsFactory.canYouRead(myFile) ;
+                return iFileToolsFactory.canYouRead(myFile);
             }
 
             public String getDescription() {
                 List<String> formats = iFileToolsFactory.getFormats();
                 String toWrite = "supported formats : ";
-                for (int i=0 ; i < formats.size()-1 ; i++) {
+                for (int i = 0; i < formats.size() - 1; i++) {
                     toWrite += formats.get(i) + ", ";
                 }
-                toWrite += formats.get(formats.size()-1) + ".";
+                toWrite += formats.get(formats.size() - 1) + ".";
                 return toWrite;
             }
         };
