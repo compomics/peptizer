@@ -1,6 +1,7 @@
 package com.compomics.peptizer.util.datatools.implementations.xtandem;
 
 import com.compomics.mascotdatfile.util.interfaces.FragmentIon;
+import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.Advocate;
 import com.compomics.peptizer.util.datatools.AnnotationType;
@@ -38,9 +39,9 @@ public class XTandemPeptideHit extends PeptizerPeptideHit implements Serializabl
 
     private String[] iModArray;
 
-    public XTandemPeptideHit(Peptide aPeptide, XTandemFile aXTandemFile) {
+    public XTandemPeptideHit(Peptide aPeptide, XTandemFile aXTandemFile, int rank) {
         originalPeptideHits.put(SearchEngineEnum.XTandem, aPeptide);
-        advocate = new Advocate(SearchEngineEnum.XTandem);
+        advocate = new Advocate(SearchEngineEnum.XTandem, rank);
         iPeptide = aPeptide;
         iXTandemFile = aXTandemFile;
     }
@@ -322,8 +323,18 @@ public class XTandemPeptideHit extends PeptizerPeptideHit implements Serializabl
         return -1;  //No confidence interval in X!Tandem found
     }
 
-    public boolean scoresAboveThreshold(double aConfidenceInterval) {
-        return (iPeptide.getDomainExpect() >= 0);
+    public boolean scoresAboveThreshold(double anEValue) {
+        return (iPeptide.getDomainExpect() <= anEValue);
+    }
+
+    public double calculateThreshold() {
+        return -1;  //No confidence interval in X!Tandem found
+    }
+
+    public boolean scoresAboveThreshold() {
+        // Set eValue to the current EValue from the configuration.
+        double eValue = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_XTANDEM_EVALUE"));
+        return scoresAboveThreshold(eValue);
     }
 
     public ArrayList<AnnotationType> getAnnotationType() {

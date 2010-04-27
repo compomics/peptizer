@@ -101,8 +101,8 @@ public class OpenNterm extends Agent {
 
     private String getModificationType(PeptizerPeptideHit aPH) {
         String modificationType = null;
-        boolean identifiedByMascot = aPH.getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
-        boolean identifiedByOMSSA = aPH.getAdvocate().getAdvocates().contains(SearchEngineEnum.OMSSA);
+        boolean identifiedByMascot = aPH.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.Mascot);
+        boolean identifiedByOMSSA = aPH.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.OMSSA);
 
         if (identifiedByMascot) {
             Modification lModification = ((PeptideHit) aPH.getOriginalPeptideHit(SearchEngineEnum.Mascot)).getModifications()[0];

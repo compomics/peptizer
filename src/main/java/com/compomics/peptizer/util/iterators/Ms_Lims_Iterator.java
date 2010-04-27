@@ -82,7 +82,7 @@ public abstract class Ms_Lims_Iterator implements PeptideIdentificationIterator 
                     if (lPeptideHits == null) {
                         lPeptideHits = new Vector<MascotPeptideHit>();
                     }
-                    lPeptideHits.add(new MascotPeptideHit((PeptideHit) iMascotDatfile.getQueryToPeptideMap().getAllPeptideHits(lQueryNumber).get(i)));
+                    lPeptideHits.add(new MascotPeptideHit((PeptideHit) iMascotDatfile.getQueryToPeptideMap().getAllPeptideHits(lQueryNumber).get(i), i + 1));
                 }
 
                 // Construct a PeptideIdentification instance.

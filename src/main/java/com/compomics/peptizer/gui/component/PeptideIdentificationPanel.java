@@ -1,6 +1,5 @@
 package com.compomics.peptizer.gui.component;
 
-import com.compomics.mascotdatfile.util.gui.SequenceFragmentationPanel;
 import com.compomics.mascotdatfile.util.mascot.PeptideHit;
 import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.util.PeptideIdentification;
@@ -104,7 +103,7 @@ public class PeptideIdentificationPanel {
 
     private void createLabels() {
 
-        Double alpha = Double.parseDouble((String) MatConfig.getInstance().getGeneralProperties().get("DEFAULT_ALPHA"));
+        Double alpha = Double.parseDouble((String) MatConfig.getInstance().getGeneralProperties().get("DEFAULT_MASCOT_ALPHA"));
         double alphaPercentage = (1 - alpha) * 100;
         BigDecimal lPercentage = new BigDecimal(alphaPercentage).setScale(2, BigDecimal.ROUND_UP);
 

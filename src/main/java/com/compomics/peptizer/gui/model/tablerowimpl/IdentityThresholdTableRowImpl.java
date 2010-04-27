@@ -3,6 +3,7 @@ package com.compomics.peptizer.gui.model.tablerowimpl;
 import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.model.AbstractTableRow;
 import com.compomics.peptizer.util.PeptideIdentification;
+import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 
 import java.math.BigDecimal;
 import java.util.Properties;
@@ -34,9 +35,9 @@ public class IdentityThresholdTableRowImpl extends AbstractTableRow {
      * {@inheritDoc}
      */
     public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
-        double lConfidence = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_ALPHA"));
+        double lConfidence = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_MASCOT_ALPHA"));
 
-        BigDecimal lBigDecimal = new BigDecimal(aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).calculateThreshold(lConfidence));
+        BigDecimal lBigDecimal = new BigDecimal(aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getPeptidHit(SearchEngineEnum.Mascot).calculateThreshold(lConfidence));
         lBigDecimal = lBigDecimal.setScale(2, BigDecimal.ROUND_HALF_DOWN);
 
         return lBigDecimal.toString();
@@ -49,7 +50,7 @@ public class IdentityThresholdTableRowImpl extends AbstractTableRow {
      * @return String description of the TableRow.
      */
     public String getDescription() {
-        double lConfidence = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_ALPHA"));
+        double lConfidence = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_MASCOT_ALPHA"));
         return "Generalrow - The Identity threshold at " + new Double((1.0 - lConfidence) * 100) + "% confidence.";
     }
 }

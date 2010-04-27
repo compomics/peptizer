@@ -1,5 +1,6 @@
 package com.compomics.peptizer.util.datatools.implementations.omssa;
 
+import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.Advocate;
 import com.compomics.peptizer.util.datatools.AnnotationType;
@@ -33,9 +34,9 @@ public class OmssaPeptideHit extends PeptizerPeptideHit implements Serializable 
      */
     private final ArrayList<AnnotationType> iAnnotationType = createAnnotationType();
 
-    public OmssaPeptideHit(MSHits msHits, HashMap modifs, MSSearchSettings msSearchSettings, int msResponseScale) {
+    public OmssaPeptideHit(MSHits msHits, HashMap modifs, MSSearchSettings msSearchSettings, int msResponseScale, int rank) {
         originalPeptideHits.put(SearchEngineEnum.OMSSA, msHits);
-        advocate = new Advocate(SearchEngineEnum.OMSSA);
+        advocate = new Advocate(SearchEngineEnum.OMSSA, rank);
         annotationType = createAnnotationType();
         this.msHits = msHits;
         this.modifs = modifs;
@@ -349,12 +350,21 @@ public class OmssaPeptideHit extends PeptizerPeptideHit implements Serializable 
     }
 
     public double calculateThreshold(double aConfidenceInterval) {
-        return 0;
-        //return msSearchSettings.MSSearchSettings_cutoff;
+        return -1;
     }
 
-    public boolean scoresAboveThreshold(double aConfidenceInterval) {
-        return (msHits.MSHits_evalue >= 0);//msSearchSettings.MSSearchSettings_cutoff);
+    public boolean scoresAboveThreshold(double anEValue) {
+        return (msHits.MSHits_evalue <= anEValue);
+    }
+
+    public double calculateThreshold() {
+        return -1;
+    }
+
+    public boolean scoresAboveThreshold() {
+        // Set eValue to the current EValue from the configuration.
+        double eValue = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_OMSSA_EVALUE"));
+        return scoresAboveThreshold(eValue);
     }
 
     public double getIonsScore() {

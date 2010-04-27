@@ -29,4 +29,8 @@ public enum SearchEngineEnum {
             return 2;
         } else return -1;
     }
+
+    public String getInitial() {
+        return "" + getName().charAt(0);
+    }
 }

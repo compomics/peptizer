@@ -43,7 +43,7 @@ public class Homology extends Agent {
      */
     public AgentVote[] inspect(PeptideIdentification aPeptideIdentification) {
 
-        String alphaString = MatConfig.getInstance().getGeneralProperty("DEFAULT_ALPHA");
+        String alphaString = MatConfig.getInstance().getGeneralProperty("DEFAULT_MASCOT_ALPHA");
         setAlpha(Double.parseDouble(alphaString));
 
         // The resulting Inspection score.
@@ -126,7 +126,7 @@ public class Homology extends Agent {
 
     private boolean canAnalyze(Advocate advocate) {
         for (int i = 0; i < compatibleSearchEngine.length; i++) {
-            if (advocate.getAdvocates().contains(compatibleSearchEngine[i])) {
+            if (advocate.getAdvocatesList().contains(compatibleSearchEngine[i])) {
                 return true;
             }
         }

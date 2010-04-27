@@ -1,6 +1,5 @@
 package com.compomics.peptizer.gui.model;
 
-import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.Mediator;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
@@ -86,7 +85,7 @@ public class TreeCellRendererImpl extends JPanel implements TreeCellRenderer {
             PeptizerPeptideHit lPeptideHit = (PeptizerPeptideHit) value;
             BigDecimal lScore = new BigDecimal(lPeptideHit.getIonsScore());
             lScore = lScore.setScale(1, BigDecimal.ROUND_DOWN);
-            BigDecimal lThreshold = new BigDecimal(lPeptideHit.calculateThreshold(Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_ALPHA"))));
+            BigDecimal lThreshold = new BigDecimal(lPeptideHit.calculateThreshold());
             lThreshold = lThreshold.setScale(1, BigDecimal.ROUND_DOWN);
 
             result = lPeptideHit.getModifiedSequence();

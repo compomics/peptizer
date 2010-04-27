@@ -29,9 +29,9 @@ public class MascotPeptideHit extends PeptizerPeptideHit implements Serializable
     private PeptideHit iPeptideHit;
 
 
-    public MascotPeptideHit(PeptideHit aPeptideHit) {
+    public MascotPeptideHit(PeptideHit aPeptideHit, int rank) {
         originalPeptideHits.put(SearchEngineEnum.Mascot, aPeptideHit);
-        advocate = new Advocate(SearchEngineEnum.Mascot);
+        advocate = new Advocate(SearchEngineEnum.Mascot, rank);
         annotationType = createAnnotationType();
         iPeptideHit = aPeptideHit;
     }
@@ -338,6 +338,18 @@ public class MascotPeptideHit extends PeptizerPeptideHit implements Serializable
 
     public boolean scoresAboveThreshold(double aConfidenceInterval) {
         return iPeptideHit.scoresAboveIdentityThreshold(aConfidenceInterval);
+    }
+
+    public double calculateThreshold() {
+        // Set iAlpha to the current Alpha from the configuration.
+        double iAlpha = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_MASCOT_ALPHA"));
+        return calculateThreshold(iAlpha);
+    }
+
+    public boolean scoresAboveThreshold() {
+        // Set iAlpha to the current Alpha from the configuration.
+        double iAlpha = Double.parseDouble(MatConfig.getInstance().getGeneralProperty("DEFAULT_MASCOT_ALPHA"));
+        return scoresAboveThreshold(iAlpha);
     }
 
     public double getIonsScore() {

@@ -8,6 +8,7 @@ import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import com.compomics.util.io.FilenameExtensionFilter;
 import de.proteinms.omxparser.OmssaOmxFile;
 import de.proteinms.omxparser.util.MSHitSet;
+import de.proteinms.omxparser.util.MSHits;
 import de.proteinms.omxparser.util.MSSearchSettings;
 import de.proteinms.omxparser.util.MSSpectrum;
 
@@ -163,22 +164,25 @@ public class OmxfileIterator implements PeptideIdentificationIterator {
                     hitsNumber = sHitSet.MSHitSet_hits.MSHits.size();
                 }
                 Vector peptizerPeptideHits = new Vector();
-                ArrayList<String> foundPeptides = new ArrayList();        // OMSSA produces duplicates we need to eliminate to make results readable
+                ArrayList<MSHits> foundPeptides = new ArrayList();        // OMSSA produces duplicates we need to eliminate to make results readable
                 boolean duplicate;
                 if (hitsNumber > 0) {
-                    foundPeptides.add(sHitSet.MSHitSet_hits.MSHits.get(0).MSHits_pepstring);
-                    peptizerPeptideHits.add(0, new OmssaPeptideHit(sHitSet.MSHitSet_hits.MSHits.get(0), iOmssaOmxFile.getModifications(), getSettings(), getMSResponseScale()));
+                    foundPeptides.add(sHitSet.MSHitSet_hits.MSHits.get(0));
+                    peptizerPeptideHits.add(0, new OmssaPeptideHit(sHitSet.MSHitSet_hits.MSHits.get(0), iOmssaOmxFile.getModifications(), getSettings(), getMSResponseScale(), 1));
+                    int cpt = 1;
                     for (int i = 1; i < hitsNumber; i++) {
                         duplicate = false;
-                        for (int j=0 ; j < foundPeptides.size() ; j++) {
-                            if (sHitSet.MSHitSet_hits.MSHits.get(i).MSHits_pepstring.compareTo(foundPeptides.get(j))==0) {
-                                duplicate = true;
+                        for (int j = 0; j < foundPeptides.size(); j++) {
+                            if (sHitSet.MSHitSet_hits.MSHits.get(i).MSHits_pepstring.compareTo(foundPeptides.get(j).MSHits_pepstring) == 0) {
+                                boolean sameModifs = true;
+                                // We may want to compare modifications 
+                                duplicate = sameModifs;
                                 break;
                             }
                         }
                         if (!duplicate) {
-                            peptizerPeptideHits.add(new OmssaPeptideHit(sHitSet.MSHitSet_hits.MSHits.get(i), iOmssaOmxFile.getModifications(), getSettings(), getMSResponseScale()));
-                            foundPeptides.add(sHitSet.MSHitSet_hits.MSHits.get(i).MSHits_pepstring);
+                            peptizerPeptideHits.add(new OmssaPeptideHit(sHitSet.MSHitSet_hits.MSHits.get(i), iOmssaOmxFile.getModifications(), getSettings(), getMSResponseScale(), ++cpt));
+                            foundPeptides.add(sHitSet.MSHitSet_hits.MSHits.get(i));
                         }
                     }
                 }

@@ -2,8 +2,10 @@ package com.compomics.peptizer.util.datatools;
 
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 
-import java.util.ArrayList;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Created by IntelliJ IDEA.
@@ -14,52 +16,63 @@ import java.io.Serializable;
  */
 public class Advocate implements Serializable {
 
-    private ArrayList<SearchEngineEnum> advocates = new ArrayList();
+    private HashMap<SearchEngineEnum, Integer> advocates = new HashMap();
 
-    public Advocate(ArrayList<SearchEngineEnum> advocates) {
+    public Advocate(HashMap<SearchEngineEnum, Integer> advocates) {
         this.advocates = advocates;
     }
 
-    public Advocate(SearchEngineEnum advocate) {
-        advocates.add(advocate);
+    public Advocate(SearchEngineEnum advocate, int rank) {
+        advocates.put(advocate, rank);
     }
 
-    public void addAdvocate(SearchEngineEnum advocate) {
-        advocates.add(advocate);
+    public void addAdvocate(SearchEngineEnum advocate, int rank) {
+        advocates.put(advocate, rank);
     }
 
     public void addAdvocate(Advocate advocate) {
-        this.advocates.addAll(advocate.getAdvocates());
+        this.advocates.putAll(advocate.getAdvocates());
     }
 
-    public ArrayList<SearchEngineEnum> getAdvocates() {
+    public ArrayList<SearchEngineEnum> getAdvocatesList() {
+        return new ArrayList(advocates.keySet());
+    }
+
+    private HashMap<SearchEngineEnum, Integer> getAdvocates() {
         return advocates;
     }
 
     public String getName() {
+        Iterator<SearchEngineEnum> searchEnginesIterator = advocates.keySet().iterator();
         String result = "";
-        if (advocates.size()>1) {
+        if (advocates.size() > 1) {
             result += "[";
         }
-        result += advocates.get(0).getName().charAt(0);
-        for (int i = 1; i < advocates.size(); i++) {
-            result += " - " + advocates.get(i).getName().charAt(0);
+        SearchEngineEnum currentSearchEngine = searchEnginesIterator.next();
+        result += currentSearchEngine.getInitial() + "" + advocates.get(currentSearchEngine);
+        while (searchEnginesIterator.hasNext()) {
+            currentSearchEngine = searchEnginesIterator.next();
+            result += " - " + currentSearchEngine.getInitial() + advocates.get(currentSearchEngine);
         }
-        if (advocates.size()>1) {
-            result += "]";    
+        if (advocates.size() > 1) {
+            result += "]";
         }
         return result;
     }
 
-    public boolean isSameAs(Advocate anotherAdvocate) {
+    public boolean sameCategoryAs(Advocate anotherAdvocate) {
         if (advocates.size() != anotherAdvocate.getAdvocates().size()) {
             return false;
         }
         for (int i = 0; i < advocates.size(); i++) {
-            if (!anotherAdvocate.getAdvocates().contains(advocates.get(i))) {
+            if (!anotherAdvocate.getAdvocatesList().contains(getAdvocatesList().get(i))) {
                 return false;
             }
         }
         return true;
+    }
+
+    public int getRank(SearchEngineEnum searchEngine) {
+        return advocates.get(searchEngine);
     }
 }

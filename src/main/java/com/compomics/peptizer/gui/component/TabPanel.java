@@ -226,14 +226,14 @@ public class TabPanel extends JPanel {
 
     public void updateAnnotationTypeButtons(int peptideNumber) {
         boolean found = false;
-        for (int i = 0; i < iPeptideIdentification.getPeptideHit(peptideNumber).getAdvocate().getAdvocates().size(); i++) {
-            if (iPeptideIdentification.getPeptideHit(peptideNumber).getAdvocate().getAdvocates().get(i).getId() == searchEngineSelectedIndex) {
+        for (int i = 0; i < iPeptideIdentification.getPeptideHit(peptideNumber).getAdvocate().getAdvocatesList().size(); i++) {
+            if (iPeptideIdentification.getPeptideHit(peptideNumber).getAdvocate().getAdvocatesList().get(i).getId() == searchEngineSelectedIndex) {
                 found = true;
                 break;
             }
         }
         if (!found) {
-            searchEngineSelectedIndex = iPeptideIdentification.getPeptideHit(peptideNumber).getAdvocate().getAdvocates().get(0).getId();
+            searchEngineSelectedIndex = iPeptideIdentification.getPeptideHit(peptideNumber).getAdvocate().getAdvocatesList().get(0).getId();
             bgSelectedIndex = -1;
         }
         for (int i = 0; i < rbtAnnotation.size(); i++) {

@@ -88,8 +88,8 @@ public class ModificationCoverageAgent extends Agent {
 
             if (lModificationLocation != -1) {
                 Vector<Ion> lMatchedIons = new Vector();
-                boolean identifiedByMascot = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
-                boolean identifiedByOMSSA = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocates().contains(SearchEngineEnum.OMSSA);
+                boolean identifiedByMascot = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocatesList().contains(SearchEngineEnum.Mascot);
+                boolean identifiedByOMSSA = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocatesList().contains(SearchEngineEnum.OMSSA);
                 if (identifiedByMascot) {
                     lMatchedIons = findNeighbourIons(aPeptideIdentification.getSpectrum(), (PeptideHit) lPeptideHit.getOriginalPeptideHit(SearchEngineEnum.Mascot), lModificationLocation, (Masses) aPeptideIdentification.getMetaData(MetaKey.Masses_section), (Parameters) aPeptideIdentification.getMetaData(MetaKey.Parameter_section));
                 } else if (identifiedByOMSSA) {
@@ -309,8 +309,8 @@ public class ModificationCoverageAgent extends Agent {
      */
     private int isModified(PeptizerPeptideHit aPh, String aModificationName, String aModifiedResidue) {
         boolean lModified = false;
-        boolean identifiedByMascot = aPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
-        boolean identifiedByOMSSA = aPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.OMSSA);
+        boolean identifiedByMascot = aPh.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.Mascot);
+        boolean identifiedByOMSSA = aPh.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.OMSSA);
         if (identifiedByMascot) {
             PeptideHit aMPh = (PeptideHit) aPh.getOriginalPeptideHit(SearchEngineEnum.Mascot);
             int lLocation = 0;

@@ -3,6 +3,7 @@ package com.compomics.peptizer.gui.model.tablerowimpl;
 import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.model.AbstractTableRow;
 import com.compomics.peptizer.util.PeptideIdentification;
+import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 
 import java.math.BigDecimal;
 import java.util.Properties;
@@ -34,7 +35,7 @@ public class HomologyScoreTableRowImpl extends AbstractTableRow {
      * {@inheritDoc}
      */
     public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
-        BigDecimal lBigDecimal = new BigDecimal(aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getHomologyThreshold());
+        BigDecimal lBigDecimal = new BigDecimal(aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getPeptidHit(SearchEngineEnum.Mascot).getHomologyThreshold());
         lBigDecimal = lBigDecimal.setScale(2, BigDecimal.ROUND_HALF_DOWN);
 
         return lBigDecimal.toString();

@@ -49,7 +49,7 @@
         </tablerow>
         <!-- This tablerow displays the score difference between the first and second rank peptidehit. -->
         <tablerow>
-            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.Delta12RankScoreTableRowImpl</uniqueid>
+            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.RatioEValue12TableRowImpl</uniqueid>
             <property name="name">Delta rank n - (n-1)</property>
             <property name="active">true</property>
         </tablerow>
@@ -93,10 +93,9 @@
             <property name="active">true</property>
         </tablerow>
         <tablerow>
-            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.IsAboveCustomConfidenceTableRowImpl</uniqueid>
-            <property name="name">95%Confident</property>
+            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.IsAboveConfidenceTableRowImpl</uniqueid>
+            <property name="name">Confident</property>
             <property name="active">false</property>
-            <property name="alpha">0.05</property>
         </tablerow>
         <tablerow>
             <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.IdentityThreshold95TableRowImpl</uniqueid>

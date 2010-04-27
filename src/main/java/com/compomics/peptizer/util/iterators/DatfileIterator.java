@@ -116,7 +116,7 @@ public class DatfileIterator implements PeptideIdentificationIterator {
                 Vector peptizerPeptideHits = new Vector(hitsNumber);
                 // translation into peptizer object
                 for (int i = 0; i < hitsNumber; i++) {
-                    peptizerPeptideHits.add(new MascotPeptideHit((PeptideHit) mascotPeptideHits.get(i)));
+                    peptizerPeptideHits.add(new MascotPeptideHit((PeptideHit) mascotPeptideHits.get(i), i + 1));
                 }
                 // Create a new PeptideIdentification and shift the index.
                 PeptideIdentification lPeptideIdentification = new PeptideIdentification(lSpectrum, peptizerPeptideHits, SearchEngineEnum.Mascot);

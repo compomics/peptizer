@@ -73,8 +73,8 @@ public class NTermAcetylation extends Agent {
      */
     private boolean getAcetylationStatus(PeptizerPeptideHit aPh) {
 
-        boolean identifiedByMascot = aPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
-        boolean identifiedByOMSSA = aPh.getAdvocate().getAdvocates().contains(SearchEngineEnum.OMSSA);
+        boolean identifiedByMascot = aPh.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.Mascot);
+        boolean identifiedByOMSSA = aPh.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.OMSSA);
 
         if (identifiedByMascot) {
             PeptideHit aMPh = (PeptideHit) aPh.getOriginalPeptideHit(SearchEngineEnum.Mascot);

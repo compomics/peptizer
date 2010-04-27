@@ -54,8 +54,8 @@ public class Deamidation extends Agent {
 
             // 2. Get the number of deamidations.
             int lNumberOfDeamidations = 0;
-            boolean identifiedByMascot = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
-            boolean identifiedByOMSSA = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocates().contains(SearchEngineEnum.OMSSA);
+            boolean identifiedByMascot = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocatesList().contains(SearchEngineEnum.Mascot);
+            boolean identifiedByOMSSA = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocatesList().contains(SearchEngineEnum.OMSSA);
 
             if (identifiedByMascot) {
                 lNumberOfDeamidations = getNumberOfDeamidations((MascotPeptideHit) lPeptideHit);

@@ -82,11 +82,15 @@ public class TableHeaderCellRendererImpl implements TableCellRenderer {
             PeptizerPeptideHit currentPeptideHit = lPeptideIdentification.getPeptideHit(column - 1);
             int index = 1;
             for (int i = 0; i < column - 1; i++) {
-                if (lPeptideIdentification.getPeptideHit(i).getAdvocate().isSameAs(currentPeptideHit.getAdvocate())) {
+                if (lPeptideIdentification.getPeptideHit(i).getAdvocate().sameCategoryAs(currentPeptideHit.getAdvocate())) {
                     index++;
                 }
             }
-            lbl.setText(currentPeptideHit.getAdvocate().getName() + " " + index);
+            if (currentPeptideHit.getAdvocate().getAdvocatesList().size() > 1) {
+                lbl.setText(currentPeptideHit.getAdvocate().getName() + " " + index);
+            } else {
+                lbl.setText(currentPeptideHit.getAdvocate().getName());
+            }
             if (!lPeptideIdentification.isValidated()) {
                 // A. If nothing is validated, stay with the defaults.
                 setDefault();
@@ -158,6 +162,6 @@ public class TableHeaderCellRendererImpl implements TableCellRenderer {
             font = new Font(lbl.getFont().getFamily(), Font.BOLD, lbl.getFont().getSize());
         else
             font = new Font(lbl.getFont().getFamily(), 0, lbl.getFont().getSize());
-		lbl.setFont(font);
-	}
+        lbl.setFont(font);
+    }
 }

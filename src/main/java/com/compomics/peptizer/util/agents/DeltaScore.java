@@ -51,7 +51,7 @@ public class DeltaScore extends Agent {
      */
     public AgentVote[] inspect(PeptideIdentification aPeptideIdentification) {
 
-        String alphaString = MatConfig.getInstance().getGeneralProperty("DEFAULT_ALPHA");
+        String alphaString = MatConfig.getInstance().getGeneralProperty("DEFAULT_MASCOT_ALPHA");
         setAlpha(Double.parseDouble(alphaString));
 
         double lDelta = Double.parseDouble((String) this.iProperties.get(DELTA));
@@ -63,7 +63,7 @@ public class DeltaScore extends Agent {
 
             // Make Agent Report!
             iReport = new AgentReport(getUniqueID());
-            boolean identifiedByMascot = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocates().contains(SearchEngineEnum.Mascot);
+            boolean identifiedByMascot = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocatesList().contains(SearchEngineEnum.Mascot);
 
             if (identifiedByMascot) {
                 // 1. Get the nth confident PeptideHit.

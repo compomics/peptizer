@@ -3,8 +3,8 @@ package com.compomics.peptizer.gui.component;
 import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.interfaces.IteratorPanel;
 import com.compomics.peptizer.interfaces.PeptideIdentificationIterator;
-import com.compomics.peptizer.util.fileio.MatLogger;
 import com.compomics.peptizer.util.datatools.FileToolsFactory;
+import com.compomics.peptizer.util.fileio.MatLogger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -19,7 +19,9 @@ import java.io.IOException;
  * Time: 22:02:23
  */
 
-/** Class description: ------------------ This class was developed to*/
+/**
+ * Class description: ------------------ This class was developed to
+ */
 public class IteratorPanel_Folder extends JPanel implements IteratorPanel {
 
     private static IteratorPanel_Folder iSingleton = null;
@@ -48,7 +50,9 @@ public class IteratorPanel_Folder extends JPanel implements IteratorPanel {
 
     }
 
-    /** Construct this InteratorPanel_Folder instance. */
+    /**
+     * Construct this InteratorPanel_Folder instance.
+     */
     private void construct() {
         // Layout
         BoxLayout lBoxLayout = new BoxLayout(this, BoxLayout.LINE_AXIS);
@@ -82,7 +86,9 @@ public class IteratorPanel_Folder extends JPanel implements IteratorPanel {
 
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public static IteratorPanel_Folder getInstance() {
         if (iSingleton == null) {
             iSingleton = new IteratorPanel_Folder();
@@ -90,7 +96,9 @@ public class IteratorPanel_Folder extends JPanel implements IteratorPanel {
         return iSingleton;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public PeptideIdentificationIterator getIterator() {
         if (iFolder != null) {
             if (boolFolderHasCHanged) {

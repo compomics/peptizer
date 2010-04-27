@@ -85,7 +85,7 @@ public class IdentificationFactory {
             while (keyIterator.hasNext() && !found) {
                 currentkey = keyIterator.next();
                 // We assume that a searchengine will retrieve only one PeptideIdentification per spectrum
-                if (currentkey != newIdentification.getAdvocate().getAdvocates().get(0)) {
+                if (currentkey != newIdentification.getAdvocate().getAdvocatesList().get(0)) {
                     oldIdentificationsIt = identifications.get(currentkey).iterator();
                     while (oldIdentificationsIt.hasNext()) {
                         oldIdentification = oldIdentificationsIt.next();
@@ -98,7 +98,7 @@ public class IdentificationFactory {
                 }
             }
             if (!found) {
-                identifications.get(newIdentification.getAdvocate().getAdvocates().get(0)).add(newIdentification);
+                identifications.get(newIdentification.getAdvocate().getAdvocatesList().get(0)).add(newIdentification);
             }
         }
 
