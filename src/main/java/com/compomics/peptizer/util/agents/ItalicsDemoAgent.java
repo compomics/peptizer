@@ -53,7 +53,7 @@ public class ItalicsDemoAgent extends Agent {
             // The resulting Inspection score.
             // If shorter then the given length, set to 1.
 
-            if (lPeptideHit.scoresAboveThreshold()) {
+            if (lPeptideHit.validatedByOneAdvocate()) {
                 lScore[i] = AgentVote.NEGATIVE_FOR_SELECTION;
             } else {
                 lScore[i] = AgentVote.POSITIVE_FOR_SELECTION;

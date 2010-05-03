@@ -34,7 +34,7 @@ public class IsAboveConfidenceTableRowImpl extends AbstractTableRow {
      * {@inheritDoc}
      */
     public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
-        return aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).scoresAboveThreshold() ? "true" : "false";
+        return aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).validatedByOneAdvocate() ? "true" : "false";
     }
 
     /**

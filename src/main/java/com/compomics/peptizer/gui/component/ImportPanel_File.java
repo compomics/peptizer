@@ -124,17 +124,9 @@ public class ImportPanel_File extends JPanel implements ImportPanel {
         progressBar.setMaximum(iFile.size());
 
         if (iFile.size() > 0) {
-            for (int i = 0; i < iFile.size(); i++) {
-                progressBar.setMessage("loading " + iFile.get(i).getName());
-                progressBar.setValue(i);
-
-                if (iFile.get(i).exists()) {
-                    IdentificationFactory.getInstance().load(iFile.get(i));
-                } else {
-                    JOptionPane.showMessageDialog(this.getParent(), iFile.get(i).getName() + " does not exist!", "Data import failed.", JOptionPane.ERROR_MESSAGE);
-                    break;
-                }
-            }
+            FileImportWorker fileImportWorker = new FileImportWorker(progressBar);
+            fileImportWorker.execute();
+            progressBar.setVisible(true);
         } else {
             JOptionPane.showMessageDialog(this.getParent(), "Select at least a file please.", "Data import failed.", JOptionPane.ERROR_MESSAGE);
         }
@@ -228,5 +220,45 @@ public class ImportPanel_File extends JPanel implements ImportPanel {
         return "Identification File(s)";
     }
 
+    private class FileImportWorker extends SwingWorker {
+
+        private DefaultProgressBar progressBar;
+
+        protected FileImportWorker(DefaultProgressBar progressBar) {
+            this.progressBar = progressBar;
+        }
+
+        /**
+         * Computes a result, or throws an exception if unable to do so.
+         * <p/>
+         * <p/>
+         * Note that this method is executed only once.
+         * <p/>
+         * <p/>
+         * Note: this method is executed in a background thread.
+         *
+         * @return the computed result
+         * @throws Exception if unable to compute a result
+         */
+        protected Object doInBackground() throws Exception {
+            if (iFile.size() < 4) {
+                progressBar.setIndeterminate(true);
+            }
+            for (int i = 0; i < iFile.size(); i++) {
+                progressBar.setMessage("loading " + iFile.get(i).getName());
+                progressBar.setValue(i);
+
+                if (iFile.get(i).exists()) {
+                    IdentificationFactory.getInstance().load(iFile.get(i));
+                } else {
+                    JOptionPane.showMessageDialog(ImportPanel_File.this.getParent(), iFile.get(i).getName() + " does not exist!", "Data import failed.", JOptionPane.ERROR_MESSAGE);
+                    break;
+                }
+            }
+            progressBar.setVisible(false);
+            progressBar.dispose();
+            return null;
+        }
+    }
 
 }
