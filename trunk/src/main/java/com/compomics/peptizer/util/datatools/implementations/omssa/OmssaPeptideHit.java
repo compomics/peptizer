@@ -66,12 +66,26 @@ public class OmssaPeptideHit extends PeptizerPeptideHit implements Serializable 
         return decomposedSequence;
     }
 
+    public ArrayList<Integer> getModificationsLocations() {
+        ArrayList<Integer> variableMod = new ArrayList();
+        // We need a sorted vector of the locations of variable modifications to discriminate peptides.
+        List<MSModHit> hitModifs = msHits.MSHits_mods.MSModHit;
+        for (int i = 0; i < hitModifs.size(); i++) {
+            variableMod.add(hitModifs.get(i).MSModHit_site+1);
+        }
+        return variableMod;
+    }
+
     public String getModifiedSequence() {
 
         String[] decomposedSequence = decomposeSequence(getSequence());
         // First handle the fixed modifications
         List<Integer> fixedModifications = msSearchSettings.MSSearchSettings_fixed.MSMod;
 
+        String nTerm = "NH2";
+        String cTerm = "COOH";
+        boolean nModified = false;
+        boolean cModified = false;
         for (int i = 0; i < fixedModifications.size(); i++) {
             OmssaModification currentmodification = modifs.get(fixedModifications.get(i).intValue());
             String modType = currentmodification.getModName();
@@ -80,8 +94,6 @@ public class OmssaPeptideHit extends PeptizerPeptideHit implements Serializable 
             - modifications at the begining or end of a protein
             - multiple modifications on the same AA or terminus.
              */
-            boolean nModified = false;
-            boolean cModified = false;
             if (currentmodification.getModType() == OmssaModification.MODAA) {
                 for (int j = 0; j < decomposedSequence.length; j++) {
                     for (int k = 0; k < modResidue.size(); k++) {
@@ -92,26 +104,31 @@ public class OmssaPeptideHit extends PeptizerPeptideHit implements Serializable 
                 }
             } else if (currentmodification.getModType() == OmssaModification.MODNP) {
                 if (nModified) {
-                    decomposedSequence[0] += "<" + modType + ">";
+                    nTerm += "<" + modType + ">";
                 } else {
-                    decomposedSequence[0] = "<" + modType + ">";
+                    nTerm = "<" + modType + ">";
                     nModified = true;
                 }
             } else if (currentmodification.getModType() == OmssaModification.MODNPAA && decomposedSequence[0].compareTo(modResidue.get(0)) == 0) {
                 if (nModified) {
-                    decomposedSequence[0] += "<" + modType + ">";
+                    nTerm += "<" + modType + ">";
                 } else {
-                    decomposedSequence[0] = "<" + modType + ">";
+                    nTerm = "<" + modType + ">";
                 }
             } else if (currentmodification.getModType() == OmssaModification.MODCP) {
                 if (cModified) {
-                    decomposedSequence[decomposedSequence.length - 1] += "<" + modType + ">";
+                    cTerm += "<" + modType + ">";
                 } else {
-                    decomposedSequence[decomposedSequence.length - 1] = "<" + modType + ">";
+                    cTerm = "<" + modType + ">";
                     cModified = true;
                 }
             } else if (currentmodification.getModType() == OmssaModification.MODCPAA && decomposedSequence[decomposedSequence.length - 1].compareTo(modResidue.get(0)) == 0) {
-                decomposedSequence[decomposedSequence.length - 1] = decomposedSequence[decomposedSequence.length - 1] + "<" + modType + ">";
+                if (cModified) {
+                    cTerm += "<" + modType + ">";
+                } else {
+                    cTerm = "<" + modType + ">";
+                    cModified = true;
+                }
             }
         }
 
@@ -125,11 +142,11 @@ public class OmssaPeptideHit extends PeptizerPeptideHit implements Serializable 
 
 
         // Concat everything
-        String modifiedSequence = "NH2-";
+        String modifiedSequence = nTerm + "-";
         for (int i = 0; i < decomposedSequence.length; i++) {
             modifiedSequence += decomposedSequence[i];
         }
-        modifiedSequence += "-COOH";
+        modifiedSequence += "-" + cTerm;
         return modifiedSequence;
     }
 
@@ -138,6 +155,10 @@ public class OmssaPeptideHit extends PeptizerPeptideHit implements Serializable 
         // First handle the fixed modifications
         List<Integer> fixedModifications = msSearchSettings.MSSearchSettings_fixed.MSMod;
 
+        String nTerm = "NH2";
+        String cTerm = "COOH";
+        boolean nModified = false;
+        boolean cModified = false;
         for (int i = 0; i < fixedModifications.size(); i++) {
             OmssaModification currentmodification = modifs.get(fixedModifications.get(i).intValue());
             String modType = currentmodification.getModName();
@@ -155,13 +176,33 @@ public class OmssaPeptideHit extends PeptizerPeptideHit implements Serializable 
                     }
                 }
             } else if (currentmodification.getModType() == OmssaModification.MODNP) {
-                decomposedSequence[0] = decomposedSequence[0] + "<" + modType + ">";
+                if (nModified) {
+                    nTerm += "<" + modType + ">";
+                } else {
+                    nTerm = "<" + modType + ">";
+                    nModified = true;
+                }
             } else if (currentmodification.getModType() == OmssaModification.MODNPAA && decomposedSequence[0].compareTo(modResidue.get(0)) == 0) {
-                decomposedSequence[0] = decomposedSequence[0] + "<" + modType + ">";
+                if (nModified) {
+                    nTerm += "<" + modType + ">";
+                } else {
+                    nTerm = "<" + modType + ">";
+                    nModified = true;
+                }
             } else if (currentmodification.getModType() == OmssaModification.MODCP) {
-                decomposedSequence[decomposedSequence.length - 1] = decomposedSequence[decomposedSequence.length - 1] + "<" + modType + ">";
+                if (cModified) {
+                    cTerm += "<" + modType + ">";
+                } else {
+                    cTerm = "<" + modType + ">";
+                    cModified = true;
+                }
             } else if (currentmodification.getModType() == OmssaModification.MODCPAA && decomposedSequence[decomposedSequence.length - 1].compareTo(modResidue.get(0)) == 0) {
-                decomposedSequence[decomposedSequence.length - 1] = decomposedSequence[decomposedSequence.length - 1] + "<" + modType + ">";
+                if (cModified) {
+                    cTerm += "<" + modType + ">";
+                } else {
+                    cTerm = "<" + modType + ">";
+                    cModified = true;
+                }
             }
         }
 
@@ -172,14 +213,6 @@ public class OmssaPeptideHit extends PeptizerPeptideHit implements Serializable 
             String modName = modifs.get(mod).getModName();
             decomposedSequence[hitModifs.get(i).MSModHit_site] += "<" + modName + ">";
         }
-
-
-        // Concat everything
-        String modifiedSequence = "NH2-";
-        for (int i = 0; i < decomposedSequence.length; i++) {
-            modifiedSequence += decomposedSequence[i];
-        }
-        modifiedSequence += "-COOH";
 
 
         // look for the b and y hits
@@ -195,8 +228,8 @@ public class OmssaPeptideHit extends PeptizerPeptideHit implements Serializable 
             }
         }
 
-        decomposedSequence[0] = "NH2-" + decomposedSequence[0];
-        decomposedSequence[decomposedSequence.length - 1] += "-COOH";
+        decomposedSequence[0] = nTerm + "-" + decomposedSequence[0];
+        decomposedSequence[decomposedSequence.length - 1] += "-" + cTerm;
 
         // Color or underline according to the coverage
         if (bHits[0] && bHits[1]) {
@@ -223,7 +256,7 @@ public class OmssaPeptideHit extends PeptizerPeptideHit implements Serializable 
         for (int i = 0; i < decomposedSequence.length; i++) {
             coloredSequence += decomposedSequence[i];
         }
-        modifiedSequence += "</html>";
+        coloredSequence += "</html>";
 
         // Create label and set text.
         JLabel label = new JLabelImpl(coloredSequence.toString(), getSequence());
@@ -343,10 +376,6 @@ public class OmssaPeptideHit extends PeptizerPeptideHit implements Serializable 
             }
         }
         return peak;
-    }
-
-    private ArrayList<AnnotationType> getOMSSAAnnotationType() {
-        return iAnnotationType;
     }
 
     public double calculateThreshold(double aConfidenceInterval) {

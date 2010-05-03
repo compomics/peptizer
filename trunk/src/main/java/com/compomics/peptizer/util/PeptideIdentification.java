@@ -192,7 +192,7 @@ public class PeptideIdentification implements Comparable, Serializable {
             if (iNumberOfConfidentPeptideHits == 0) {
                 for (int i = 0; i < iPeptideHits.size(); i++) {
                     PeptizerPeptideHit lPeptideHit = iPeptideHits.elementAt(i);
-                    if (lPeptideHit.scoresAboveThreshold()) {
+                    if (lPeptideHit.validatedByOneAdvocate()) {
                         iNumberOfConfidentPeptideHits++;
                     } else {
                         break;

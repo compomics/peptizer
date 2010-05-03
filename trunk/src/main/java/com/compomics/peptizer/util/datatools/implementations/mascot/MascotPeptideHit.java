@@ -53,6 +53,18 @@ public class MascotPeptideHit extends PeptizerPeptideHit implements Serializable
         return result;
     }
 
+    public ArrayList<Integer> getModificationsLocations() {
+        ArrayList<Integer> variableMod = new ArrayList();
+        // We need a sorted vector of the locations of variable modifications to discriminate peptides.
+        int[] modificationsArray = iPeptideHit.getVariableModificationsArray();
+        for (int i=0 ; i < modificationsArray.length ; i++) {
+            if (modificationsArray[i]!=0) {
+                variableMod.add(i);    
+            }
+        }
+        return variableMod;
+    }
+
     public JLabel getColoredModifiedSequence(PeptideIdentification aPeptideIdentification) {
         // Get peptidehitannotation object.
         PeptideHitAnnotation pha =

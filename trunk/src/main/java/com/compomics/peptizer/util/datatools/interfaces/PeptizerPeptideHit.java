@@ -64,7 +64,17 @@ public abstract class PeptizerPeptideHit {
         if (aPeptizerPeptideHit.getSequence().compareTo(this.getSequence()) != 0) {
             return false;
         }
-        // Other criteria than the sequence might be implemented here.
+        ArrayList<Integer> newLocations = aPeptizerPeptideHit.getModificationsLocations();
+        ArrayList<Integer> thisLocations = this.getModificationsLocations();
+        if (newLocations.size() != thisLocations.size()) {
+            return false;
+        }
+        for (int i=0 ; i < thisLocations.size() ; i++) {
+            if (newLocations.get(i) != thisLocations.get(i)) {
+                return false;
+            }
+        }
+        // Other criteria might be implemented here.
         return true;
     }
 
@@ -72,13 +82,13 @@ public abstract class PeptizerPeptideHit {
 
     public abstract String getModifiedSequence();
 
+    public abstract ArrayList<Integer> getModificationsLocations();
+
     public abstract JLabel getColoredModifiedSequence(PeptideIdentification aPeptideIdentification);
 
     public abstract int getBTag(PeptideIdentification aPeptideIdentification);
 
     public abstract int getYTag(PeptideIdentification aPeptideIdentification);
-
-    public abstract double getExpectancy(double aConfidenceInterval);
 
     public abstract double getTheoMass();
 
@@ -103,17 +113,29 @@ public abstract class PeptizerPeptideHit {
 
     public abstract int[] getSequenceCoverage(PeptideIdentification aPeptideIdentification);
 
-    public abstract double getIonsScore();
+    public abstract double getIonsScore();              // Search engine dependant - depreciated
 
-    public abstract double getHomologyThreshold();
+    public abstract double getHomologyThreshold();    // Search engine dependant - depreciated
 
-    public abstract double calculateThreshold(double aConfidenceInterval);
+    public abstract double calculateThreshold(double aConfidenceInterval);    // Search engine dependant - depreciated
 
-    public abstract boolean scoresAboveThreshold(double aConfidenceInterval);
+    public abstract boolean scoresAboveThreshold(double aConfidenceInterval);   // Search engine dependant - depreciated
 
-    public abstract double calculateThreshold();
+    public abstract double getExpectancy(double aConfidenceInterval); // Search engine dependant - to be used carefully
 
-    public abstract boolean scoresAboveThreshold();
+    public abstract double calculateThreshold();  // Search engine dependant - depreciated
+
+    public boolean validatedByOneAdvocate() {
+        // We perform a fuzzy logic "or" to see if a peptide is confident. More peptides could be rescued.
+        for (int i=0 ; i < fusedHits.size() ; i++) {
+            if (fusedHits.get(i).scoresAboveThreshold()) {
+                return true;
+            }
+        }
+        return scoresAboveThreshold();
+    }
+
+    protected abstract boolean scoresAboveThreshold();
 
     // If the search results can be annotated in different ways, explain it to Peptizer
     public ArrayList<AnnotationType> getAnnotationType() {

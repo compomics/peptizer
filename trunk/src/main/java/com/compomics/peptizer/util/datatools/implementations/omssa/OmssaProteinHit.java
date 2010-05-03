@@ -24,7 +24,7 @@ public class OmssaProteinHit implements PeptizerProteinHit {
     }
 
     public String getAccession() {
-        return msPepHit.MSPepHit_accession;
+        return getProteinAccession(msPepHit.MSPepHit_defline);
     }
 
     public SearchEngineEnum getSearchEngineEnum() {
@@ -37,5 +37,11 @@ public class OmssaProteinHit implements PeptizerProteinHit {
 
     public int getEnd() {
         return msPepHit.MSPepHit_stop;
+    }
+
+     private String getProteinAccession(String description) {
+        int start = description.indexOf("|");
+        int end = description.indexOf("|", ++start);
+        return description.substring(start, end);
     }
 }

@@ -57,6 +57,11 @@ public class XTandemPeptideHit extends PeptizerPeptideHit implements Serializabl
         return iPeptide.getDomainSequence();
     }
 
+    public ArrayList<Integer> getModificationsLocations() {
+        // To be implemented once the parser retrives modifications properly
+        return new ArrayList<Integer>();  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public String[] decomposeSequence(String sequence) {
         String shortsequence = sequence.substring(4, (sequence.length() - 5));
 
