@@ -65,7 +65,7 @@ public class Ms_Lims_IdentificationIDIterator extends Ms_Lims_Iterator {
             }
 
             String lQuery =
-                    "Select i.l_datfileid, i.datfile_query, i.identificationid from identification as i, spectrumfile as s where i.l_spectrumfileid=s.spectrumfileid and i.identificationid in (" + sb.toString() + ") order by i.l_datfileid";
+                    "Select i.l_datfileid, i.datfile_query, i.identificationid from identification as i, spectrum as s where i.l_spectrumid=s.spectrumid and i.identificationid in (" + sb.toString() + ") order by i.l_datfileid";
             // Test query - returns 6 rows with 5 distinct datfiles. (34, 309, 310, 2498 and 23068)
             // lQuery = "Select i.l_datfileid, s.filename, i.identificationid from identification as i, spectrumfile as s where i.l_spectrumfileid=s.spectrumfileid and i.identificationid in ('5134','5139','5145','513', '51344', '513454') order by l_datfileid";
 
