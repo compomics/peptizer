@@ -311,7 +311,7 @@ public class TabPanel extends JPanel {
         PeptizerPeak[] lPeaks = lSpectrum.getPeakList();
         String lSpectrumname = lSpectrum.getName();
         String lCharge = "not defined";
-        double lPrecursor = 0.0;
+        double lPrecursor = lSpectrum.getPrecursorMZ();
 
         /*
         if (iPeptideIdentication.getSpectrum() instanceof Query) {
