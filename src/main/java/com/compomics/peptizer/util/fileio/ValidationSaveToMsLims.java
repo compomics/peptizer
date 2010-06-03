@@ -132,7 +132,7 @@ public class ValidationSaveToMsLims extends ValidationSaver {
      */
     private ResultSet performSelect(String aDatfileID, String aSpectrumFile) throws SQLException {
         String lQuery =
-                "select * from identification as i, spectrumfile as s where i.l_spectrumfileid=s.spectrumfileid and s.filename=\"" + aSpectrumFile + "\" and i.l_datfileid=" + aDatfileID;
+                "select * from identification as i, spectrum as s where i.l_spectrumid=s.spectrumid and s.filename=\"" + aSpectrumFile + "\" and i.l_datfileid=" + aDatfileID;
         PreparedStatement lPreparedStatement = ConnectionManager.getInstance().getConnection().prepareStatement(lQuery);
         return lPreparedStatement.executeQuery();
     }
