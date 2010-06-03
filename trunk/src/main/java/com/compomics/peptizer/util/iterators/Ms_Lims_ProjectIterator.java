@@ -79,7 +79,7 @@ public class Ms_Lims_ProjectIterator extends Ms_Lims_Iterator {
 
         try {
             String lQuery =
-                    "Select i.l_datfileid, i.datfile_query, i.identificationid from identification as i, spectrumfile as s where i.l_spectrumfileid=s.spectrumfileid and s.l_projectid=" + iProjectID + " order by i.l_datfileid";
+                    "Select i.l_datfileid, i.datfile_query, i.identificationid from identification as i, spectrum as s where i.l_spectrumid=s.spectrumid and s.l_projectid=" + iProjectID + " order by i.l_datfileid";
 
             PreparedStatement ps = ConnectionManager.getInstance().getConnection().prepareStatement(lQuery);
             ResultSet rs = ps.executeQuery();
