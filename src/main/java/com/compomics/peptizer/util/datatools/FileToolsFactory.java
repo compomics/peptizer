@@ -25,6 +25,16 @@ import java.util.List;
 public class FileToolsFactory {
     private static FileToolsFactory iSingleton = null;
     private List<ParsingType> iParsingType;
+    /**
+     * This boolean assures the filetoolsfactory works in command line mode.
+     */
+    private boolean iCommandLine = false;
+
+    /**
+     * This ParsingType is the default parsingtype for Mascot files.
+     * This mode is used when Peptizer is ran via the command line.
+     */
+    private ParsingType iDefaultMascotParsingType = new MascotParsingType(MascotDatfileType.INDEX);
 
     public static FileToolsFactory getInstance() {
         if (iSingleton == null) {
@@ -59,22 +69,27 @@ public class FileToolsFactory {
             }
             if (aFile.getName().endsWith(".dat")) requested = true;
             if (requested) {
-                String memory = "Memory : Optimal for files up to tens of megabytes.";
-                String index = "Index : optimal for files over a hundred of megabytes in size.";
-                Object[] possibilities = {memory, index};
-                String s = (String) JOptionPane.showInputDialog(
-                        null,
-                        "Mascot identification files were found, which parsing type would you like to use ?",
-                        "Customized Dialog",
-                        JOptionPane.PLAIN_MESSAGE,
-                        null,
-                        possibilities,
-                        "Memory");
-                if (s != null) {
-                    if (s.compareTo(memory) == 0) result.add(new MascotParsingType(MascotDatfileType.MEMORY));
-                    if (s.compareTo(index) == 0) result.add(new MascotParsingType(MascotDatfileType.INDEX));
-                } else {
-                    result.addAll(getParsingType(aFile));
+                if (!iCommandLine) {
+                    String memory = "Memory : Optimal for files up to tens of megabytes.";
+                    String index = "Index : optimal for files over a hundred of megabytes in size.";
+                    Object[] possibilities = {memory, index};
+                    String s = (String) JOptionPane.showInputDialog(
+                            null,
+                            "Mascot identification files were found, which parsing type would you like to use ?",
+                            "Customized Dialog",
+                            JOptionPane.PLAIN_MESSAGE,
+                            null,
+                            possibilities,
+                            "Memory");
+                    if (s != null) {
+                        if (s.compareTo(memory) == 0) result.add(new MascotParsingType(MascotDatfileType.MEMORY));
+                        if (s.compareTo(index) == 0) result.add(new MascotParsingType(MascotDatfileType.INDEX));
+                    } else {
+                        result.addAll(getParsingType(aFile));
+                    }
+                }else {
+                    // Command line mode, use default Parsingtype.
+                    result.add(iDefaultMascotParsingType);
                 }
             }
         }
@@ -192,5 +207,36 @@ public class FileToolsFactory {
         return formats;
     }
 
+    /**
+     * Get the defaul parsing type for Mascot result files.
+     * @return ParsingType default set to INDEX strategy.
+     */
+    public ParsingType getDefaultMascotParsingType() {
+        return iDefaultMascotParsingType;
+    }
+
+    /**
+     * Set the default parsing type for Mascot result files.
+     * @param aDefaultMascotParsingType
+     */
+    public void setDefaultMascotParsingType(ParsingType aDefaultMascotParsingType) {
+        iDefaultMascotParsingType = aDefaultMascotParsingType;
+    }
+
+    /**
+     * Returns whether the FileToolsFactory is being used in command line mode.
+     * @return
+     */
+    public boolean isCommandLine() {
+        return iCommandLine;
+    }
+
+    /**
+     * Set the FileToolsFactory in command line mode.
+     * @param aCommandLine TRUE/FALSE
+     */
+    public void setCommandLine(boolean aCommandLine) {
+        iCommandLine = aCommandLine;
+    }
 }
 

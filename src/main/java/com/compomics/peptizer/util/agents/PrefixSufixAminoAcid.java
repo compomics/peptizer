@@ -8,8 +8,6 @@ import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerProteinHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 
@@ -42,7 +40,6 @@ public class PrefixSufixAminoAcid extends Agent{
         // Init the general Agent settings.
         initialize(new String[]{PREFIX, SUFFIX});
         compatibleSearchEngine = searchEngines;
-        Logger.getInstance("org.apache.commons.httpclient.Wire").setLevel(Level.ERROR);
     }
 
     @Override

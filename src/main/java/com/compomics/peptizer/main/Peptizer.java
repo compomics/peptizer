@@ -10,6 +10,7 @@ import com.compomics.peptizer.interfaces.PeptideIdentificationIterator;
 import com.compomics.peptizer.util.AgentAggregatorFactory;
 import com.compomics.peptizer.util.AgentFactory;
 import com.compomics.peptizer.util.PeptideIdentification;
+import com.compomics.peptizer.util.datatools.FileToolsFactory;
 import com.compomics.peptizer.util.datatools.IdentificationFactory;
 import com.compomics.peptizer.util.enumerator.AgentAggregationResult;
 import com.compomics.peptizer.util.fileio.MatLogger;
@@ -138,6 +139,7 @@ public class Peptizer {
                 MatLogger.setSystemOut(true);
 
                 // Create the iterator.
+                FileToolsFactory.getInstance().setCommandLine(true);
                 IdentificationFactory.getInstance().load(input);
                 PeptideIdentificationIterator iter = IdentificationFactory.getInstance().getIterator();
 
