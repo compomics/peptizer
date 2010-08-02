@@ -118,6 +118,11 @@
             <property name="name">YTag</property>
             <property name="active">true</property>
         </tablerow>
+        <tablerow>
+            <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.ExperimentalMassTableRowImpl</uniqueid>
+            <property name="name">ExpMass</property>
+            <property name="active">true</property>
+        </tablerow>
     </table>
     <!-- End of table configuration file-->
 </config>
