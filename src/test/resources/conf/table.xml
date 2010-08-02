@@ -51,7 +51,7 @@
         <tablerow>
             <uniqueid>com.compomics.peptizer.gui.model.tablerowimpl.RatioEValue12TableRowImpl</uniqueid>
             <property name="name">Delta rank n - (n-1)</property>
-            <property name="active">true</property>
+            <property name="active">false</property>
         </tablerow>
         <!-- This tablerow displays the peptide's sequence. -->
         <tablerow>

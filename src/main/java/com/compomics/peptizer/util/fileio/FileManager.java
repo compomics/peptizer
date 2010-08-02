@@ -62,6 +62,11 @@ public class FileManager {
      */
     private File iPeptideIdentificationsSerializedInput = null;
 
+    /**
+     * Basic file referencing the user home directory.
+     */
+    private File iHome = new File(System.getProperty("user.home"));
+
 
     /**
      * This private constructor takes no arguments.
@@ -227,7 +232,7 @@ public class FileManager {
         boolean boolContinue = true;
 
         // Previous selected path or OS root.
-        String previousPath = "/";
+        String previousPath = iHome.getPath();
         if (iAgentConfigurationOutput != null) {
             previousPath = iAgentConfigurationOutput.getPath();
         }
@@ -288,7 +293,7 @@ public class FileManager {
         boolean boolSelection = false;
 
         // Previous selected path or OS root.
-        String previousPath = "/";
+        String previousPath = iHome.getPath();
         if (iAgentConfigurationInput != null) {
             previousPath = iAgentConfigurationInput.getPath();
         }
@@ -353,7 +358,7 @@ public class FileManager {
         boolean boolContinue = true;
 
         // Previous selected path or OS root.
-        String previousPath = "/";
+        String previousPath = iHome.getPath();
         if (iTaskOutput != null) {
             previousPath = iTaskOutput.getPath();
         }
@@ -413,7 +418,7 @@ public class FileManager {
         boolean boolSelection = false;
 
         // Previous selected path or OS root.
-        String previousPath = "/";
+        String previousPath = iHome.getPath();
         if (iTaskInput != null) {
             previousPath = iTaskInput.getPath();
         }
@@ -478,7 +483,7 @@ public class FileManager {
         boolean boolContinue = true;
 
         // Previous selected path or OS root.
-        String previousPath = "/";
+        String previousPath = iHome.getPath();
         if (iTXTOutput != null) {
             previousPath = iTXTOutput.getPath();
         }
@@ -542,7 +547,7 @@ public class FileManager {
         boolean boolContinue = true;
 
         // Previous selected path or OS root.
-        String previousPath = "/";
+        String previousPath = iHome.getPath();
         if (iPDFOutput != null) {
             previousPath = iPDFOutput.getPath();
         }
@@ -605,7 +610,7 @@ public class FileManager {
         boolean boolContinue = true;
 
         // Previous selected path or OS root.
-        String previousPath = "/";
+        String previousPath = iHome.getPath();
         if (iPeptideIdentificationsSerializedOutput != null) {
             previousPath = iPeptideIdentificationsSerializedOutput.getPath();
         }
@@ -665,7 +670,7 @@ public class FileManager {
         boolean boolSelection = false;
 
         // Previous selected path or OS root.
-        String previousPath = "/";
+        String previousPath = iHome.getPath();
         if (iPeptideIdentificationsSerializedInput != null) {
             previousPath = iPeptideIdentificationsSerializedInput.getPath();
         }

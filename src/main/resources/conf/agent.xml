@@ -166,6 +166,24 @@
             <property name="precursor_loss">79.9568</property>
         </agent>
 
+        <agent>
+            <!-- Inspects for the mass error (Da). Scores +1 if a peptide could be correlated to a single protein, Scores 0 if more.-->
+            <uniqueid>com.compomics.peptizer.util.agents.spectrum.DoubleChargedFragmentIons</uniqueid>
+            <property name="name">Double Charged Fragmentions</property>
+            <property name="active">false</property>
+            <property name="veto">false</property>
+            <property name="intensity">0.40</property>
+        </agent>
 
+
+        <agent>
+            <!-- Inspects for the mass error (Da). Scores +1 if a peptide could be correlated to a single protein, Scores 0 if more.-->
+            <uniqueid>com.compomics.peptizer.util.agents.PrefixSufixAminoAcid</uniqueid>
+            <property name="name">Prefix-Suffix Amino Acids</property>
+            <property name="active">false</property>
+            <property name="veto">false</property>
+            <property name="prefix">KR</property>
+            <property name="suffix"></property>
+        </agent>
     </agents>
 </config>

@@ -188,7 +188,7 @@ public abstract class Ms_Lims_Iterator implements PeptideIdentificationIterator 
                 ps.close();
 
                 // Set the current DatfileIterator to new MascotDatfile.
-                System.out.println("LOG: MOVED TO " + (iIterationUnitIndex + 1) + " " + iIterationUnits.get(iIterationUnitIndex));
+                System.out.println("LOG: MOVED TO " + (iIterationUnitIndex + 1) + " " + iIterationUnits.get(iIterationUnitIndex) + "\n");
 
                 // Raise the index!
                 iIterationUnitIndex = iIterationUnitIndex + 1;
