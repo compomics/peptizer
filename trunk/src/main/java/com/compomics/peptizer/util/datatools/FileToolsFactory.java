@@ -127,8 +127,9 @@ public class FileToolsFactory {
     // -- Working with MS LIMS --
 
     public PeptideIdentificationIterator getIterator(Connection aConnection, long aProjectID) {
-        if (iParsingType == null) {
-            // Mascot type pannel
+        if (iParsingType == null | iParsingType.size() == 0) {
+            iParsingType = new ArrayList();
+            iParsingType.add(new MascotParsingType());
         }
         Ms_Lims_ProjectIterator iter = new Ms_Lims_ProjectIterator(aConnection, aProjectID);
         MascotParsingType mascotParsingType = null;
@@ -139,7 +140,7 @@ public class FileToolsFactory {
             }
         }
         iter.setMascotDatfileType(mascotParsingType.getParsingType());
-        return new Ms_Lims_ProjectIterator(aConnection, aProjectID);
+        return iter;
     }
 
     public PeptideIdentificationIterator getIterator(ArrayList<Long> iIdentificationIDs) {

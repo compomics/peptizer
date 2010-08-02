@@ -11,11 +11,11 @@
 
     <!-- Set the version number for the whole project -->
     <properties>
-        <version.number>1.5.2</version.number>
+        <version.number>1.5.3</version.number>
         <logging.level.default>DEBUG</logging.level.default>
         <logging.file.path.name>peptizerlog4j.log</logging.file.path.name>
         <logging.file.max.size>5000KB</logging.file.max.size>
-        <logging.pattern>[%d{dd-MMM-yyyy HH:mm:ss} - %p]  "%m"   (%C:%L)%n</logging.pattern>
+        <logging.pattern>[%d{dd-MMM-yyyy HH:mm:ss} - %p] "%m" (%C:%L)%n</logging.pattern>
     </properties>
 
     <!-- Licence -->
@@ -148,7 +148,7 @@
                 </executions>
             </plugin>
 
-			<!-- Resources plugin - classes -->
+            <!-- Resources plugin - classes -->
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>2.3</version>
@@ -172,7 +172,7 @@
                             </resources>
                         </configuration>
                     </execution>
-                     <execution>
+                    <execution>
                         <id>copy-resources-conf</id>
                         <phase>compile</phase>
                         <goals>
@@ -210,7 +210,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
             <!-- Create javadoc on build -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -278,6 +278,13 @@
 
     <!-- Dependencies -->
     <dependencies>
+
+        <dependency>
+            <groupId>uk.ac.ebi.uniprot.kraken</groupId>
+            <artifactId>uniprotjapi</artifactId>
+            <version>2010.07</version>
+        </dependency>
+
         <!-- This project depends on the junit JAR file.
           -->
         <dependency>
@@ -386,6 +393,7 @@
             <version>1.1.1</version>
             <type>jar</type>
         </dependency>
+
 
     </dependencies>
 

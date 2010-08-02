@@ -1,16 +1,18 @@
 package com.compomics.peptizer.main;
 
 import com.compomics.peptizer.MatConfig;
-import com.compomics.peptizer.gui.SelectedPeptideIdentifications;
+import com.compomics.peptizer.gui.model.AbstractTableRow;
 import com.compomics.peptizer.gui.model.TableRowManager;
+import com.compomics.peptizer.interfaces.Agent;
 import com.compomics.peptizer.interfaces.AgentAggregator;
 import com.compomics.peptizer.interfaces.PeptideIdentificationIterator;
 import com.compomics.peptizer.util.AgentAggregatorFactory;
 import com.compomics.peptizer.util.AgentFactory;
+import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.IdentificationFactory;
+import com.compomics.peptizer.util.enumerator.AgentAggregationResult;
 import com.compomics.peptizer.util.fileio.MatLogger;
 import com.compomics.peptizer.util.fileio.ValidationSaveToCSV;
-import com.compomics.peptizer.util.worker.MatWorker;
 import com.compomics.util.general.CommandLineParser;
 
 import java.io.File;
@@ -20,6 +22,7 @@ import java.sql.Driver;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 /**
  * Created by IntelliJ IDEA.
@@ -186,8 +189,6 @@ public class Peptizer_MsLims {
                 IdentificationFactory.getInstance().load(lConnection, lProjectID);
                 PeptideIdentificationIterator iter = IdentificationFactory.getInstance().getIterator();
 
-                // Create a holder for the selected peptideidentifications.
-                SelectedPeptideIdentifications results = new SelectedPeptideIdentifications();
 
                 //System.out.println("*****************");
                 System.out.println("Peptizer_MsLims to CSV");
@@ -203,13 +204,69 @@ public class Peptizer_MsLims {
                 AgentAggregator lAgentAggregator = AgentAggregatorFactory.getInstance().getAgentAggregators()[0];
                 lAgentAggregator.setAgentsCollection(AgentFactory.getInstance().getActiveAgents());
 
-                MatWorker worker = new MatWorker(iter, lAgentAggregator, results, null);
+                // Iterate all the PeptideIdentifications.
+                int lMatchCounter = 0;
+                int lNonConfidentCounter = 0;
+                int lNonMatchCounter = 0;
+                int lNoIdentificationCounter = 0;
+                int lIterationCounter = 0;
+
 
                 long start = System.currentTimeMillis();
-                System.out.println("1) Peptizer started applying profile '" + agent.getName() + "' to project '" + project + "' on '" + url + "' at '" + new Date(System.currentTimeMillis()) + "'.");
-                worker.construct();
-                long end1 = System.currentTimeMillis();
-                System.out.println("Finished profiling after " + ((end1 - start) / 1000) + " seconds.\n");
+                System.out.println("1) Peptizer started applying profile \"" + agent.getName() + "\" to \"" + agent.getName() + "\" at " + new Date(System.currentTimeMillis()) + ".");
+
+                ValidationSaveToCSV saver = null;
+
+
+                while (iter.hasNext()) {
+                    lIterationCounter++;
+
+                    PeptideIdentification lPeptideIdentification = (PeptideIdentification) iter.next();
+                    // If the PeptideIdentification matches the AgentAggregator.
+                    AgentAggregationResult lAggregationResult = lAgentAggregator.match(lPeptideIdentification);
+
+                    switch (lAggregationResult) {
+
+                        case MATCH:
+                            lMatchCounter++;
+                            lPeptideIdentification.getValidationReport().setComment("MATCH");
+                            break;
+
+                        case NON_CONFIDENT:
+                            lNonConfidentCounter++;
+                            lPeptideIdentification.getValidationReport().setComment("NON_CONFIDENT");
+                            break;
+
+                        case NON_MATCH:
+                            lNonMatchCounter++;
+                            lPeptideIdentification.getValidationReport().setComment("NON_MATCH");
+                            break;
+
+                        case NO_IDENTIFICATION:
+                            lNoIdentificationCounter++;
+                            lPeptideIdentification.getValidationReport().setComment("NO_IDENTIFICATION");
+                            break;
+                    }
+
+                    try {
+                        if (saver == null) {
+                            saver = initSaver(output, saver);
+                            saver.setIncludeNonPrimary(false);
+                            saver.initHeader();
+                        }
+                        // Save the identification!
+                        saver.savePeptideIdentification(lPeptideIdentification);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (lIterationCounter % 100 == 0) {
+                        System.out.print(".");
+                    }
+                    if (lIterationCounter % 5000 == 0) {
+                        System.out.print("\n");
+                    }
+                }
 
                 try {
                     // close the connection, not needed anymore now.
@@ -219,34 +276,40 @@ public class Peptizer_MsLims {
                     e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
                 }
 
-                System.out.println("2) Writing csv output to " + output + ".");
 
-                if (results.getNumberOfSpectra() == 0) {
-                    System.out.println("No spectra were selected.");
-                } else {
-
-                    TableRowManager data = new TableRowManager(results.getPeptideIdentification(0).getAgentIDList());
-                    ArrayList list = new ArrayList();
-                    for (int i = 0; i < data.getNumberOfVisibleRows(); i++) {
-                        list.add(data.getTableRow(i));
-                    }
-                    ValidationSaveToCSV saver = new ValidationSaveToCSV(output, list);
-                    saver.setSeparator(";");
-                    saver.setComments(false);
-                    saver.setIncludeConfidentNotSelected(false);
-                    saver.setIncludeNonConfident(false);
-                    saver.setData(results);
-                    Object o = saver.construct();
-                    long end2 = System.currentTimeMillis();
-                    System.out.println("Finished csv output after " + ((end2 - end1) / 1000) + " seconds.");
-                    System.out.println(o.toString());
-                }
                 // Rename the file if successfull!
                 System.out.println("\nExit.");
                 System.exit(0);
             }
         }
     }
+
+    private static ValidationSaveToCSV initSaver(final File aOutput, ValidationSaveToCSV aSaver) {
+        List<Agent> iActiveAgents = AgentFactory.getInstance().getActiveAgents();
+
+        List iAgentIDs = new ArrayList();
+        for (int i = 0; i < iActiveAgents.size(); i++) {
+            Agent lAgent = iActiveAgents.get(i);
+            iAgentIDs.add(lAgent.getUniqueID());
+
+        }
+
+        TableRowManager data = new TableRowManager(iAgentIDs);
+        ArrayList list = new ArrayList();
+        for (int i = 0; i < data.getNumberOfVisibleRows(); i++) {
+            list.add(data.getTableRow(i));
+        }
+
+        AbstractTableRow.setHTML(false);
+
+        aSaver = new ValidationSaveToCSV(aOutput, list);
+        aSaver.setSeparator(";");
+        aSaver.setComments(true);
+        aSaver.setIncludeConfidentNotSelected(true);
+        aSaver.setIncludeNonConfident(false);
+        return aSaver;
+    }
+
 
     /**
      * This method prints the specified error message to standard out, after prepending and appending two blank lines

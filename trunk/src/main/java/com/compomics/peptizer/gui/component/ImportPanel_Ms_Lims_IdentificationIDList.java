@@ -1,13 +1,14 @@
 package com.compomics.peptizer.gui.component;
 
-import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.interfaces.ImportPanel;
 import com.compomics.peptizer.gui.progressbars.DefaultProgressBar;
 import com.compomics.peptizer.util.datatools.IdentificationFactory;
 import com.compomics.peptizer.util.fileio.ConnectionManager;
 import com.compomics.peptizer.util.fileio.MatLogger;
+import com.compomics.util.enumeration.CompomicsTools;
 import com.compomics.util.gui.dialogs.ConnectionDialog;
 import com.compomics.util.interfaces.Connectable;
+import com.compomics.util.io.PropertiesManager;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -22,6 +23,7 @@ import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Properties;
 
 /**
  * Created by IntelliJ IDEA. User: Kenny Date: 14-mrt-2008 Time: 13:45:55 To change this template use File | Settings |
@@ -82,12 +84,11 @@ public class ImportPanel_Ms_Lims_IdentificationIDList extends JPanel implements 
         btnConnection.setText("Create Connection");
         btnConnection.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
+                Properties lProperties = PropertiesManager.getInstance().getProperties(CompomicsTools.PEPTIZER, "peptizer.properties");
                 JDialog lConnectionDialog =
-                        new ConnectionDialog((JFrame) SwingUtilities.getRoot(lblConnection).getParent(),
+                        new ConnectionDialog(null,
                                 ImportPanel_Ms_Lims_IdentificationIDList.this,
-                                "Establish DB connnection for Peptizer",
-                                MatConfig.getInstance().getGeneralProperties().getProperty("CONNECTION_PROPERTIES")
-                        );
+                                "Establish DB connnection for Peptizer",lProperties);
                 lConnectionDialog.setVisible(true);
             }
         });

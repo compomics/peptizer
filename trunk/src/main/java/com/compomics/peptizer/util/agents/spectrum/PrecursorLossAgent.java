@@ -11,8 +11,6 @@ import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 
-import java.math.BigDecimal;
-
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -54,30 +52,27 @@ public class PrecursorLossAgent extends Agent {
 
         double lPrecursorLoss = Double.parseDouble((String) (this.iProperties.get(PRECURSOR_LOSS)));
 
-        double intensity = match(aPeptideIdentification, lPrecursorLoss);
+        double lPrecursorLossRelativeIntensity = match(aPeptideIdentification, lPrecursorLoss);
 
         // Make Agent Report!
         AgentVote lVote;
         iReport = new AgentReport(getUniqueID());
 
-        double lIntensityRatio;
         String lTableData;
         String lARFFData;
 
 
-        if (intensity != -1) {
-            // If matched, store a relative intensity ratio for the precursor loss.
-            lIntensityRatio = new BigDecimal(intensity / aPeptideIdentification.getSpectrum().getMaxIntensity()).setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
-            lTableData = "" + lIntensityRatio;
-            lARFFData = "" + lIntensityRatio;
-            lVote = AgentVote.POSITIVE_FOR_SELECTION;
-        } else {
-            lIntensityRatio = 0;
-            lTableData = "" + lIntensityRatio;
-            lARFFData = "" + lIntensityRatio;
+        if (lPrecursorLossRelativeIntensity != -1) {
+            // If matched, store a relative lPrecursorLossRelativeIntensity ratio for the precursor loss.
+            lTableData = "" + lPrecursorLossRelativeIntensity;
+            lARFFData = "" + lPrecursorLossRelativeIntensity;
             lVote = AgentVote.NEGATIVE_FOR_SELECTION;
+        } else {
+            lPrecursorLossRelativeIntensity = 0;
+            lTableData = "" + lPrecursorLossRelativeIntensity;
+            lARFFData = "" + lPrecursorLossRelativeIntensity;
+            lVote = AgentVote.POSITIVE_FOR_SELECTION;
         }
-
 
         for (int i = 0; i < lAgentVotes.length; i++) {
             lAgentVotes[i] = lVote;
@@ -104,7 +99,11 @@ public class PrecursorLossAgent extends Agent {
             FragmentIon lFragmentIon = new FragmentIonImpl(lPrecursorWithLoss, lTolerance, FragmentIon.PRECURSOR_LOSS, 1, "Prec_ " + lPrecursorLoss + "_loss");
 
             if (lFragmentIon.isMatch(((Spectrum) aPeptideIdentification.getSpectrum().getOriginalSpectrum()).getPeakList(), lTolerance)) {
-                return lFragmentIon.getIntensity();
+                double lFragmentIonIntensity = lFragmentIon.getIntensity();
+                double lMaxIntensity = aPeptideIdentification.getSpectrum().getMaxIntensity();
+                double lRelativeIntensity = (lFragmentIonIntensity/lMaxIntensity*100)/100; // round to 2 digits.
+
+                return lRelativeIntensity;
             } else {
                 return -1;
             }

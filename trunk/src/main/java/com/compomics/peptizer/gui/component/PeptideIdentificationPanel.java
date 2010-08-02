@@ -59,8 +59,8 @@ public class PeptideIdentificationPanel {
         PeptizerSpectrum lSpectrum = iPeptideIdentification.getSpectrum();
         PeptizerPeak[] lPeaks = lSpectrum.getPeakList();
         // annotationsFromLastType will contain the annotations of the last type found, ie Fuse for Mascot.
-        HashMap lAnnotationMap = iPeptideHit.getAllAnnotation(iPeptideIdentification, 0);
-        AnnotationType lAnnotationType = iPeptideHit.getAnnotationType().get(0);
+        HashMap lAnnotationMap = iPeptideHit.getAllAnnotation(iPeptideIdentification, 1);
+        AnnotationType lAnnotationType = iPeptideHit.getAnnotationType().get(1);
 
         Vector annotationsFromLastType = (Vector) lAnnotationMap.get(lAnnotationType.getIndex() + "" + lAnnotationType.getSearchEngine().getId() + "" + 1);
 

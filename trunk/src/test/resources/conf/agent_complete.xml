@@ -87,7 +87,7 @@
             <property name="veto">false</property>
         </agent>
         <agent>
-            <!-- Inspects for the Proline fragmentation properties. Scores +1 if the peptide contains a Pro and no relative intense (max intensity x 0.4) b or y ion Nterminal of the Pro is found.. Scores 0 if no Proline. Scores -1 if an intens fragment ion NTerminal to the Pro is found. -->
+            <!-- Inspects for the Proline fragmentation properties. Scores +1 if the peptide contains a Pro and no relative intense (max lPrecursorLossRelativeIntensity x 0.4) b or y ion Nterminal of the Pro is found.. Scores 0 if no Proline. Scores -1 if an intens fragment ion NTerminal to the Pro is found. -->
             <uniqueid>com.compomics.peptizer.util.agents.ProlineAgent</uniqueid>
             <property name="name">Proline Peak</property>
             <property name="active">true</property>
