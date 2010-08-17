@@ -243,6 +243,8 @@ public class ImportPanel_File extends JPanel implements ImportPanel {
         protected Object doInBackground() throws Exception {
             if (iFile.size() < 4) {
                 progressBar.setIndeterminate(true);
+            } else {
+                progressBar.setMaximum(iFile.size());
             }
             for (int i = 0; i < iFile.size(); i++) {
                 progressBar.setMessage("loading " + iFile.get(i).getName());

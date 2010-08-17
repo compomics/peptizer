@@ -1,18 +1,12 @@
 package com.compomics.peptizer.util.agents;
 
-import com.compomics.mascotdatfile.util.interfaces.Modification;
-import com.compomics.mascotdatfile.util.mascot.PeptideHit;
 import com.compomics.peptizer.interfaces.Agent;
 import com.compomics.peptizer.util.AgentReport;
 import com.compomics.peptizer.util.PeptideIdentification;
-import com.compomics.peptizer.util.datatools.implementations.omssa.OmssaPeptideHit;
+import com.compomics.peptizer.util.datatools.interfaces.PeptizerModification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
-import de.proteinms.omxparser.util.MSHits;
-import de.proteinms.omxparser.util.MSModHit;
-
-import java.util.List;
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -29,7 +23,7 @@ public class OpenNterm extends Agent {
     public OpenNterm() {
         // Init the general Agent settings.
         initialize();
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA};
+        SearchEngineEnum[] searchEngines = {};
         compatibleSearchEngine = searchEngines;
     }
 
@@ -60,8 +54,7 @@ public class OpenNterm extends Agent {
 
             // 1. Get the nth confident PeptideHit.
             PeptizerPeptideHit lPeptideHit = aPeptideIdentification.getPeptideHit(i);
-            String modificationType = null;
-            modificationType = getModificationType(lPeptideHit);
+            String modificationType = getModificationType(lPeptideHit);
 
 
             if (modificationType == null) {
@@ -93,58 +86,19 @@ public class OpenNterm extends Agent {
     }
 
     /**
-     * This Method Checks if there is a modification on the n-term and returns its type.
+     * This Method Checks if there is a modification on the n-term and returns its name.
      *
      * @param aPH - PeptizerPeptideHit upon inspection.
      * @return String           - The modification type found.
      */
 
     private String getModificationType(PeptizerPeptideHit aPH) {
-        String modificationType = null;
-        boolean identifiedByMascot = aPH.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.Mascot);
-        boolean identifiedByOMSSA = aPH.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.OMSSA);
-
-        if (identifiedByMascot) {
-            Modification lModification = ((PeptideHit) aPH.getOriginalPeptideHit(SearchEngineEnum.Mascot)).getModifications()[0];
-            if (lModification != null) {
-                modificationType = lModification.getShortType();
+        for (PeptizerModification mod : aPH.getModifications()) {
+            if (mod.getModificationSite() == 0) {
+                return mod.getName();
             }
-        } else if (identifiedByOMSSA) {
-            OmssaPeptideHit anOPh = (OmssaPeptideHit) aPH;
-
-            // see if there is a fixed modification :
-            // Type 1 : modn
-            // Type 2 : modnaa
-            // Type 5 : modnp
-            // Type 6 : modnpaa
-            // Other types : if the residue is concerned
-            String nTerm = anOPh.decomposeSequence(anOPh.getSequence())[0];
-            List<Integer> ids = anOPh.getFixedModifications();
-            for (int i = 0; i < ids.size(); i++) {
-                for (int j = 0; j < anOPh.modifs.size(); j++) {
-                    if (anOPh.modifs.get(j).getModNumber() == ids.get(j).intValue()) {
-                        if (anOPh.modifs.get(j).getModType() == 1 || anOPh.modifs.get(j).getModType() == 2 || anOPh.modifs.get(j).getModType() == 5 || anOPh.modifs.get(j).getModType() == 6) {
-                            return anOPh.modifs.get(j).getModName();
-                        } else {
-                            for (int k = 0; k < anOPh.modifs.get(j).getModResidues().size(); k++) {
-                                if (anOPh.modifs.get(j).getModResidues().get(k).compareTo(nTerm) == 0) {
-                                    return anOPh.modifs.get(j).getModName();
-                                }
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-
-            // see if there is a variable modification
-            List<MSModHit> modifications = ((MSHits) anOPh.getOriginalPeptideHit(SearchEngineEnum.OMSSA)).MSHits_mods.MSModHit;
-            for (int j = 0; j < modifications.size(); j++)
-                if (modifications.get(j).MSModHit_site == 0) {
-                    modificationType = modifications.get(j).MSModHit_modtype.toString();
-                }
         }
-        return modificationType;
+        return null;
     }
 
     /**

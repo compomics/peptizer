@@ -1,18 +1,18 @@
 package com.compomics.peptizer.util.agents;
 
-import com.compomics.mascotdatfile.util.interfaces.Modification;
-import com.compomics.mascotdatfile.util.mascot.PeptideHit;
 import com.compomics.peptizer.interfaces.Agent;
 import com.compomics.peptizer.util.AgentReport;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.implementations.mascot.MascotPeptideHit;
 import com.compomics.peptizer.util.datatools.implementations.omssa.OmssaPeptideHit;
+import com.compomics.peptizer.util.datatools.implementations.pride.PridePeptideHit;
+import com.compomics.peptizer.util.datatools.interfaces.PeptizerModification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
-import de.proteinms.omxparser.util.MSHits;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,14 +28,15 @@ public class Deamidation extends Agent {
 
     public static final String COUNT = "count";
 
+    private final ArrayList<String> prideAccessions = new ArrayList<String>(Arrays.asList(new String[]{"MOD:00137", "MOD:00219", "MOD:00400", "MOD:00565", "MOD:00657", "MOD:00791", "MOD:01293", "MOD:01294", "MOD:01336", "MOD:01337", "MOD:01369", "MOD:01371"}));
+
     /**
      * This empty private constructor can only be accessed from a static method getInstance.
      */
     public Deamidation() {
         // Init the general Agent settings.
         initialize(COUNT);
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot};
-        compatibleSearchEngine = searchEngines;
+        compatibleSearchEngine = new SearchEngineEnum[]{};
     }
 
     /**
@@ -46,7 +47,6 @@ public class Deamidation extends Agent {
         // This inspect score will stay '0' if there are no deamidations found in
         AgentVote[] lScore = new AgentVote[aPeptideIdentification.getNumberOfConfidentPeptideHits()];
 
-
         for (int i = 0; i < lScore.length; i++) {
 
             // 1. Get the peptidehit that was requested by the arguments.
@@ -54,13 +54,26 @@ public class Deamidation extends Agent {
 
             // 2. Get the number of deamidations.
             int lNumberOfDeamidations = 0;
-            boolean identifiedByMascot = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocatesList().contains(SearchEngineEnum.Mascot);
-            boolean identifiedByOMSSA = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocatesList().contains(SearchEngineEnum.OMSSA);
-
-            if (identifiedByMascot) {
-                lNumberOfDeamidations = getNumberOfDeamidations((MascotPeptideHit) lPeptideHit);
-            } else if (identifiedByOMSSA) {
-                lNumberOfDeamidations = getNumberOfDeamidations((OmssaPeptideHit) lPeptideHit);
+            if (lPeptideHit instanceof MascotPeptideHit) {
+                for (PeptizerModification mod : lPeptideHit.getModifications()) {
+                    if (mod.getModificationSite() > 0 && mod.getModificationSite() < lPeptideHit.getSequence().length()) {
+                        if (mod.getName().toLowerCase().equals("deamidated") && lPeptideHit.getSequence().charAt(mod.getModificationSite()) == 'G') {
+                            lNumberOfDeamidations++;
+                        }
+                    }
+                }
+            } else if (lPeptideHit instanceof OmssaPeptideHit) {
+                for (PeptizerModification mod : lPeptideHit.getModifications()) {
+                    if (mod.getName().equals("deamidation of N and Q")) {
+                        lNumberOfDeamidations++;
+                    }
+                }
+            } else if (lPeptideHit instanceof PridePeptideHit) {
+                for (PeptizerModification mod : lPeptideHit.getModifications()) {
+                    if (prideAccessions.contains(mod.getPrideAccession())) {
+                        lNumberOfDeamidations++;
+                    }
+                }
             }
 
             // 3. Parse the number of deamidations into a inspect score,
@@ -88,84 +101,6 @@ public class Deamidation extends Agent {
         }
 
         return lScore;
-    }
-
-    /**
-     * This method calculates the number of deamidations in the sequence of a Mascot peptidehit.
-     *
-     * @param aMPH PeptideHit to be inspected.
-     * @return int Number of deamidations.
-     */
-    private int getNumberOfDeamidations(MascotPeptideHit aMPH) {
-        int lCount = 0;
-        PeptideHit aPH = (PeptideHit) aMPH.getOriginalPeptideHit();
-        // Check first if the PeptideHit has any modifications!
-        if (aPH.getModifications() != null) {
-            for (int i = 0; i < aPH.getModifications().length; i++) {
-                // Check out each 'not null' modification in the array for deamidations, if there is one, raise the counter.
-                Modification lModification = aPH.getModifications()[i];
-                if (lModification != null) {
-                    if (lModification.getShortType().equals("Dam")) {
-                        // Deamidations do occur when followed by Glycine.
-                        if (aPH.getSequence().charAt(i) != 'G') {
-                            lCount = lCount + 1;
-                        }
-                    }
-                }
-            }
-        }
-
-        return lCount;
-    }
-
-    /**
-     * This method calculates the number of deamidations in the sequence of an Omssa peptidehit.
-     *
-     * @param anOPH PeptideHit to be inspected.
-     * @return int Number of deamidations.
-     */
-    private int getNumberOfDeamidations(OmssaPeptideHit anOPH) {
-        int lCount = 0;
-        // Get the id of deamination
-        int id = -1;
-        Vector<String> modResidues = new Vector();
-        for (int i = 0; i < anOPH.modifs.size(); i++) {
-            if (anOPH.modifs.get(i).getModName().compareTo("deamidation of N and Q") == 0) {
-                id = anOPH.modifs.get(i).getModType().intValue();
-                modResidues = anOPH.modifs.get(i).getModResidues();
-                break;
-            }
-        }
-
-        // inspect fixed modifications
-        String[] decomposedSequence = anOPH.decomposeSequence(anOPH.getSequence());
-        for (int i = 0; i < anOPH.getFixedModifications().size(); i++) {
-            if (anOPH.getFixedModifications().get(i).intValue() == id) {
-                for (int j = 0; j < decomposedSequence.length - 1; j++) {
-                    for (int k = 0; k < modResidues.size(); k++) {
-                        // if we have the concerned residue not followed by a G then increase
-                        if (decomposedSequence[j].compareTo(modResidues.get(k)) == 0 && decomposedSequence[j + 1].compareTo("G") != 0) {
-                            lCount++;
-                        }
-                    }
-                }
-            }
-        }
-
-        // inspect variable modifications
-        MSHits aPH = (MSHits) anOPH.getOriginalPeptideHit(SearchEngineEnum.OMSSA);
-        for (int i = 0; i < aPH.MSHits_mods.MSModHit.size(); i++) {
-            // if we have the concerned modification not followed by a G then increase
-            if (aPH.MSHits_mods.MSModHit.get(i).MSModHit_modtype.MSMod == id) {
-                if (aPH.MSHits_mods.MSModHit.get(i).MSModHit_site < decomposedSequence.length) {
-                    if (decomposedSequence[aPH.MSHits_mods.MSModHit.get(i).MSModHit_site + 1].compareTo("G") != 0) {
-                        lCount++;
-                    }
-                }
-            }
-        }
-
-        return lCount;
     }
 
     /**

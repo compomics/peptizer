@@ -1,18 +1,16 @@
 package com.compomics.peptizer.util.agents;
 
-import com.compomics.mascotdatfile.util.interfaces.Spectrum;
-import com.compomics.mascotdatfile.util.mascot.Masses;
-import com.compomics.mascotdatfile.util.mascot.Parameters;
-import com.compomics.mascotdatfile.util.mascot.PeptideHit;
-import com.compomics.mascotdatfile.util.mascot.PeptideHitAnnotation;
 import com.compomics.peptizer.interfaces.Agent;
 import com.compomics.peptizer.util.AgentReport;
-import com.compomics.peptizer.util.MetaKey;
 import com.compomics.peptizer.util.PeptideIdentification;
+import com.compomics.peptizer.util.datatools.interfaces.PeptizerFragmentIon;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
+import com.compomics.peptizer.util.enumerator.IonTypeEnum;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
-import de.proteinms.omxparser.util.MSHits;
+
+import java.util.HashMap;
+import java.util.Vector;
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -32,11 +30,10 @@ public class ProlineAgent extends Agent {
     public static final String INTENSITY = "intensity";
     private double iIntensity = 0.0;
 
-
     public ProlineAgent() {
         // Init the general Agent settings.
         initialize(INTENSITY);
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA};
+        SearchEngineEnum[] searchEngines = {};
         compatibleSearchEngine = searchEngines;
     }
 
@@ -63,6 +60,8 @@ public class ProlineAgent extends Agent {
         AgentVote[] lScore = new AgentVote[aPeptideIdentification.getNumberOfConfidentPeptideHits()];
 
         for (int i = 0; i < lScore.length; i++) {
+            // Create output for this peptidehit.
+            StringBuffer sb = new StringBuffer();
 
             // Make Agent Report!
             iReport = new AgentReport(getUniqueID());
@@ -75,8 +74,6 @@ public class ProlineAgent extends Agent {
             boolean result = false;
             boolean lContainsProline = false;
             int index = 0;
-            boolean boolB = false;
-            boolean boolY = false;
 
             while ((index =
                     lPeptideHit.getSequence().indexOf("P", index + 1)) > 0) { // NTerminal Proline residue is of no matter.
@@ -84,29 +81,23 @@ public class ProlineAgent extends Agent {
                 // Documentation example:
                 // Peptide with sequence PEPTIDE, we want to look for the b2 and y5.
                 // index will be 2 so we want to check the relevance of b(index) and y(length-index)
-
-                boolB = getBoolB(lPeptideHit, aPeptideIdentification, index);
-                boolY = getBoolY(lPeptideHit, aPeptideIdentification, index);
-
+                boolean boolB = getBoolB(lPeptideHit, aPeptideIdentification, index);
+                boolean boolY = getBoolY(lPeptideHit, aPeptideIdentification, index);
                 if (boolB || boolY) {
                     result = true;
-                    break;
+                    if (boolB) {
+                        sb.append("b").append(index);
+                        if (boolY) {
+                            sb.append(" - ");
+                        }
+                    }
+                    if (boolY) {
+                        sb.append("y").append(lPeptideHit.getSequence().length() - index);
+                    }
                 }
             }
 
             if (result) {
-                // Create output for this peptidehit.
-                StringBuffer sb = new StringBuffer();
-                if (boolB) {
-                    sb.append("b").append(index);
-                    if (boolY) {
-                        sb.append(" - ");
-                    }
-                }
-                if (boolY) {
-                    sb.append("y").append(lPeptideHit.getSequence().length() - index);
-                }
-
                 // Score negative if Proline peak is found! This is as expected!
                 lScore[i] = AgentVote.NEGATIVE_FOR_SELECTION;
                 lTableData = sb.toString();
@@ -145,111 +136,48 @@ public class ProlineAgent extends Agent {
     }
 
     /**
-     * This Method Checks the relevance of b(index)
+     * This Method Checks the relevance of b(index) or y(index)
      *
      * @param aPPh - PeptizerPeptideHit upon inspection.
      * @return boolean          - true if proline B ion peak is found
      */
     private boolean getBoolB(PeptizerPeptideHit aPPh, PeptideIdentification aPeptideIdentification, int index) {
-        boolean result = false;
-        boolean identifiedByMascot = aPPh.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.Mascot);
-        boolean identifiedByOMSSA = aPPh.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.OMSSA);
-
-        if (identifiedByMascot) {
-            PeptideHit aMPh = (PeptideHit) aPPh.getOriginalPeptideHit(SearchEngineEnum.Mascot);
-            PeptideHitAnnotation lPeptideHitAnnotation =
-                    aMPh.getPeptideHitAnnotation((Masses) aPeptideIdentification.getMetaData(MetaKey.Masses_section), (Parameters) aPeptideIdentification.getMetaData(MetaKey.Parameter_section));
-
-            // check the b ions
-            int indexB = index - 1;
-            result = lPeptideHitAnnotation.getBions()[indexB].isMatchAboveIntensityThreshold(
-                    ((Spectrum) aPeptideIdentification.getSpectrum().getOriginalSpectrum()).getPeakList(),
-                    aPeptideIdentification.getSpectrum().getMaxIntensity(),
-                    iIntensity,
-                    Double.parseDouble(((Parameters) aPeptideIdentification.getMetaData(MetaKey.Parameter_section)).getITOL()));
-            // If no match among Bions, check the B++double ions
-            if (!result) {
-                result = lPeptideHitAnnotation.getBDoubleions()[indexB].isMatchAboveIntensityThreshold(
-                        ((Spectrum) aPeptideIdentification.getSpectrum().getOriginalSpectrum()).getPeakList(),
-                        aPeptideIdentification.getSpectrum().getMaxIntensity(),
-                        iIntensity,
-                        Double.parseDouble(((Parameters) aPeptideIdentification.getMetaData(MetaKey.Parameter_section)).getITOL()));
-            }
-        } else if (identifiedByOMSSA) {
-            MSHits msHits = (MSHits) aPPh.getOriginalPeptideHit(SearchEngineEnum.OMSSA);
-            for (int i = 0; i < msHits.MSHits_mzhits.MSMZHit.size(); i++) {
-                if (msHits.MSHits_mzhits.MSMZHit.get(i).MSMZHit_ion.MSIonType == 1 && msHits.MSHits_mzhits.MSMZHit.get(i).MSMZHit_number == index - 1) {
-                    double mz = msHits.MSHits_mzhits.MSMZHit.get(i).MSMZHit_mz;
-                    double intensity = -1;
-                    double intensityMax = aPeptideIdentification.getSpectrum().getMaxIntensity();
-                    for (int j = 0; j < aPeptideIdentification.getSpectrum().getPeakList().length; j++) {
-                        if (aPeptideIdentification.getSpectrum().getPeakList()[j].getMZ() == mz) {
-                            intensity = aPeptideIdentification.getSpectrum().getPeakList()[j].getIntensity();
-                        }
-                        break;
-                    }
-                    if (intensity >= intensityMax * iIntensity) {
-                        return true;
-                    }
+        double intMax = aPeptideIdentification.getSpectrum().getMaxIntensity();
+        HashMap<String, Vector<PeptizerFragmentIon>> annotationMap = aPPh.getAllAnnotation(aPeptideIdentification, 0);
+        String key = 0 + "" + aPPh.getAdvocate().getAdvocatesList().get(0).getId() + "" + 1 + "";
+        for (PeptizerFragmentIon ion : annotationMap.get(key)) {
+            if (ion.getType() == IonTypeEnum.b
+                    || ion.getType() == IonTypeEnum.bH2O
+                    || ion.getType() == IonTypeEnum.bNH3) {
+                if (ion.getIntensity() >= iIntensity * intMax && ion.getNumber() == index) {
+                    return true;
                 }
             }
         }
-        return result;
+        return false;
     }
 
     /**
-     * This Method Checks the relevance of y(index)
+     * This Method Checks the relevance of b(index) or y(index)
      *
      * @param aPPh - PeptizerPeptideHit upon inspection.
-     * @return boolean          - true if proline Y ion peak is found
+     * @return boolean          - true if proline B ion peak is found
      */
     private boolean getBoolY(PeptizerPeptideHit aPPh, PeptideIdentification aPeptideIdentification, int index) {
-        boolean result = false;
-        boolean identifiedByMascot = aPPh.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.Mascot);
-        boolean identifiedByOMSSA = aPPh.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.OMSSA);
-        if (identifiedByMascot) {
-            PeptideHit aMPh = (PeptideHit) aPPh.getOriginalPeptideHit(SearchEngineEnum.Mascot);
-            PeptideHitAnnotation lPeptideHitAnnotation =
-                    aMPh.getPeptideHitAnnotation((Masses) aPeptideIdentification.getMetaData(MetaKey.Masses_section), (Parameters) aPeptideIdentification.getMetaData(MetaKey.Parameter_section));
-
-            // check the y ions
-            int indexY = aMPh.getSequence().length() - index;
-            indexY = indexY - 1;
-            result = lPeptideHitAnnotation.getYions()[indexY].isMatchAboveIntensityThreshold(
-                    ((Spectrum) aPeptideIdentification.getSpectrum().getOriginalSpectrum()).getPeakList(),
-                    aPeptideIdentification.getSpectrum().getMaxIntensity(),
-                    iIntensity,
-                    Double.parseDouble(((Parameters) aPeptideIdentification.getMetaData(MetaKey.Parameter_section)).getITOL()));
-            // If no match among Yions, check the Y++double ions
-            if (!result) {
-                result = lPeptideHitAnnotation.getYDoubleions()[indexY].isMatchAboveIntensityThreshold(
-                        ((Spectrum) aPeptideIdentification.getSpectrum().getOriginalSpectrum()).getPeakList(),
-                        aPeptideIdentification.getSpectrum().getMaxIntensity(),
-                        iIntensity,
-                        Double.parseDouble(((Parameters) aPeptideIdentification.getMetaData(MetaKey.Parameter_section)).getITOL()));
-            }
-        } else if (identifiedByOMSSA) {
-            MSHits msHits = (MSHits) aPPh.getOriginalPeptideHit(SearchEngineEnum.OMSSA);
-            for (int i = 0; i < msHits.MSHits_mzhits.MSMZHit.size(); i++) {
-                if (msHits.MSHits_mzhits.MSMZHit.get(i).MSMZHit_ion.MSIonType == 4 && msHits.MSHits_mzhits.MSMZHit.get(i).MSMZHit_number == msHits.MSHits_pepstring.length() - index - 1) {
-                    double mz = msHits.MSHits_mzhits.MSMZHit.get(i).MSMZHit_mz;
-                    double intensity = -1;
-                    double intensityMax = aPeptideIdentification.getSpectrum().getMaxIntensity();
-                    for (int j = 0; j < aPeptideIdentification.getSpectrum().getPeakList().length; j++) {
-                        if (aPeptideIdentification.getSpectrum().getPeakList()[j].getMZ() == mz) {
-                            intensity = aPeptideIdentification.getSpectrum().getPeakList()[j].getIntensity();
-                        }
-                        break;
-                    }
-                    if (intensity >= intensityMax * iIntensity) {
-                        return true;
-                    }
+        double intMax = aPeptideIdentification.getSpectrum().getMaxIntensity();
+        HashMap<String, Vector<PeptizerFragmentIon>> annotationMap = aPPh.getAllAnnotation(aPeptideIdentification, 0);
+        String key = 0 + "" + aPPh.getAdvocate().getAdvocatesList().get(0).getId() + "" + 1 + "";
+        for (PeptizerFragmentIon ion : annotationMap.get(key)) {
+            if (ion.getType() == IonTypeEnum.y
+                    || ion.getType() == IonTypeEnum.yH2O
+                    || ion.getType() == IonTypeEnum.yNH3) {
+                if (ion.getIntensity() >= iIntensity * intMax && ion.getNumber() == aPPh.getSequence().length() - index) {
+                    return true;
                 }
             }
         }
-        return result;
+        return false;
     }
-
 
     /**
      * Returns a description for the Agent. Use in tooltips and configuration settings. Fill in an agent description.

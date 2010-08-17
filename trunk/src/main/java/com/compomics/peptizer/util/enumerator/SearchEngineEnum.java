@@ -1,5 +1,7 @@
 package com.compomics.peptizer.util.enumerator;
 
+import java.io.Serializable;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Marc
@@ -7,27 +9,35 @@ package com.compomics.peptizer.util.enumerator;
  * Time: 14:28:58
  * To change this template use File | Settings | File Templates.
  */
-public enum SearchEngineEnum {
-    Mascot, OMSSA, XTandem;
+public enum SearchEngineEnum implements Serializable {
+    Mascot, OMSSA, XTandem, Sequest, unknown;
 
     public String getName() {
-        if (this == Mascot) {
-            return "Mascot";
-        } else if (this == OMSSA) {
-            return "OMSSA";
-        } else if (this == XTandem) {
-            return "XTandem";
-        } else return null;
+        switch (this) {
+            case Mascot:
+                return "Mascot";
+            case OMSSA:
+                return "OMSSA";
+            case XTandem:
+                return "XTandem";
+            default:
+                return "unknown";
+        }
     }
 
     public int getId() {
-        if (this == Mascot) {
-            return 0;
-        } else if (this == OMSSA) {
-            return 1;
-        } else if (this == XTandem) {
-            return 2;
-        } else return -1;
+        switch (this) {
+            case Mascot:
+                return 0;
+            case OMSSA:
+                return 1;
+            case XTandem:
+                return 2;
+            case Sequest:
+                return 3;
+            default:
+                return 4;
+        }
     }
 
     public String getInitial() {

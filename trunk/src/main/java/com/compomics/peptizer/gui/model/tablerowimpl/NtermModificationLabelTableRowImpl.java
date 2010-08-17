@@ -35,7 +35,7 @@ public class NtermModificationLabelTableRowImpl extends AbstractTableRow {
     /**
      * {@inheritDoc}
      */
-    public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+    public String getDataImpl(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
         // Transform into 0-index!
         aPeptideHitNumber = aPeptideHitNumber - 1;
         String lResult = "NA";

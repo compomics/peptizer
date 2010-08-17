@@ -1,15 +1,13 @@
 package com.compomics.peptizer.util.agents;
 
-import com.compomics.mascotdatfile.util.interfaces.Modification;
-import com.compomics.mascotdatfile.util.mascot.PeptideHit;
 import com.compomics.peptizer.interfaces.Agent;
 import com.compomics.peptizer.util.AgentReport;
 import com.compomics.peptizer.util.PeptideIdentification;
-import com.compomics.peptizer.util.datatools.implementations.omssa.OmssaPeptideHit;
+import com.compomics.peptizer.util.datatools.implementations.pride.PridePeptideHit;
+import com.compomics.peptizer.util.datatools.interfaces.PeptizerModification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
-import de.proteinms.omxparser.util.MSHits;
 
 /**
  * Created by IntelliJ IDEA. User: kenny Date: 28-sep-2006 Time: 14:49:25
@@ -22,7 +20,7 @@ public class NTermAcetylation extends Agent {
     public NTermAcetylation() {
         // Init the general Agent settings.
         initialize();
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA};
+        SearchEngineEnum[] searchEngines = {};
         compatibleSearchEngine = searchEngines;
     }
 
@@ -72,37 +70,13 @@ public class NTermAcetylation extends Agent {
      * @return boolean - true if <aPH> has an N-terminal acetylation.
      */
     private boolean getAcetylationStatus(PeptizerPeptideHit aPh) {
-
-        boolean identifiedByMascot = aPh.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.Mascot);
-        boolean identifiedByOMSSA = aPh.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.OMSSA);
-
-        if (identifiedByMascot) {
-            PeptideHit aMPh = (PeptideHit) aPh.getOriginalPeptideHit(SearchEngineEnum.Mascot);
-            // N-terminal residue is [0] in the Modification array.
-            Modification lMod = aMPh.getModifications()[0];
-            // If lMod exists, check if it is an acetylation.
-            if (lMod != null) {
-                if (lMod.getShortType().indexOf("Ac") >= 0) {
+        for (PeptizerModification mod : aPh.getModifications()) {
+            if (aPh instanceof PridePeptideHit) {
+                if (mod.getPrideAccession().equals("MOD:00408")) {
                     return true;
                 }
-            }
-        } else if (identifiedByOMSSA) {
-            OmssaPeptideHit anOPh = (OmssaPeptideHit) aPh;
-
-            // id of this modification
-            int id = 10;
-
-            // inspect if this modification was found in the fixed modifications
-            for (int i = 0; i < anOPh.getFixedModifications().size(); i++) {
-                if (anOPh.getFixedModifications().get(i).intValue() == id) {
-                    return true;
-                }
-            }
-
-            // inspect if this modification was found in the variable modifications
-            MSHits aPH = (MSHits) anOPh.getOriginalPeptideHit(SearchEngineEnum.OMSSA);
-            for (int i = 0; i < aPH.MSHits_mods.MSModHit.size(); i++) {
-                if (aPH.MSHits_mods.MSModHit.get(i).MSModHit_modtype.MSMod == id) {
+            } else if (mod.getName().toLowerCase().contains("acetylation")) {
+                if (mod.getModificationSite() == 0) {
                     return true;
                 }
             }

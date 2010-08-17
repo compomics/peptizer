@@ -37,7 +37,7 @@ public class RatioEValue12TableRowImpl extends AbstractTableRow {
      * {@inheritDoc}
      */
 
-    public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+    public String getDataImpl(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
         String result = "";
 
         // To keep things clear, the getPeptideHit method returns items from a Vector.

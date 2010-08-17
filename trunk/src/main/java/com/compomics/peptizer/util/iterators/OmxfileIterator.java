@@ -7,10 +7,15 @@ import com.compomics.peptizer.util.datatools.implementations.omssa.OmssaSpectrum
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import com.compomics.util.io.FilenameExtensionFilter;
 import de.proteinms.omxparser.OmssaOmxFile;
-import de.proteinms.omxparser.util.*;
+import de.proteinms.omxparser.util.MSHitSet;
+import de.proteinms.omxparser.util.MSSearchSettings;
+import de.proteinms.omxparser.util.MSSpectrum;
 
 import java.io.File;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Vector;
 
 /**
  * Created by IntelliJ IDEA.

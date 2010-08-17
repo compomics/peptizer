@@ -10,7 +10,6 @@ import com.compomics.peptizer.interfaces.PeptideIdentificationIterator;
 import com.compomics.peptizer.util.AgentAggregatorFactory;
 import com.compomics.peptizer.util.AgentFactory;
 import com.compomics.peptizer.util.PeptideIdentification;
-import com.compomics.peptizer.util.datatools.FileToolsFactory;
 import com.compomics.peptizer.util.datatools.IdentificationFactory;
 import com.compomics.peptizer.util.enumerator.AgentAggregationResult;
 import com.compomics.peptizer.util.fileio.MatLogger;
@@ -49,7 +48,7 @@ public class Peptizer {
     public static void main(String[] args) {
         // First see if we should output anything useful.
         if (args == null || args.length == 0) {
-            flagError("Usage:\n\tPeptizer  --sourcetype <file|folder> " +
+            flagError("Usage:\n\tPeptizer " +
                     "--source <input file|folder> " +
                     "--target <target_file_name>" +
                     "--table <table_setting_xml_file>" +
@@ -57,7 +56,6 @@ public class Peptizer {
                     "--aggregator <aggregator_setting_xml_file>" +
                     "--general <general_setting_xml_file>" +
                     "--toprank <true|false>" +
-                    "\n\t--sourcetype flags the type of input, can be a folder or a file." +
                     "\n\t--source is the input file or folder with identifications that will be profiled." +
                     "\n\t--agent is the configuration file for agents that define the profile. Each agent will be a csv column." +
                     "\n\t--aggregator is the configuration file for the aggregator that must judge a peptideidentification based on the agents. The first aggregator in the configuration file will be active!!" +
@@ -67,8 +65,7 @@ public class Peptizer {
                     "\n\n\tNote that an existing target file will be silently overwritten!");
         }
         CommandLineParser clp =
-                new CommandLineParser(args, new String[]{"sourcetype", "source", "target", "table", "agent", "aggregator", "general", "toprank"});
-        String sourcetype = clp.getOptionParameter("sourcetype");
+                new CommandLineParser(args, new String[]{"source", "target", "table", "agent", "aggregator", "general", "toprank"});
         String source = clp.getOptionParameter("source");
         String target = clp.getOptionParameter("target");
         String tablePath = clp.getOptionParameter("table");
@@ -80,9 +77,7 @@ public class Peptizer {
         int lSource = 0;
 
         // See if all of this is correct.
-        if (sourcetype == null) {
-            flagError("You did not specify the '--sourcetype <file|folder>' parameter!\n\nRun program without parameters for help.");
-        } else if (source == null) {
+        if (source == null) {
             flagError("You did not specify the '--source <input file|folder>' parameter!\n\nRun program without parameters for help.");
         } else if (target == null) {
             flagError("You did not specify the '--target <target_file_name>' parameter!\n\nRun program without parameters for help.");
@@ -95,7 +90,7 @@ public class Peptizer {
         } else if (generalPath == null) {
             flagError("You did not specify the '--general <general_setting_xml_file>' parameter!\n\nRun program without parameters for help.");
         } else if (toprankState == null) {
-            toprankState = "true"; // Default, only the top ranked peptide hit is printed. 
+            toprankState = "true"; // Default, only the top ranked peptide hit is printed.
         } else {
             // Parameters were all found. Let's see if we can access all files that should be accessed.
             // Note that an existing target_file will result in clean and silent overwrite of the file!
@@ -139,7 +134,6 @@ public class Peptizer {
                 MatLogger.setSystemOut(true);
 
                 // Create the iterator.
-                FileToolsFactory.getInstance().setCommandLine(true);
                 IdentificationFactory.getInstance().load(input);
                 PeptideIdentificationIterator iter = IdentificationFactory.getInstance().getIterator();
 
@@ -150,7 +144,7 @@ public class Peptizer {
                 System.out.println("Peptizer to CSV");
                 System.out.println("*****************");
                 System.out.println("\tAll data gathered by all active agents and preset tablerows on the input will be written to the output in the csv file format.\n");
-                System.out.println("\tSource " + sourcetype + ":" + "\t\t" + input);
+                System.out.println("\tSource:" + "\t\t" + input);
                 System.out.println("\tTarget:" + "\t\t\t\t" + output);
                 System.out.println("\n\tSettings");
                 System.out.println("\t\tAgent:" + "\t\t\t\t" + agent);

@@ -33,7 +33,7 @@ public class MassErrorTableRowImpl extends AbstractTableRow {
     /**
      * {@inheritDoc}
      */
-    public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+    public String getDataImpl(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
         return Double.toString(aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getDeltaMass()) + "Da";
     }
 

@@ -32,7 +32,7 @@ public class RelativeIntensityAgent extends Agent {
     public RelativeIntensityAgent() {
         // Init the general Agent settings.
         initialize(INTENSITY_THRESHOLD);
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA, SearchEngineEnum.XTandem};
+        SearchEngineEnum[] searchEngines = {};
         compatibleSearchEngine = searchEngines;
     }
 
@@ -51,11 +51,11 @@ public class RelativeIntensityAgent extends Agent {
      *         </ul>
      */
     public AgentVote[] inspect(PeptideIdentification aPeptideIdentification) {
+        AgentVote[] lAgentVotes = new AgentVote[aPeptideIdentification.getNumberOfConfidentPeptideHits()];
 
         // Localize the Dummy property.
         double lThreshold = Double.parseDouble((String) (this.iProperties.get(INTENSITY_THRESHOLD)));
 
-        AgentVote[] lAgentVotes = new AgentVote[aPeptideIdentification.getNumberOfConfidentPeptideHits()];
 
         PeptizerSpectrum lSpectrum = aPeptideIdentification.getSpectrum();
         PeptizerPeak[] lPeaks = lSpectrum.getPeakList();
@@ -64,7 +64,7 @@ public class RelativeIntensityAgent extends Agent {
         double lTotalSpectrumIntensity = 0.0;
         for (int i = 0; i < lPeaks.length; i++) {
             PeptizerPeak lPeak = lPeaks[i];
-            lTotalSpectrumIntensity = lTotalSpectrumIntensity + lPeak.getIntensity();
+            lTotalSpectrumIntensity += lPeak.getIntensity();
         }
 
         for (int i = 0; i < lAgentVotes.length; i++) {
@@ -84,60 +84,17 @@ public class RelativeIntensityAgent extends Agent {
             HashMap lPeptideHitAnnotation;
             ArrayList<AnnotationType> lAnnotationType = lPeptideHit.getAnnotationType();
 
-            Vector v = new Vector();
-            boolean identifiedByMascot = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocatesList().contains(SearchEngineEnum.Mascot);
-            boolean identifiedByOMSSA = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocatesList().contains(SearchEngineEnum.OMSSA);
-            boolean identifiedByXTandem = aPeptideIdentification.getPeptideHit(i).getAdvocate().getAdvocatesList().contains(SearchEngineEnum.XTandem);
-
-            if (identifiedByMascot) {
-                searchEngineUsed = SearchEngineEnum.Mascot;
-                // We will analyze the mascot assigned peaks or the fused ones according to fuse. I guess this could be search engine independant.
-                boolean fused = false;
-                if (fused) {
-                    for (int j = 0; j < lAnnotationType.size(); j++) {
-                        if (lAnnotationType.get(j).getSearchEngine() == SearchEngineEnum.Mascot && lAnnotationType.get(j).getIndex() == 1) {
-                            lPeptideHitAnnotation = lPeptideHit.getAllAnnotation(aPeptideIdentification, i);
-                            v = (Vector) lPeptideHitAnnotation.get(lAnnotationType.get(j).getIndex() + "" + SearchEngineEnum.Mascot.getId() + "" + i);
-                            break;
-                        }
-                    }
-                } else {
-                    for (int j = 0; j < lAnnotationType.size(); j++) {
-                        if (lAnnotationType.get(j).getSearchEngine() == SearchEngineEnum.Mascot && lAnnotationType.get(j).getIndex() == 0) {
-                            lPeptideHitAnnotation = lPeptideHit.getAllAnnotation(aPeptideIdentification, i);
-                            v = (Vector) lPeptideHitAnnotation.get(lAnnotationType.get(j).getIndex() + "" + SearchEngineEnum.Mascot.getId() + "" + i);
-                            break;
-                        }
-                    }
-                }
-            } else if (identifiedByOMSSA) {
-                searchEngineUsed = SearchEngineEnum.OMSSA;
-                // There is only one annotation type here.
-                for (int j = 0; j < lAnnotationType.size(); j++) {
-                    if (lAnnotationType.get(j).getSearchEngine() == SearchEngineEnum.OMSSA) {
-                        lPeptideHitAnnotation = lPeptideHit.getAllAnnotation(aPeptideIdentification, i);
-                        v = (Vector) lPeptideHitAnnotation.get(lAnnotationType.get(j).getIndex() + "" + SearchEngineEnum.OMSSA.getId() + "" + i);
-                        break;
-                    }
-                }
-            } else if (identifiedByXTandem) {
-                searchEngineUsed = SearchEngineEnum.XTandem;
-                // There is only one annotation type here.
-                for (int j = 0; j < lAnnotationType.size(); j++) {
-                    if (lAnnotationType.get(j).getSearchEngine() == SearchEngineEnum.XTandem) {
-                        lPeptideHitAnnotation = lPeptideHit.getAllAnnotation(aPeptideIdentification, i);
-                        v = (Vector) lPeptideHitAnnotation.get(lAnnotationType.get(j).getIndex() + "" + SearchEngineEnum.XTandem.getId() + "" + i);
-                        break;
-                    }
-                }
-            }
+            HashMap<String, Vector<PeptizerFragmentIon>> annotationMap = lPeptideHit.getAllAnnotation(aPeptideIdentification, 0);
+            String key = 0 + "" + lPeptideHit.getAdvocate().getAdvocatesList().get(0).getId() + "" + 1 + "";
+            Vector v = annotationMap.get(key);
+            double intMax = lSpectrum.getMaxIntensity();
 
             DescriptiveStatistics lStatistics = new DescriptiveStatistics();
 
             if (v != null) {
                 for (int j = 0; j < v.size(); j++) {
                     PeptizerFragmentIon lFragmentIon = (PeptizerFragmentIon) v.elementAt(j);
-                    lStatistics.addValue(lFragmentIon.getIntensity() / lSpectrum.getMaxIntensity());
+                    lStatistics.addValue(lFragmentIon.getIntensity() / intMax);
                 }
             }
 

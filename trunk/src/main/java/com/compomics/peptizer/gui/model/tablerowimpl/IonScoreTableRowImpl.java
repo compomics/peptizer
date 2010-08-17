@@ -33,7 +33,7 @@ public class IonScoreTableRowImpl extends AbstractTableRow {
     /**
      * {@inheritDoc}
      */
-    public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+    public String getDataImpl(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
         if (aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getIonsScore() >= 0)
             return "" + aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getPeptidHit(SearchEngineEnum.Mascot).getIonsScore();
         else return "";

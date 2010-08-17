@@ -23,7 +23,7 @@ public class DummyAgent extends Agent {
     public DummyAgent() {
         // Init the general Agent settings.
         initialize(DUMMY_PROPERTY);
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA, SearchEngineEnum.XTandem};
+        SearchEngineEnum[] searchEngines = {};
         compatibleSearchEngine = searchEngines;
     }
 

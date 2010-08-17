@@ -13,8 +13,8 @@ import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import junit.TestCaseLM;
 import junit.framework.Assert;
 
-import java.util.Vector;
 import java.io.File;
+import java.util.Vector;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,7 +32,7 @@ public class TestSubSequence extends TestCaseLM {
     public TestSubSequence() {
         super("Testscenario TestSubSequence. ");
         iSubSequence = (SubSequence) AgentFactory.getInstance().getAgent("com.compomics.peptizer.util.agents.SubSequence");
-        iSubSequence.setProperty(SubSequence.SUBSEQUENCE, "LLGDVAPNFEANT");
+        iSubSequence.setProperty(SubSequence.SUBSEQUENCE, "LLGDVAPNGEANT");
     }
 
     public void testInspect() {
@@ -48,7 +48,7 @@ public class TestSubSequence extends TestCaseLM {
         Vector lPeptideHits = lMascotDatfile.getQueryToPeptideMap().getAllPeptideHits(lQueryNumber);
         Vector lPeptizerPeptideHits = new Vector(lPeptideHits.size());
         for (int i = 0; i < lPeptideHits.size(); i++) {
-            lPeptizerPeptideHits.add(new MascotPeptideHit((PeptideHit) lPeptideHits.get(i), i+1));
+            lPeptizerPeptideHits.add(new MascotPeptideHit((PeptideHit) lPeptideHits.get(i), i + 1));
         }
         MascotSpectrum mascotSpectrum = new MascotSpectrum(lMascotDatfile.getQuery(lQueryNumber));
         PeptideIdentification lPeptideIdentification = new PeptideIdentification(mascotSpectrum, lPeptizerPeptideHits, SearchEngineEnum.Mascot);
@@ -56,12 +56,12 @@ public class TestSubSequence extends TestCaseLM {
         AgentVote[] lResult = iSubSequence.inspect(lPeptideIdentification);
         // First and second id, single SubSequence - negative test.
         Assert.assertEquals(1, lResult[0].score);
-        Assert.assertEquals(1, lResult[1].score);
-        Assert.assertEquals(1, lResult[2].score);
+        Assert.assertEquals(0, lResult[1].score);
+        Assert.assertEquals(0, lResult[2].score);
         Assert.assertTrue(lResult.length == 3);
 
         Assert.assertEquals(1, lPeptideIdentification.getAgentReport(1, iSubSequence.getUniqueID()).getReport(AgentReport.RK_ARFF));
-        Assert.assertEquals("PGGL-LLGDVAPNFEANT-TVGR", lPeptideIdentification.getAgentReport(1, iSubSequence.getUniqueID()).getReport(AgentReport.RK_TABLEDATA));
+        Assert.assertEquals("PGGL-LLGDVAPNGEANT-TVGR", lPeptideIdentification.getAgentReport(1, iSubSequence.getUniqueID()).getReport(AgentReport.RK_TABLEDATA));
         Assert.assertEquals(AgentVote.POSITIVE_FOR_SELECTION, lPeptideIdentification.getAgentReport(1, iSubSequence.getUniqueID()).getReport(AgentReport.RK_RESULT));
     }
 }

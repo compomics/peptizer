@@ -13,8 +13,8 @@ import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import junit.TestCaseLM;
 import junit.framework.Assert;
 
-import java.util.Vector;
 import java.io.File;
+import java.util.Vector;
 
 /**
  * Created by IntelliJ IDEA.
@@ -50,7 +50,7 @@ public class TestMultipleConfidentHits extends TestCaseLM {
         Vector lPeptideHits = lMascotDatfile.getQueryToPeptideMap().getAllPeptideHits(lQueryNumber);
         Vector lPeptizerPeptideHits = new Vector(lPeptideHits.size());
         for (int i = 0; i < lPeptideHits.size(); i++) {
-            lPeptizerPeptideHits.add(new MascotPeptideHit((PeptideHit) lPeptideHits.get(i), i+1));
+            lPeptizerPeptideHits.add(new MascotPeptideHit((PeptideHit) lPeptideHits.get(i), i + 1));
         }
         MascotSpectrum mascotSpectrum = new MascotSpectrum(lMascotDatfile.getQuery(lQueryNumber));
         PeptideIdentification lPeptideIdentification = new PeptideIdentification(mascotSpectrum, lPeptizerPeptideHits, SearchEngineEnum.Mascot);

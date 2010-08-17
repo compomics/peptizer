@@ -33,7 +33,7 @@ public class SequenceRegexp extends Agent {
 
         // Init the general Agent settings.
         initialize(SEQUENCEREGEXP);
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA, SearchEngineEnum.XTandem};
+        SearchEngineEnum[] searchEngines = {};
         compatibleSearchEngine = searchEngines;
     }
 
@@ -66,7 +66,7 @@ public class SequenceRegexp extends Agent {
             PeptizerPeptideHit lPeptideHit = aPeptideIdentification.getPeptideHit(i);
 
             // 2. Check if sequence matches.
-            // Create a matcher           
+            // Create a matcher
             Matcher matcher = pattern.matcher(lPeptideHit.getSequence());
             // Try to find a match and construct results.
             if (matcher.find()) {

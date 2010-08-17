@@ -27,7 +27,7 @@ public class SubSequence extends Agent {
     public SubSequence() {
         // Init the general Agent settings.
         initialize();
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA, SearchEngineEnum.XTandem};
+        SearchEngineEnum[] searchEngines = {};
         compatibleSearchEngine = searchEngines;
 
         // Init the specific Agent settings.

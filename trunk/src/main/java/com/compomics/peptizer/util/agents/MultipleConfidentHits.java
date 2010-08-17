@@ -32,7 +32,7 @@ public class MultipleConfidentHits extends Agent {
     public MultipleConfidentHits() {
         // Init the general Agent settings.
         initialize(DELTA);
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA, SearchEngineEnum.XTandem};
+        SearchEngineEnum[] searchEngines = {};
         compatibleSearchEngine = searchEngines;
     }
 

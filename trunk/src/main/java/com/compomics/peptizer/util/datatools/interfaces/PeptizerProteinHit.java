@@ -15,7 +15,7 @@ public interface PeptizerProteinHit {
 
     public SearchEngineEnum getSearchEngineEnum();
 
-    public int getStart();
+    public Integer getStart();
 
-    public int getEnd();
+    public Integer getEnd();
 }

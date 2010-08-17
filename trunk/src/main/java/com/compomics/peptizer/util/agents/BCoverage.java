@@ -29,7 +29,7 @@ public class BCoverage extends Agent {
     public BCoverage() {
         // Init the general Agent settings.
         initialize(PERCENTAGE);
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA, SearchEngineEnum.XTandem};
+        SearchEngineEnum[] searchEngines = {};
         compatibleSearchEngine = searchEngines;
     }
 
@@ -52,7 +52,6 @@ public class BCoverage extends Agent {
         double lPercentageParameter = Double.parseDouble((String) (this.iProperties.get(PERCENTAGE)));
 
         AgentVote[] lScore = new AgentVote[aPeptideIdentification.getNumberOfConfidentPeptideHits()];
-
         for (int i = 0; i < lScore.length; i++) {
 
             // Make Agent Report!

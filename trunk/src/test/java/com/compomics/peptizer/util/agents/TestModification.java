@@ -13,8 +13,8 @@ import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import junit.TestCaseLM;
 import junit.framework.Assert;
 
-import java.util.Vector;
 import java.io.File;
+import java.util.Vector;
 
 /**
  * Created by IntelliJ IDEA.
@@ -33,7 +33,7 @@ public class TestModification extends TestCaseLM {
         super("Testscenario TestModification. ");
         iModification =
                 (ModificationAgent) AgentFactory.getInstance().getAgent("com.compomics.peptizer.util.agents.ModificationAgent");
-        iModification.setProperty(ModificationAgent.MODIFICATION_NAME, "mox");
+        iModification.setProperty(ModificationAgent.MODIFICATION_NAME, "oxidation");
     }
 
     public void testInspect() {
@@ -52,7 +52,7 @@ public class TestModification extends TestCaseLM {
         Vector lPeptideHits = lMascotDatfile.getQueryToPeptideMap().getAllPeptideHits(lQueryNumber);
         Vector lPeptizerPeptideHits = new Vector(lPeptideHits.size());
         for (int i = 0; i < lPeptideHits.size(); i++) {
-            lPeptizerPeptideHits.add(new MascotPeptideHit((PeptideHit) lPeptideHits.get(i), i+1));
+            lPeptizerPeptideHits.add(new MascotPeptideHit((PeptideHit) lPeptideHits.get(i), i + 1));
         }
         MascotSpectrum mascotSpectrum = new MascotSpectrum(lMascotDatfile.getQuery(lQueryNumber));
         PeptideIdentification lPeptideIdentification = new PeptideIdentification(mascotSpectrum, lPeptizerPeptideHits, SearchEngineEnum.Mascot);
@@ -64,12 +64,12 @@ public class TestModification extends TestCaseLM {
         Assert.assertEquals(1, lResult[1].score);
         Assert.assertTrue(lResult.length == 2);
 
-        Assert.assertEquals("mox", iModification.getProperty(ModificationAgent.MODIFICATION_NAME));
+        Assert.assertEquals("oxidation", iModification.getProperty(ModificationAgent.MODIFICATION_NAME));
         Assert.assertEquals(0, lPeptideIdentification.getAgentReport(1, iModification.getUniqueID()).getReport(AgentReport.RK_ARFF));
         Assert.assertEquals("NA", lPeptideIdentification.getAgentReport(1, iModification.getUniqueID()).getReport(AgentReport.RK_TABLEDATA));
         Assert.assertEquals(AgentVote.NEUTRAL_FOR_SELECTION, lPeptideIdentification.getAgentReport(1, iModification.getUniqueID()).getReport(AgentReport.RK_RESULT));
         Assert.assertEquals(1, lPeptideIdentification.getAgentReport(2, iModification.getUniqueID()).getReport(AgentReport.RK_ARFF));
-        Assert.assertEquals("mox", lPeptideIdentification.getAgentReport(2, iModification.getUniqueID()).getReport(AgentReport.RK_TABLEDATA));
+        Assert.assertEquals("oxidation", lPeptideIdentification.getAgentReport(2, iModification.getUniqueID()).getReport(AgentReport.RK_TABLEDATA));
         Assert.assertEquals(AgentVote.POSITIVE_FOR_SELECTION, lPeptideIdentification.getAgentReport(2, iModification.getUniqueID()).getReport(AgentReport.RK_RESULT));
     }
 }

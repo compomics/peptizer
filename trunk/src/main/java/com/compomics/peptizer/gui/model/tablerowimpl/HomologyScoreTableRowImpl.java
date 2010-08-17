@@ -34,7 +34,7 @@ public class HomologyScoreTableRowImpl extends AbstractTableRow {
     /**
      * {@inheritDoc}
      */
-    public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+    public String getDataImpl(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
         BigDecimal lBigDecimal = new BigDecimal(aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getPeptidHit(SearchEngineEnum.Mascot).getHomologyThreshold());
         lBigDecimal = lBigDecimal.setScale(2, BigDecimal.ROUND_HALF_DOWN);
 

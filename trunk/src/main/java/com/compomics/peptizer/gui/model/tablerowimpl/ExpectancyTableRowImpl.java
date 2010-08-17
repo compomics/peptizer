@@ -36,7 +36,7 @@ public class ExpectancyTableRowImpl extends AbstractTableRow {
     /**
      * {@inheritDoc}
      */
-    public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+    public String getDataImpl(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
         ArrayList<SearchEngineEnum> advocates = aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getAdvocate().getAdvocatesList();
         String result = "";
         for (int i = 0; i < advocates.size(); i++) {

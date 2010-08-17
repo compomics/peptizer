@@ -34,11 +34,11 @@ public class XTandemProteinHit implements PeptizerProteinHit {
         return iSearchEngineEnum;
     }
 
-    public int getStart() {
+    public Integer getStart() {
         return iPeptide.getDomainStart();
     }
 
-    public int getEnd() {
+    public Integer getEnd() {
         return iPeptide.getDomainEnd();
     }
 }

@@ -32,7 +32,7 @@ public class StartSite extends Agent {
     public StartSite() {
         // Init the general Agent settings.
         initialize(new String[]{LOW, HIGH});
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA, SearchEngineEnum.XTandem};
+        SearchEngineEnum[] searchEngines = {};
         compatibleSearchEngine = searchEngines;
     }
 

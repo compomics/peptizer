@@ -29,7 +29,7 @@ public class TotalCoverage extends Agent {
     public TotalCoverage() {
         // Init the general Agent settings.
         initialize(PERCENTAGE);
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA};
+        SearchEngineEnum[] searchEngines = {};
         compatibleSearchEngine = searchEngines;
     }
 
@@ -70,14 +70,14 @@ public class TotalCoverage extends Agent {
             // If shorter then the given length, set to 1.
 
             int[] lCoverage = lPeptideHit.getSequenceCoverage(aPeptideIdentification);
-            BigDecimal YionPercentage =
+            BigDecimal ionPercentage =
                     new BigDecimal(((lCoverage[2] + 0.0) / (lPeptideHit.getSequence().length()))).setScale(2, BigDecimal.ROUND_HALF_UP);
-            if (YionPercentage.doubleValue() <= lPercentageParameter) {
-                lTableData = Double.toString(YionPercentage.doubleValue());
+            if (ionPercentage.doubleValue() <= lPercentageParameter) {
+                lTableData = Double.toString(ionPercentage.doubleValue());
                 lScore[i] = AgentVote.POSITIVE_FOR_SELECTION;
                 lARFFData = "1";
             } else {
-                lTableData = Double.toString(YionPercentage.doubleValue());
+                lTableData = Double.toString(ionPercentage.doubleValue());
                 lScore[i] = AgentVote.NEUTRAL_FOR_SELECTION;
                 lARFFData = "0";
             }

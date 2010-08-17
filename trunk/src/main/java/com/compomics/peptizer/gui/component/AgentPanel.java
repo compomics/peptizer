@@ -53,7 +53,7 @@ public class AgentPanel extends JPanel implements Updateable {
     private final String INFORMER = "Inform";
 
     private final String PARAMETERS = "Parameters";
-    private final String COMPATIBILITY = "Compatibility";
+    private final String COMPATIBILITY = "Restriction";
 
     /**
      * The Collection of Agents to display in the Table.
@@ -407,6 +407,7 @@ public class AgentPanel extends JPanel implements Updateable {
                         sb.append(", ");
                     }
                 }
+
                 // Return the String processing.
                 o = sb.toString();
             }

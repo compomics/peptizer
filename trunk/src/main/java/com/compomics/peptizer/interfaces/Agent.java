@@ -23,7 +23,7 @@ import java.util.Properties;
 public abstract class Agent implements Comparable {
 
     /**
-     * Fixed reply 
+     * Fixed reply
      */
 
     /**
@@ -69,12 +69,25 @@ public abstract class Agent implements Comparable {
      * @return the result of the inspection.
      */
     public AgentVote[] inspectIfPossible(PeptideIdentification aPeptideIdentification) {
-        for (int i = 0; i < compatibleSearchEngine.length; i++) {
-            if (aPeptideIdentification.getAdvocate().getAdvocatesList().contains(compatibleSearchEngine[i])) {
-                return inspect(aPeptideIdentification);
+        try {
+            for (SearchEngineEnum searchEngine : compatibleSearchEngine) {
+                if (aPeptideIdentification.getAdvocate().getAdvocatesList().contains(searchEngine)) {
+                    return inspect(aPeptideIdentification);
+                }
             }
+            return inspect(aPeptideIdentification);
+        } catch (Exception e) {
+            iReport = new AgentReport(getUniqueID());
+            AgentVote[] lAgentVotes = new AgentVote[aPeptideIdentification.getNumberOfConfidentPeptideHits()];
+            for (int i = 0; i < lAgentVotes.length; i++) {
+                lAgentVotes[i] = AgentVote.NEUTRAL_FOR_SELECTION;
+                iReport.addReport(AgentReport.RK_RESULT, lAgentVotes[i]);
+                iReport.addReport(AgentReport.RK_TABLEDATA, "-");
+                iReport.addReport(AgentReport.RK_ARFF, "no data");
+                aPeptideIdentification.addAgentReport(i + 1, getUniqueID(), iReport);
+            }
+            return lAgentVotes;
         }
-        return null;
     }
 
     /**

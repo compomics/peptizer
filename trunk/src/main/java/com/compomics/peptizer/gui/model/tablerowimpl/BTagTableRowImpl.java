@@ -32,7 +32,7 @@ public class
     /**
      * {@inheritDoc}
      */
-    public Object getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+    public Object getDataImpl(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
         String result = null;
         try {
             // Get the peptidehit.

@@ -92,6 +92,18 @@ public class PeptideIdentification implements Comparable, Serializable {
     }
 
     /**
+     * This constructor takes a Spectrum and a Vector with PeptideHits as parameters.
+     *
+     * @param aSpectrum    of the PeptideIdentification
+     * @param aPeptideHits of the PeptideIdentification.
+     */
+    public PeptideIdentification(PeptizerSpectrum aSpectrum, Vector<PeptizerPeptideHit> aPeptideHits, Advocate advocate) {
+        iSpectrum = aSpectrum;
+        iPeptideHits = aPeptideHits;
+        this.advocate = advocate;
+    }
+
+    /**
      * Returns the Spectrum of the PeptideIdentification
      *
      * @return Spectrum of the PeptideIdentification.
