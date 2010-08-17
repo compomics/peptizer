@@ -26,7 +26,7 @@ public class MostIntenseImmoniumIonAgent extends Agent {
     public MostIntenseImmoniumIonAgent() {
         // Init the general Agent settings.
         initialize(new String[]{AMINOACIDS, ERROR});
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA};
+        SearchEngineEnum[] searchEngines = {};
         compatibleSearchEngine = searchEngines;
 
         // Build a Map with immonium ion masses.
@@ -34,28 +34,28 @@ public class MostIntenseImmoniumIonAgent extends Agent {
 
         iImmoniumIons = new HashMap<Character, Ion>();
 
-        iImmoniumIons.put('H', new Ion(110, IonTypeEnum.immonium));
-        iImmoniumIons.put('F', new Ion(120, IonTypeEnum.immonium));
-        iImmoniumIons.put('Y', new Ion(136, IonTypeEnum.immonium));
-        iImmoniumIons.put('W', new Ion(159, IonTypeEnum.immonium));
+        iImmoniumIons.put('H', new Ion(110, IonTypeEnum.immoniumH));
+        iImmoniumIons.put('F', new Ion(120, IonTypeEnum.immoniumF));
+        iImmoniumIons.put('Y', new Ion(136, IonTypeEnum.immoniumY));
+        iImmoniumIons.put('W', new Ion(159, IonTypeEnum.immoniumW));
 
-        iImmoniumIons.put('L', new Ion(86, IonTypeEnum.immonium));
-        iImmoniumIons.put('I', new Ion(86, IonTypeEnum.immonium));
-        iImmoniumIons.put('P', new Ion(70, IonTypeEnum.immonium));
+        iImmoniumIons.put('L', new Ion(86, IonTypeEnum.immoniumL));
+        iImmoniumIons.put('I', new Ion(86, IonTypeEnum.immoniumI));
+        iImmoniumIons.put('P', new Ion(70, IonTypeEnum.immoniumP));
         /*
-        iImmoniumIons.put('M', new Ion(104, IonTypeEnum.immonium));
-        iImmoniumIons.put('A', new Ion(44, IonTypeEnum.immonium));
-        iImmoniumIons.put('R', new Ion(129, IonTypeEnum.immonium));
-        iImmoniumIons.put('N', new Ion(87, IonTypeEnum.immonium));
-        iImmoniumIons.put('D', new Ion(88, IonTypeEnum.immonium));
-        iImmoniumIons.put('C', new Ion(76, IonTypeEnum.immonium));
-        iImmoniumIons.put('E', new Ion(102, IonTypeEnum.immonium));
-        iImmoniumIons.put('Q', new Ion(101, IonTypeEnum.immonium));
-        iImmoniumIons.put('G', new Ion(30, IonTypeEnum.immonium));
-        iImmoniumIons.put('K', new Ion(101, IonTypeEnum.immonium));
-        iImmoniumIons.put('S', new Ion(60, IonTypeEnum.immonium));
-        iImmoniumIons.put('T', new Ion(74, IonTypeEnum.immonium));
-        iImmoniumIons.put('V', new Ion(72, IonTypeEnum.immonium));
+        iImmoniumIons.put('M', new Ion(104, IonTypeEnum.immoniumM));
+        iImmoniumIons.put('A', new Ion(44, IonTypeEnum.immoniumA));
+        iImmoniumIons.put('R', new Ion(129, IonTypeEnum.immoniumR));
+        iImmoniumIons.put('N', new Ion(87, IonTypeEnum.immoniumN));
+        iImmoniumIons.put('D', new Ion(88, IonTypeEnum.immoniumD));
+        iImmoniumIons.put('C', new Ion(76, IonTypeEnum.immoniumC));
+        iImmoniumIons.put('E', new Ion(102, IonTypeEnum.immoniumE));
+        iImmoniumIons.put('Q', new Ion(101, IonTypeEnum.immoniumQ));
+        iImmoniumIons.put('G', new Ion(30, IonTypeEnum.immoniumG));
+        iImmoniumIons.put('K', new Ion(101, IonTypeEnum.immoniumK));
+        iImmoniumIons.put('S', new Ion(60, IonTypeEnum.immoniumS));
+        iImmoniumIons.put('T', new Ion(74, IonTypeEnum.immoniumT));
+        iImmoniumIons.put('V', new Ion(72, IonTypeEnum.immoniumV));
         */
     }
 

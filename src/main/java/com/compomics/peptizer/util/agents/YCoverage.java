@@ -29,7 +29,7 @@ public class YCoverage extends Agent {
     public YCoverage() {
         // Init the general Agent settings.
         initialize(PERCENTAGE);
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA, SearchEngineEnum.XTandem};
+        SearchEngineEnum[] searchEngines = {};
         compatibleSearchEngine = searchEngines;
     }
 

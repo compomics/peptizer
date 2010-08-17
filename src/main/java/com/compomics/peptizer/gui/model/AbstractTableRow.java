@@ -63,7 +63,23 @@ public abstract class AbstractTableRow {
      * @param aPeptideHitNumber      Returns PeptideHit by NAME. * <b>1' will return the first PeptideHit. '2' the seconde etc..</b>'
      * @return data on the identification.
      */
-    public abstract Object getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber);
+    public Object getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+        try {
+            return getDataImpl(aPeptideIdentification, aPeptideHitNumber);
+        } catch (Exception e) {
+            return "-";
+        }
+    }
+
+    /**
+     * Returns the data on the PeptideIdentifcation.
+     *
+     * @param aPeptideIdentification PeptideIdentification on the table.
+     * @param aPeptideHitNumber      Returns PeptideHit by NAME. * <b>1' will return the first PeptideHit. '2' the seconde etc..</b>'
+     * @return data on the identification.
+     */
+    public abstract Object getDataImpl(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber);
+
 
     /**
      * Returns the fixed String ID.

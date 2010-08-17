@@ -32,7 +32,7 @@ public class ModifiedSequenceTableRowImpl extends AbstractTableRow {
     /**
      * {@inheritDoc}
      */
-    public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+    public String getDataImpl(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
         String s = "";
         s = aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getModifiedSequence();
         return s;

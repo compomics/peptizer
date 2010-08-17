@@ -1,16 +1,18 @@
 package com.compomics.peptizer.util.agents;
 
-import com.compomics.mascotdatfile.util.mascot.PeptideHit;
 import com.compomics.peptizer.interfaces.Agent;
 import com.compomics.peptizer.util.AgentReport;
 import com.compomics.peptizer.util.PeptideIdentification;
+import com.compomics.peptizer.util.datatools.implementations.mascot.MascotPeptideHit;
 import com.compomics.peptizer.util.datatools.implementations.omssa.OmssaPeptideHit;
+import com.compomics.peptizer.util.datatools.implementations.pride.PridePeptideHit;
+import com.compomics.peptizer.util.datatools.interfaces.PeptizerModification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
-import de.proteinms.omxparser.util.MSHits;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -23,10 +25,13 @@ import java.util.List;
  */
 public class SialylationAgent extends Agent {
 
+    private final ArrayList<String> prideAccessions = new ArrayList<String>(Arrays.asList(new String[]{"MOD:00137", "MOD:00219", "MOD:00400", "MOD:00565", "MOD:00657", "MOD:00791", "MOD:01293", "MOD:01294", "MOD:01336", "MOD:01337", "MOD:01369", "MOD:01371"}));
+
+
     public SialylationAgent() {
         // Init the general Agent settings.
         initialize();
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA};
+        SearchEngineEnum[] searchEngines = {};
         compatibleSearchEngine = searchEngines;
     }
 
@@ -71,8 +76,33 @@ public class SialylationAgent extends Agent {
 
             // Loop as long as there is an Asn residue in the peptide sequence,
             while ((index = lSequence.indexOf("N", index)) != -1) {
-                // If an Asn is inside the peptide, look if it carries a demidation modification.
-                hasDeamidatedAsparagine = isDeaminated(lPeptideHit, index);
+                // If an Asn is inside the peptide, look if it carries a demidation modification.int lNumberOfDeamidations = 0;
+                if (lPeptideHit instanceof MascotPeptideHit) {
+                    for (PeptizerModification mod : lPeptideHit.getModifications()) {
+                        if (mod.getModificationSite() > 0 && mod.getModificationSite() < lPeptideHit.getSequence().length()) {
+                            if (mod.getName().equals("deamidation") && lPeptideHit.getSequence().charAt(mod.getModificationSite() - 1) == 'N') {
+                                hasDeamidatedAsparagine = true;
+                                break;
+                            }
+                        }
+                    }
+                } else if (lPeptideHit instanceof OmssaPeptideHit) {
+                    for (PeptizerModification mod : lPeptideHit.getModifications()) {
+                        if (mod.getName().equals("deamidation of N")) {
+                            hasDeamidatedAsparagine = true;
+                            break;
+                        }
+                    }
+                } else if (lPeptideHit instanceof PridePeptideHit) {
+                    for (PeptizerModification mod : lPeptideHit.getModifications()) {
+                        if (mod.getModificationSite() > 0 && mod.getModificationSite() < lPeptideHit.getSequence().length()) {
+                            if (prideAccessions.contains(mod.getPrideAccession()) && lPeptideHit.getSequence().charAt(mod.getModificationSite() - 1) == 'N') {
+                                hasDeamidatedAsparagine = true;
+                                break;
+                            }
+                        }
+                    }
+                }
             }
 
             // Score +1 is the boolean was set to true, Score 0 if else.
@@ -102,53 +132,6 @@ public class SialylationAgent extends Agent {
 
     }
 
-    /**
-     * This Method Checks the modification status of a PeptideHit, the purpose
-     *
-     * @param aPPh  - PeptizerPeptideHit upon inspection.
-     * @param index - Position to inspect
-     * @return boolean           - true if peptide deaminated at this position
-     */
-    private boolean isDeaminated(PeptizerPeptideHit aPPh, int index) {
-        boolean identifiedByMascot = aPPh.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.Mascot);
-        boolean identifiedByOMSSA = aPPh.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.OMSSA);
-
-        if (identifiedByMascot) {
-            PeptideHit aMPh = (PeptideHit) aPPh.getOriginalPeptideHit(SearchEngineEnum.Mascot);
-            String lModificationShortType = aMPh.getModifications()[index].getShortType();
-            if (lModificationShortType.equalsIgnoreCase("dam")) {
-                return true;
-            }
-        } else if (identifiedByOMSSA) {
-            OmssaPeptideHit anOPh = (OmssaPeptideHit) aPPh;
-            MSHits msHits = (MSHits) aPPh.getOriginalPeptideHit(SearchEngineEnum.OMSSA);
-
-            // Look for the id of the deamination
-            int id = -1;
-            for (int i = 0; i < anOPh.modifs.size(); i++) {
-                if (anOPh.modifs.get(i).getModName().compareTo("deamidation of N and Q") == 0) {
-                    id = anOPh.modifs.get(i).getModNumber();
-                    break;
-                }
-            }
-
-            // Inspect fixed modifications
-            List<Integer> fixedMods = anOPh.getFixedModifications();
-            for (int i = 0; i < fixedMods.size(); i++) {
-                if (fixedMods.get(i).intValue() == id) {
-                    return true;
-                }
-            }
-
-            // Inspect variable modifications
-            for (int i = 0; i < msHits.MSHits_mods.MSModHit.size(); i++) {
-                if (msHits.MSHits_mods.MSModHit.get(i).MSModHit_site == index && msHits.MSHits_mods.MSModHit.get(i).MSModHit_modtype.MSMod == id) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
     /**
      * Returns a description for the Agent. Use in tooltips and configuration settings.

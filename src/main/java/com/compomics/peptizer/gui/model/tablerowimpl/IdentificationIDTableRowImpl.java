@@ -32,7 +32,7 @@ public class IdentificationIDTableRowImpl extends AbstractTableRow {
     /**
      * {@inheritDoc}
      */
-    public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+    public String getDataImpl(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
         Object o = null;
         if (aPeptideIdentification.metaDataContainsKey(MetaKey.Identification_id)) {
             o = aPeptideIdentification.getMetaData(MetaKey.Identification_id);

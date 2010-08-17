@@ -31,15 +31,15 @@ public class OmssaProteinHit implements PeptizerProteinHit {
         return iSearchEngineEnum;
     }
 
-    public int getStart() {
+    public Integer getStart() {
         return msPepHit.MSPepHit_start;
     }
 
-    public int getEnd() {
+    public Integer getEnd() {
         return msPepHit.MSPepHit_stop;
     }
 
-     private String getProteinAccession(String description) {
+    private String getProteinAccession(String description) {
         int start = description.indexOf("|");
         int end = description.indexOf("|", ++start);
         return description.substring(start, end);

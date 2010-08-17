@@ -25,7 +25,7 @@ public class ItalicsDemoAgent extends Agent {
     public ItalicsDemoAgent() {
         // Init the general Agent settings.
         initialize();
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA};
+        SearchEngineEnum[] searchEngines = {};
         compatibleSearchEngine = searchEngines;
 
     }

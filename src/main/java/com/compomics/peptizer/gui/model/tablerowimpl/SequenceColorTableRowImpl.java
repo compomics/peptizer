@@ -33,7 +33,7 @@ public class SequenceColorTableRowImpl extends AbstractTableRow {
     /**
      * {@inheritDoc}
      */
-    public Object getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+    public Object getDataImpl(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
         JLabel label = null;
         try {
             // Get the peptidehit.

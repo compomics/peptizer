@@ -30,7 +30,7 @@ public class DeltaMassPPMAgent extends Agent {
     public DeltaMassPPMAgent() {
         // Init the general Agent settings.
         initialize(new String[]{TOLERANCE});
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA, SearchEngineEnum.XTandem};
+        SearchEngineEnum[] searchEngines = {};
         compatibleSearchEngine = searchEngines;
     }
 
@@ -56,7 +56,6 @@ public class DeltaMassPPMAgent extends Agent {
         double lTolerance = Double.parseDouble((String) (this.iProperties.get(TOLERANCE)));
 
         AgentVote[] lAgentVotes = new AgentVote[aPeptideIdentification.getNumberOfConfidentPeptideHits()];
-
         for (int i = 0; i < lAgentVotes.length; i++) {
 
             // Make Agent Report!

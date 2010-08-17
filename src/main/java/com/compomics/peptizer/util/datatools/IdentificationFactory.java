@@ -54,54 +54,53 @@ public class IdentificationFactory {
     // Methods
 
     public PeptideIdentificationIterator getIterator() {
-        // For now ms_lims contains only Mascot results. Future versions might need preprocessing if not made upstream.                    
+        // For now ms_lims contains only Mascot results. Future versions might need preprocessing if not made upstream.
         if (projectID != -1) {
             return fileToolsFactory.getIterator(connection, projectID);
         } else if (iIdentificationIDs != null) {
             return fileToolsFactory.getIterator(iIdentificationIDs);
-        } else {
+        } else if (identifications.size() > 0) {
             return new PreprocessedIdentificationIterator();
+        } else {
+            return null;
         }
     }
 
     public void load(File aFile) {
-        PeptideIdentificationIterator newIdentificationsIt = fileToolsFactory.getIterator(aFile);
-        PeptideIdentification newIdentification, oldIdentification;
-        SearchEngineEnum currentkey;
-        Iterator<SearchEngineEnum> keyIterator;
-        Iterator<PeptideIdentification> oldIdentificationsIt;
-        String currentSequence;
-        boolean found;
-        while (newIdentificationsIt.hasNext()) {
-            newIdentification = newIdentificationsIt.next();
-            try {
-                newIdentification.getSpectrum().getName();
-            } catch (Exception e) {
-                int a = 0;
-            }
-            currentSequence = newIdentification.getSpectrum().getName();
-            keyIterator = identifications.keySet().iterator();
-            found = false;
-            while (keyIterator.hasNext() && !found) {
-                currentkey = keyIterator.next();
-                // We assume that a searchengine will retrieve only one PeptideIdentification per spectrum
-                if (currentkey != newIdentification.getAdvocate().getAdvocatesList().get(0)) {
-                    oldIdentificationsIt = identifications.get(currentkey).iterator();
-                    while (oldIdentificationsIt.hasNext()) {
-                        oldIdentification = oldIdentificationsIt.next();
-                        if (oldIdentification.getSpectrum().getName().compareTo(currentSequence) == 0) {
-                            oldIdentification.fuse(newIdentification);
-                            found = true;
-                            break;
+        try {
+            PeptideIdentificationIterator newIdentificationsIt = fileToolsFactory.getIterator(aFile);
+            PeptideIdentification newIdentification, oldIdentification;
+            SearchEngineEnum currentkey;
+            Iterator<SearchEngineEnum> keyIterator;
+            Iterator<PeptideIdentification> oldIdentificationsIt;
+            String currentSpectrum;
+            boolean found;
+            while (newIdentificationsIt.hasNext()) {
+                newIdentification = newIdentificationsIt.next();
+                currentSpectrum = newIdentification.getSpectrum().getName();
+                keyIterator = identifications.keySet().iterator();
+                found = false;
+                while (keyIterator.hasNext() && !found) {
+                    currentkey = keyIterator.next();
+                    if (currentkey != newIdentification.getAdvocate().getAdvocatesList().get(0)) {
+                        oldIdentificationsIt = identifications.get(currentkey).iterator();
+                        while (oldIdentificationsIt.hasNext()) {
+                            oldIdentification = oldIdentificationsIt.next();
+                            if (oldIdentification.getSpectrum().getName().equals(currentSpectrum)) {
+                                oldIdentification.fuse(newIdentification);
+                                found = true;
+                                break;
+                            }
                         }
                     }
                 }
+                if (!found) {
+                    identifications.get(newIdentification.getAdvocate().getAdvocatesList().get(0)).add(newIdentification);
+                }
             }
-            if (!found) {
-                identifications.get(newIdentification.getAdvocate().getAdvocatesList().get(0)).add(newIdentification);
-            }
+        } catch (Exception e) {
+            identifications = new HashMap();
         }
-
     }
 
     public void load(Connection aConnection, long aProjectID) {

@@ -1,6 +1,5 @@
 package com.compomics.peptizer.util.agents;
 
-import com.compomics.mascotdatfile.util.interfaces.Modification;
 import com.compomics.mascotdatfile.util.mascot.Masses;
 import com.compomics.mascotdatfile.util.mascot.Parameters;
 import com.compomics.mascotdatfile.util.mascot.PeptideHit;
@@ -11,7 +10,7 @@ import com.compomics.peptizer.util.AgentReport;
 import com.compomics.peptizer.util.MetaKey;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.Ion;
-import com.compomics.peptizer.util.datatools.implementations.omssa.OmssaPeptideHit;
+import com.compomics.peptizer.util.datatools.interfaces.PeptizerModification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerSpectrum;
 import com.compomics.peptizer.util.enumerator.AgentVote;
@@ -126,7 +125,7 @@ public class ModificationCoverageAgent extends Agent {
                 if (ctermCount == 0 || ntermCount == 0) {
                     if (ctermCount == 0 && ntermCount == 0) {
                         // Neither b or y ions have been found around the modification!
-                        // 
+                        //
                         lScore[i] = AgentVote.POSITIVE_FOR_SELECTION;
                         lTableData = "None";
                         lARFFData = 1;
@@ -309,59 +308,14 @@ public class ModificationCoverageAgent extends Agent {
      */
     private int isModified(PeptizerPeptideHit aPh, String aModificationName, String aModifiedResidue) {
         boolean lModified = false;
-        boolean identifiedByMascot = aPh.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.Mascot);
-        boolean identifiedByOMSSA = aPh.getAdvocate().getAdvocatesList().contains(SearchEngineEnum.OMSSA);
-        if (identifiedByMascot) {
-            PeptideHit aMPh = (PeptideHit) aPh.getOriginalPeptideHit(SearchEngineEnum.Mascot);
-            int lLocation = 0;
-            while (!lModified && lLocation < (aMPh.getSequence().length() + 2)) {
-                Modification lMod = aMPh.getModifications()[lLocation];
-// If lMod exists, check if it is an acetylation.
-                if (lMod != null) {
-                    if (lMod.getLocation().toUpperCase().equals(aModifiedResidue.toUpperCase())) {
-                        if (lMod.getShortType().toLowerCase().indexOf(aModificationName) >= 0) {
-                            return lLocation;
-                        }
-                    }
-                }
-                lLocation++;
-            }
-            // no match!
-            return -1;
-        } else if (identifiedByOMSSA) {
-            OmssaPeptideHit anOPH = (OmssaPeptideHit) aPh;
-// Get the id of the modification
-            int id = -1;
-            Vector<String> modResidues = new Vector();
-            for (int i = 0; i < anOPH.modifs.size(); i++) {
-                if (anOPH.modifs.get(i).getModName().compareTo(aModificationName) == 0) {
-                    id = anOPH.modifs.get(i).getModType().intValue();
-                    modResidues = anOPH.modifs.get(i).getModResidues();
-                    break;
-                }
-            }
-
-            // inspect fixed modifications
-            String[] decomposedSequence = anOPH.decomposeSequence(anOPH.getSequence());
-            for (int j = 0; j < decomposedSequence.length - 1; j++) {
-                for (int k = 0; k < modResidues.size(); k++) {
-                    // if we have the concerned residue return true
-                    if (decomposedSequence[j].compareTo(modResidues.get(k)) == 0) {
-                        return j;
-                    }
-                }
-            }
-
-            // inspect variable modifications
-            MSHits aPH = (MSHits) anOPH.getOriginalPeptideHit(SearchEngineEnum.OMSSA);
-            for (int i = 0; i < aPH.MSHits_mods.MSModHit.size(); i++) {
-                // if we have the concerned modification return true
-                if (aPH.MSHits_mods.MSModHit.get(i).MSModHit_modtype.MSMod == id) {
-                    return aPH.MSHits_mods.MSModHit.get(i).MSModHit_site;
+        for (PeptizerModification mod : aPh.getModifications()) {
+            if (mod.getModificationSite() > 0 && mod.getModificationSite() < aPh.getSequence().length()) {
+                if (mod.getName().toLowerCase().equals(aModificationName.toLowerCase())
+                        && aModifiedResidue.toUpperCase().equals(aPh.getSequence().charAt(mod.getModificationSite() - 1) + "")) {
+                    return mod.getModificationSite();
                 }
             }
         }
-        // no match!
         return -1;
     }
 }

@@ -6,6 +6,7 @@ import com.compomics.peptizer.util.AgentReport;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
+import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 
 import java.io.BufferedInputStream;
 import java.io.InputStreamReader;
@@ -31,6 +32,8 @@ public class ProteinContextAgent extends Agent {
     public ProteinContextAgent() {
         // Init the general Agent settings.
         initialize();
+        SearchEngineEnum[] searchEngines = {};
+        compatibleSearchEngine = searchEngines;
     }
 
     public AgentVote[] inspect(final PeptideIdentification aPeptideIdentification) {

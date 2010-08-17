@@ -31,7 +31,7 @@ public class DatabaseTableRowImpl extends AbstractTableRow {
     /**
      * {@inheritDoc}
      */
-    public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+    public String getDataImpl(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
         return aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getDatabase(aPeptideIdentification);
     }
 

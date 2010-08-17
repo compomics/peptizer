@@ -10,7 +10,10 @@ import com.compomics.util.io.FilenameExtensionFilter;
 import org.xml.sax.SAXException;
 
 import javax.swing.*;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,16 +28,6 @@ import java.util.List;
 public class FileToolsFactory {
     private static FileToolsFactory iSingleton = null;
     private List<ParsingType> iParsingType;
-    /**
-     * This boolean assures the filetoolsfactory works in command line mode.
-     */
-    private boolean iCommandLine = false;
-
-    /**
-     * This ParsingType is the default parsingtype for Mascot files.
-     * This mode is used when Peptizer is ran via the command line.
-     */
-    private ParsingType iDefaultMascotParsingType = new MascotParsingType(MascotDatfileType.INDEX);
 
     public static FileToolsFactory getInstance() {
         if (iSingleton == null) {
@@ -69,27 +62,22 @@ public class FileToolsFactory {
             }
             if (aFile.getName().endsWith(".dat")) requested = true;
             if (requested) {
-                if (!iCommandLine) {
-                    String memory = "Memory : Optimal for files up to tens of megabytes.";
-                    String index = "Index : optimal for files over a hundred of megabytes in size.";
-                    Object[] possibilities = {memory, index};
-                    String s = (String) JOptionPane.showInputDialog(
-                            null,
-                            "Mascot identification files were found, which parsing type would you like to use ?",
-                            "Customized Dialog",
-                            JOptionPane.PLAIN_MESSAGE,
-                            null,
-                            possibilities,
-                            "Memory");
-                    if (s != null) {
-                        if (s.compareTo(memory) == 0) result.add(new MascotParsingType(MascotDatfileType.MEMORY));
-                        if (s.compareTo(index) == 0) result.add(new MascotParsingType(MascotDatfileType.INDEX));
-                    } else {
-                        result.addAll(getParsingType(aFile));
-                    }
-                }else {
-                    // Command line mode, use default Parsingtype.
-                    result.add(iDefaultMascotParsingType);
+                String memory = "Memory : Optimal for files up to tens of megabytes.";
+                String index = "Index : optimal for files over a hundred of megabytes in size.";
+                Object[] possibilities = {memory, index};
+                String s = (String) JOptionPane.showInputDialog(
+                        null,
+                        "Mascot identification files were found, which parsing type would you like to use ?",
+                        "Customized Dialog",
+                        JOptionPane.PLAIN_MESSAGE,
+                        null,
+                        possibilities,
+                        "Memory");
+                if (s != null) {
+                    if (s.compareTo(memory) == 0) result.add(new MascotParsingType(MascotDatfileType.MEMORY));
+                    if (s.compareTo(index) == 0) result.add(new MascotParsingType(MascotDatfileType.INDEX));
+                } else {
+                    result.addAll(getParsingType(aFile));
                 }
             }
         }
@@ -117,14 +105,23 @@ public class FileToolsFactory {
         if (idFile.getName().endsWith(".omx")) {
             return new OmxfileIterator(idFile);
         }
+
+        // case PrideXML:
+        if (isPride(idFile)) {
+            return new PrideXMLIterator(idFile);
+        }
+
         // case XTandem:
-        if (idFile.getName().endsWith(".xml") && idFile.getName().compareToIgnoreCase("mods.xml") != 0 && idFile.getName().compareToIgnoreCase("usermods.xml") != 0) {
+        if (idFile.getName().endsWith(".xml")
+                && idFile.getName().compareToIgnoreCase("mods.xml") != 0
+                && idFile.getName().compareToIgnoreCase("usermods.xml") != 0) {
             try {
                 return new XTandemIterator(idFile);
             } catch (SAXException e) {
                 e.printStackTrace();
             }
         }
+
         // case folder:
         if (idFile.isDirectory()) {
             File[] containedFiles = idFile.listFiles();
@@ -142,9 +139,8 @@ public class FileToolsFactory {
     // -- Working with MS LIMS --
 
     public PeptideIdentificationIterator getIterator(Connection aConnection, long aProjectID) {
-        if (iParsingType == null | iParsingType.size() == 0) {
-            iParsingType = new ArrayList();
-            iParsingType.add(new MascotParsingType());
+        if (iParsingType == null) {
+            // Mascot type pannel
         }
         Ms_Lims_ProjectIterator iter = new Ms_Lims_ProjectIterator(aConnection, aProjectID);
         MascotParsingType mascotParsingType = null;
@@ -155,7 +151,7 @@ public class FileToolsFactory {
             }
         }
         iter.setMascotDatfileType(mascotParsingType.getParsingType());
-        return iter;
+        return new Ms_Lims_ProjectIterator(aConnection, aProjectID);
     }
 
     public PeptideIdentificationIterator getIterator(ArrayList<Long> iIdentificationIDs) {
@@ -170,6 +166,8 @@ public class FileToolsFactory {
         result.add(SearchEngineEnum.Mascot);
         result.add(SearchEngineEnum.OMSSA);
         result.add(SearchEngineEnum.XTandem);
+        result.add(SearchEngineEnum.Sequest);
+        result.add(SearchEngineEnum.unknown);
         return result;
     }
 
@@ -178,7 +176,7 @@ public class FileToolsFactory {
         if (aFile.getName().endsWith(".dat")) return true;
         // case OMSSA :
         if (aFile.getName().endsWith(".omx")) return true;
-        // case XTandem :
+        // case XTandem & Pride :
         if (aFile.getName().endsWith(".xml")) return true;
         return aFile.isDirectory();
     }
@@ -189,6 +187,10 @@ public class FileToolsFactory {
         if (aFile.getName().endsWith(".omx")) return "OMSSA Identification File";
         if (aFile.getName().compareTo("mods.xml") == 0 || aFile.getName().compareTo("usermods.xml") == 0)
             return "OMSSA parameter file";
+        // case Pride:
+        if (isPride(aFile)) {
+            return "Pride XML file";
+        }
         // case XTandem :
         if (aFile.getName().endsWith(".xml") && aFile.getName().compareTo("mods.xml") != 0 && aFile.getName().compareTo("usermods.xml") != 0)
             return "X!Tandem Identification File";
@@ -207,36 +209,17 @@ public class FileToolsFactory {
         return formats;
     }
 
-    /**
-     * Get the defaul parsing type for Mascot result files.
-     * @return ParsingType default set to INDEX strategy.
-     */
-    public ParsingType getDefaultMascotParsingType() {
-        return iDefaultMascotParsingType;
+    private boolean isPride(File aFile) {
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(aFile));
+            reader.readLine();
+            boolean result = reader.readLine().contains("ExperimentCollection");
+            reader.close();
+            return result;
+        } catch (IOException we) {
+            return false;
+        }
     }
 
-    /**
-     * Set the default parsing type for Mascot result files.
-     * @param aDefaultMascotParsingType
-     */
-    public void setDefaultMascotParsingType(ParsingType aDefaultMascotParsingType) {
-        iDefaultMascotParsingType = aDefaultMascotParsingType;
-    }
-
-    /**
-     * Returns whether the FileToolsFactory is being used in command line mode.
-     * @return
-     */
-    public boolean isCommandLine() {
-        return iCommandLine;
-    }
-
-    /**
-     * Set the FileToolsFactory in command line mode.
-     * @param aCommandLine TRUE/FALSE
-     */
-    public void setCommandLine(boolean aCommandLine) {
-        iCommandLine = aCommandLine;
-    }
 }
 

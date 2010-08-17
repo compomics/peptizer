@@ -43,7 +43,7 @@ public class NitroTyrosineImmoniumAgent extends Agent {
     public NitroTyrosineImmoniumAgent() {
         // Init the general Agent settings.
         initialize(new String[]{TOLERANCE});
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA};
+        SearchEngineEnum[] searchEngines = {};
         compatibleSearchEngine = searchEngines;
     }
 

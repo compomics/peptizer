@@ -31,11 +31,11 @@ public class MascotProteinHit implements PeptizerProteinHit {
         return iSearchEngineEnum;
     }
 
-    public int getStart() {
+    public Integer getStart() {
         return iProteinHit.getStart();
     }
 
-    public int getEnd() {
+    public Integer getEnd() {
         return iProteinHit.getStop();
     }
 }

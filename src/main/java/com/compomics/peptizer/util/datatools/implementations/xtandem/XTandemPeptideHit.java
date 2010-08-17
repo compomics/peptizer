@@ -5,12 +5,10 @@ import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.Advocate;
 import com.compomics.peptizer.util.datatools.AnnotationType;
+import com.compomics.peptizer.util.datatools.interfaces.PeptizerModification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
-import de.proteinms.xtandemparser.interfaces.Modification;
-import de.proteinms.xtandemparser.xtandem.FixedModification;
 import de.proteinms.xtandemparser.xtandem.Peptide;
-import de.proteinms.xtandemparser.xtandem.VariableModification;
 import de.proteinms.xtandemparser.xtandem.XTandemFile;
 
 import javax.swing.*;
@@ -86,45 +84,6 @@ public class XTandemPeptideHit extends PeptizerPeptideHit implements Serializabl
             modifications[i] = "";
         }
         int spectrumNumber = iPeptide.getSpectrumNumber();
-
-        ArrayList<Modification> fixedModList = iXTandemFile.getModificationMap().getFixedModifications(spectrumNumber);
-        ArrayList<Modification> varModList = iXTandemFile.getModificationMap().getVariableModifications(spectrumNumber);
-        iModArray = new String[sequence.length()];
-
-        if (fixedModList != null) {
-            for (Modification aFixedMod : fixedModList) {
-                FixedModification fixMod = (FixedModification) aFixedMod;
-                Vector<String> modifiedResidues = new Vector<String>();
-                if (iPeptide.getDomainID().equals(fixMod.getDomainID())) {
-                    modifiedResidues.add(fixMod.getModifiedResidue());
-                }
-                for (String modifiedResidue : modifiedResidues) {
-                    int index = sequence.indexOf(modifiedResidue);
-                    while (index != -1) {
-                        modifications[index] += "<" + "M(" + fixMod.getMass() + ")" + ">";
-                        iModArray[index] = fixMod.getName();
-                        index = sequence.indexOf(modifiedResidue, index + 1);
-                    }
-                }
-            }
-        }
-        if (varModList != null) {
-            for (Modification aVarMod : varModList) {
-                VariableModification varMod = (VariableModification) aVarMod;
-                Vector<String> modifiedResidues = new Vector<String>();
-                if (iPeptide.getDomainID().equals(varMod.getDomainID())) {
-                    modifiedResidues.add(varMod.getModifiedResidue());
-                }
-                for (String modifiedResidue : modifiedResidues) {
-                    int index = sequence.indexOf(modifiedResidue);
-                    while (index != -1) {
-                        modifications[index] += "<" + "M(" + varMod.getMass() + ")" + ">";
-                        iModArray[index] = varMod.getName();
-                        index = sequence.indexOf(modifiedResidue, index + 1);
-                    }
-                }
-            }
-        }
 
         // cycle through all the modifications and extract the modification type if possible
         for (int i = 0; i < modifications.length; i++) {
@@ -257,15 +216,15 @@ public class XTandemPeptideHit extends PeptizerPeptideHit implements Serializabl
         return ionTag;
     }
 
-    public double getExpectancy(double aConvidence) {
+    public Double getExpectancy(double aConvidence) {
         return iPeptide.getDomainExpect();
     }
 
-    public double getTheoMass() {
+    public Double getTheoMass() {
         return iPeptide.getDomainMh();
     }
 
-    public double getDeltaMass() {
+    public Double getDeltaMass() {
         return iPeptide.getDomainDeltaMh();
     }
 
@@ -316,24 +275,24 @@ public class XTandemPeptideHit extends PeptizerPeptideHit implements Serializabl
         return coverage;
     }
 
-    public double getIonsScore() {
-        return -1;   // No ions score in X!Tandem
+    public Double getIonsScore() {
+        return null;   // No ions score in X!Tandem
     }
 
-    public double getHomologyThreshold() {
-        return -1;   //No homology threshold in X!Tandem found
+    public Double getHomologyThreshold() {
+        return null;   //No homology threshold in X!Tandem found
     }
 
-    public double calculateThreshold(double aConfidenceInterval) {
-        return -1;  //No confidence interval in X!Tandem found
+    public Double calculateThreshold(double aConfidenceInterval) {
+        return null;  //No confidence interval in X!Tandem found
     }
 
     public boolean scoresAboveThreshold(double anEValue) {
         return (iPeptide.getDomainExpect() <= anEValue);
     }
 
-    public double calculateThreshold() {
-        return -1;  //No confidence interval in X!Tandem found
+    public Double calculateThreshold() {
+        return null;  //No confidence interval in X!Tandem found
     }
 
     public boolean scoresAboveThreshold() {
@@ -373,5 +332,10 @@ public class XTandemPeptideHit extends PeptizerPeptideHit implements Serializabl
         public String toString() {
             return iName;
         }
+    }
+
+    @Override
+    public ArrayList<PeptizerModification> getModifications() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 }

@@ -29,7 +29,7 @@ public class Length extends Agent {
     public Length() {
         // Init the Agent settings.
         initialize(LENGTH);
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA, SearchEngineEnum.XTandem};
+        SearchEngineEnum[] searchEngines = {};
         compatibleSearchEngine = searchEngines;
     }
 

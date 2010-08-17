@@ -36,7 +36,7 @@ public class ProteinAccession extends Agent {
     public ProteinAccession() {
         // Init the general Agent settings.
         initialize(ACCESSION);
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA, SearchEngineEnum.XTandem};
+        SearchEngineEnum[] searchEngines = {};
         compatibleSearchEngine = searchEngines;
     }
 

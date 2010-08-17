@@ -33,7 +33,7 @@ public class ExperimentalMassTableRowImpl extends AbstractTableRow {
     /**
      * {@inheritDoc}
      */
-    public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+    public String getDataImpl(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
         return Double.toString(aPeptideIdentification.getSpectrum().getPrecursorMZ());
     }
 

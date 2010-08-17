@@ -35,7 +35,7 @@ public class ProteinTableRowImpl extends AbstractTableRow {
     /**
      * {@inheritDoc}
      */
-    public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+    public String getDataImpl(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
         ArrayList lProteins = aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1).getProteinHits();
         StringBuffer sb = new StringBuffer();
         int lIteration;

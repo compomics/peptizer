@@ -10,10 +10,17 @@ import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
  * To change this template use File | Settings | File Templates.
  */
 public interface PeptizerModification {
+
     public SearchEngineEnum getSearchEngineEnum();
 
-    public int getId();
-
     public String getName();
+
+    public String getPrideAccession();
+
+    public double getDeltaMass();
+
+    public int getModificationSite();
+
+    public boolean isVariable();
 
 }

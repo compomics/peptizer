@@ -34,7 +34,7 @@ public class SequenceCoverageTableRowImpl extends AbstractTableRow {
     /**
      * {@inheritDoc}
      */
-    public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+    public String getDataImpl(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
         StringBuffer sb = new StringBuffer();
         PeptizerPeptideHit lPeptideHit = aPeptideIdentification.getPeptideHit(aPeptideHitNumber - 1);
         int[] lCoverage = lPeptideHit.getSequenceCoverage(aPeptideIdentification);

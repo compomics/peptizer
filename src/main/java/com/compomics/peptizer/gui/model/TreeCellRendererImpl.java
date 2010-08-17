@@ -85,7 +85,11 @@ public class TreeCellRendererImpl extends JPanel implements TreeCellRenderer {
             PeptizerPeptideHit lPeptideHit = (PeptizerPeptideHit) value;
             BigDecimal lScore = new BigDecimal(lPeptideHit.getIonsScore());
             lScore = lScore.setScale(1, BigDecimal.ROUND_DOWN);
-            BigDecimal lThreshold = new BigDecimal(lPeptideHit.calculateThreshold());
+            Double threshold = lPeptideHit.calculateThreshold();
+            if (threshold == null) {
+                threshold = 0.0;
+            }
+            BigDecimal lThreshold = new BigDecimal(threshold);
             lThreshold = lThreshold.setScale(1, BigDecimal.ROUND_DOWN);
 
             result = lPeptideHit.getModifiedSequence();

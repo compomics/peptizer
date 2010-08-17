@@ -37,7 +37,7 @@ public class SuspectResidue extends Agent {
     public SuspectResidue() {
         // Init the general Agent settings.
         initialize(SUSPECT);
-        SearchEngineEnum[] searchEngines = {SearchEngineEnum.Mascot, SearchEngineEnum.OMSSA, SearchEngineEnum.XTandem};
+        SearchEngineEnum[] searchEngines = {};
         compatibleSearchEngine = searchEngines;
     }
 

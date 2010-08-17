@@ -39,7 +39,7 @@ public class AgentTableRowImpl extends AbstractTableRow {
     /**
      * {@inheritDoc}
      */
-    public String getData(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
+    public String getDataImpl(PeptideIdentification aPeptideIdentification, int aPeptideHitNumber) {
         StringBuffer sb = new StringBuffer();
         AgentReport lAgentReport = aPeptideIdentification.getAgentReport(aPeptideHitNumber, iUniqueAgentID);
         if (lAgentReport != null) {
