@@ -41,12 +41,12 @@ public class TestDeltaMass extends TestCaseLM {
         Agent lAgent = AgentFactory.getInstance().getAgent("com.compomics.peptizer.util.agents.DeltaMassPPMAgent");
 
         //query160
-        String datFile = getFullFilePath("F015264.dat");
+        String datFile = getFullFilePath("F015264_small.dat");
         if (File.separatorChar == '\\') {
             datFile = datFile.replace("%20", " ");
         }
         MascotDatfileInf lMascotDatfile = MascotDatfileFactory.create(datFile, MascotDatfileType.INDEX);
-        int lQueryNumber = 161;
+        int lQueryNumber = 1;
 
 
         Query lQuery = (Query) lMascotDatfile.getQuery(lQueryNumber);

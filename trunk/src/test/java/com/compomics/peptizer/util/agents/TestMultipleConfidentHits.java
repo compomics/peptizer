@@ -39,12 +39,12 @@ public class TestMultipleConfidentHits extends TestCaseLM {
 
     public void testInspect() {
         //query160
-        String datFile = getFullFilePath("F015264.dat");
+        String datFile = getFullFilePath("F015264_small.dat");
         if (File.separatorChar == '\\') {
             datFile = datFile.replace("%20", " ");
         }
         MascotDatfile lMascotDatfile = new MascotDatfile(datFile);
-        int lQueryNumber = 299;
+        int lQueryNumber = 3;
 
         Query lQuery = (Query) lMascotDatfile.getQuery(lQueryNumber);
         Vector lPeptideHits = lMascotDatfile.getQueryToPeptideMap().getAllPeptideHits(lQueryNumber);

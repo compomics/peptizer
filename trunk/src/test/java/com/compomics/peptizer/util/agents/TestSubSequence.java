@@ -37,12 +37,12 @@ public class TestSubSequence extends TestCaseLM {
 
     public void testInspect() {
         //query162
-        String datFile = getFullFilePath("F015264.dat");
+        String datFile = getFullFilePath("F015264_small.dat");
         if (File.separatorChar == '\\') {
             datFile = datFile.replace("%20", " ");
         }
         MascotDatfile lMascotDatfile = new MascotDatfile(datFile);
-        int lQueryNumber = 162;
+        int lQueryNumber = 2;
 
         Query lQuery = (Query) lMascotDatfile.getQuery(lQueryNumber);
         Vector lPeptideHits = lMascotDatfile.getQueryToPeptideMap().getAllPeptideHits(lQueryNumber);

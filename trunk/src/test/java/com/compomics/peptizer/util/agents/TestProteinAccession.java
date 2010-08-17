@@ -39,12 +39,12 @@ public class TestProteinAccession extends TestCaseLM {
     public void testInspect() {
         //q531_p1=0,1430.807388,-0.219940,5,VMEKPSPLLVGR,12,20000000000000,36.44,0002001000000000000,0,0;"Q13283":0:2:13:1,"Q9UN86":0:2:13:2
 
-        String datFile = getFullFilePath("F015264.dat");
+        String datFile = getFullFilePath("F015264_small.dat");
         if (File.separatorChar == '\\') {
             datFile = datFile.replace("%20", " ");
         }
         MascotDatfile lMascotDatfile = new MascotDatfile(datFile);
-        int lQueryNumber = 531;
+        int lQueryNumber = 7;
 
         Query lQuery = (Query) lMascotDatfile.getQuery(lQueryNumber);
 

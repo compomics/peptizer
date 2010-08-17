@@ -42,12 +42,12 @@ public class TestDeamidation extends TestCaseLM {
         iDeamidation.setProperty(Deamidation.COUNT, "2");
 
         //query160
-        String datFile = getFullFilePath("F015264.dat");
+        String datFile = getFullFilePath("F015264_small.dat");
         if (File.separatorChar == '\\') {
             datFile = datFile.replace("%20", " ");
         }
         MascotDatfile lMascotDatfile = new MascotDatfile(datFile);
-        int lQueryNumber = 162;
+        int lQueryNumber = 2;
 
         Query lQuery = (Query) lMascotDatfile.getQuery(lQueryNumber);
         Vector lPeptideHits = lMascotDatfile.getQueryToPeptideMap().getAllPeptideHits(lQueryNumber);
