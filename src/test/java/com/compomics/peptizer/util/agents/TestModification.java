@@ -38,12 +38,12 @@ public class TestModification extends TestCaseLM {
 
     public void testInspect() {
         //query160
-        String datFile = getFullFilePath("F015264.dat");
+        String datFile = getFullFilePath("F015264_small.dat");
         if (File.separatorChar == '\\') {
             datFile = datFile.replace("%20", " ");
         }
         MascotDatfile lMascotDatfile = new MascotDatfile(datFile);
-        int lQueryNumber = 354;
+        int lQueryNumber = 5;
 
         // 1) AcD3-VLIK<AcD3K*>EFR-COOH
         // 2) NH2-QELK<AcD3K*>EM<Mox*>R-COOH
