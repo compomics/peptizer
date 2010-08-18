@@ -2,18 +2,10 @@ package com.compomics.peptizer.util.iterators;
 
 import com.compomics.peptizer.interfaces.PeptideIdentificationIterator;
 import com.compomics.peptizer.util.PeptideIdentification;
-import com.compomics.peptizer.util.datatools.implementations.xtandem.XTandemPeptideHit;
-import com.compomics.peptizer.util.datatools.implementations.xtandem.XTandemSpectrum;
-import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
-import de.proteinms.xtandemparser.xtandem.Peptide;
-import de.proteinms.xtandemparser.xtandem.PeptideMap;
-import de.proteinms.xtandemparser.xtandem.Spectrum;
 import de.proteinms.xtandemparser.xtandem.XTandemFile;
 import org.xml.sax.SAXException;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Vector;
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,7 +33,7 @@ public class XTandemIterator implements PeptideIdentificationIterator {
         iOutputFile = aOutputFile;
     }
 
-    public PeptideIdentification next() {
+    public PeptideIdentification next() { /*
         if (hasNext()) {
             // Get the information of the next.
             // QueryList is a Vector, 0 returns Query 1 whereas the QueryToPeptideMap returns Query 1 for if 1 is given as a parameter.
@@ -71,9 +63,9 @@ public class XTandemIterator implements PeptideIdentificationIterator {
             } else {
                 return null;
             }
-        } else {
-            return null;
-        }
+        } else {            */
+        return null;
+        //    }
     }
 
     public boolean hasNext() {
