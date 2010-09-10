@@ -2,6 +2,7 @@ package com.compomics.peptizer.util.datatools;
 
 import com.compomics.peptizer.interfaces.PeptideIdentificationIterator;
 import com.compomics.peptizer.util.PeptideIdentification;
+import com.compomics.peptizer.util.fileio.MatLogger;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 
 import java.io.File;
@@ -99,6 +100,7 @@ public class IdentificationFactory {
                 }
             }
         } catch (Exception e) {
+                MatLogger.logExceptionalEvent("File Import Failure.\n" + e.getMessage() + "\n" + e.getStackTrace());
             identifications = new HashMap();
         }
     }
