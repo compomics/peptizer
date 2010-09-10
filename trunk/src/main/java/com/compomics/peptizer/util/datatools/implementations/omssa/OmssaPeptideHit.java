@@ -27,7 +27,7 @@ public class OmssaPeptideHit extends PeptizerPeptideHit implements Serializable 
     private MSHits msHits;
     private MSSearchSettings msSearchSettings;
     private int msResponseScale;
-    private ArrayList<PeptizerModification> modifications;
+    private ArrayList<PeptizerModification> modifications = new ArrayList<PeptizerModification>();
 
     /**
      * The final annotation types available.
@@ -47,6 +47,7 @@ public class OmssaPeptideHit extends PeptizerPeptideHit implements Serializable 
     private void importModifications(HashMap<Integer, de.proteinms.omxparser.util.OmssaModification> modifs) {
 
         /* The following cases are not taken into account:
+       - fixed modifications
        - modifications at the begining or end of a protein
        - multiple modifications on the same AA or terminus.
         */
@@ -55,33 +56,6 @@ public class OmssaPeptideHit extends PeptizerPeptideHit implements Serializable 
         String name;
         ArrayList<String> modResidues;
         double deltaMass;
-        for (int i = 0; i < modifs.size(); i++) {
-            modType = modifs.get(i).getModType();
-            modResidues = new ArrayList<String>(modifs.get(i).getModResidues());
-            name = modifs.get(i).getModName();
-            name = name.replaceAll("-", "");
-            deltaMass = modifs.get(i).getModMonoMass();
-            String[] decomposedSequence = decomposeSequence();
-            if (modType == OmssaModification.MODAA) {
-                for (int j = 0; j < decomposedSequence.length - 1; j++) {
-                    for (String modResidue : modResidues) {
-                        // if we have the concerned residue return true
-                        if (decomposedSequence[j].compareTo(modResidue) == 0) {
-                            modifications.add(new OmssaModification(modType, modResidues, name, j + 1, deltaMass, false));
-                        }
-                    }
-                }
-
-            } else if (modType == OmssaModification.MODNP) {
-                modifications.add(new OmssaModification(modType, modResidues, name, 0, deltaMass, false));
-            } else if (modType == OmssaModification.MODNPAA && decomposedSequence[0].equals(modResidues.get(0))) {
-                modifications.add(new OmssaModification(modType, modResidues, name, 0, deltaMass, false));
-            } else if (modType == OmssaModification.MODCP) {
-                modifications.add(new OmssaModification(modType, modResidues, name, decomposedSequence.length + 1, deltaMass, false));
-            } else if (modType == OmssaModification.MODCPAA && decomposedSequence[decomposedSequence.length - 1].equals(modResidues.get(0))) {
-                modifications.add(new OmssaModification(modType, modResidues, name, decomposedSequence.length + 1, deltaMass, false));
-            }
-        }
 
         // inspect variable modifications
         for (MSModHit msModHit : msHits.MSHits_mods.MSModHit) {
