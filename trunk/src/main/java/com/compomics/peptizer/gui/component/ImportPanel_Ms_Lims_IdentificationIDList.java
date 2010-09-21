@@ -9,6 +9,7 @@ import com.compomics.util.enumeration.CompomicsTools;
 import com.compomics.util.gui.dialogs.ConnectionDialog;
 import com.compomics.util.interfaces.Connectable;
 import com.compomics.util.io.PropertiesManager;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -30,6 +31,8 @@ import java.util.Properties;
  * File Templates.
  */
 public class ImportPanel_Ms_Lims_IdentificationIDList extends JPanel implements ImportPanel, Connectable {
+	// Class specific log4j logger for ImportPanel_Ms_Lims_IdentificationIDList instances.
+	 private static Logger logger = Logger.getLogger(ImportPanel_Ms_Lims_IdentificationIDList.class);
 
     /**
      * Singleton instance of the JPanel.
@@ -127,7 +130,7 @@ public class ImportPanel_Ms_Lims_IdentificationIDList extends JPanel implements 
                     updateScrollPaneBorder();
 
                 } catch (IOException e1) {
-                    e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    logger.error(e1.getMessage(), e1);  //To change body of catch statement use File | Settings | File Templates.
                 } catch (NumberFormatException nfe) {
                     JOptionPane.showMessageDialog(txaIdentificationIDs, "'" + line + "' cannot be an identificationid.", "Incorrect input!", JOptionPane.ERROR_MESSAGE);
                 }
@@ -227,7 +230,7 @@ public class ImportPanel_Ms_Lims_IdentificationIDList extends JPanel implements 
             }
         } catch (SQLException e) {
             MatLogger.logExceptionalGUIMessage("SQLException thrown while creating the Iterator.", e.toString());
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
         }
 
     }
@@ -242,7 +245,7 @@ public class ImportPanel_Ms_Lims_IdentificationIDList extends JPanel implements 
                 lblConnection.setForeground(new Color(0, 200, 0));
 
             } catch (SQLException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
             }
         } else {
             lblConnection.setText("No ms_lims connection.");

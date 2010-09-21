@@ -1,5 +1,7 @@
 package com.compomics.peptizer.gui.model;
 
+import org.apache.log4j.Logger;
+
 import java.awt.*;
 /**
  * Created by IntelliJ IDEA.
@@ -14,6 +16,8 @@ import java.awt.*;
  * This class was developed to allow a custom color scheme for the Table.
  */
 public class CustomTableColorImpl {
+	// Class specific log4j logger for CustomTableColorImpl instances.
+	 private static Logger logger = Logger.getLogger(CustomTableColorImpl.class);
     /**
      * The light color for selected column.
      */

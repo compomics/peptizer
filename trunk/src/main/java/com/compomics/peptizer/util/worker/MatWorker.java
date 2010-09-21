@@ -11,6 +11,7 @@ import com.compomics.peptizer.util.enumerator.TempFileEnum;
 import com.compomics.peptizer.util.fileio.MatLogger;
 import com.compomics.peptizer.util.fileio.TempManager;
 import com.compomics.util.sun.SwingWorker;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 /**
@@ -25,6 +26,8 @@ import java.io.*;
  * and the PeptideIdentificationIterator.
  */
 public class MatWorker extends SwingWorker {
+	// Class specific log4j logger for MatWorker instances.
+	 private static Logger logger = Logger.getLogger(MatWorker.class);
 
     /**
      * The Iterator with PeptideIdentifications.
@@ -157,10 +160,10 @@ public class MatWorker extends SwingWorker {
             iResults.setMeta(SelectedPeptideIdentifications.MK_NUMBER_NOT_CONFIDENT, iNonConfident);
             iResults.setMeta(SelectedPeptideIdentifications.MK_NUMBER_NO_IDENTIFICATION, iNoIdentification);
 
-            System.out.println("Matched" + iResults.getNumberOfSpectra());
-            System.out.println("ConfidentNotSelected:" + iConfidentNotSelected);
-            System.out.println("NotConfident:" + iNonConfident);
-            System.out.println("NoIdentification:" + iNoIdentification);
+            logger.info("Matched" + iResults.getNumberOfSpectra());
+            logger.info("ConfidentNotSelected:" + iConfidentNotSelected);
+            logger.info("NotConfident:" + iNonConfident);
+            logger.info("NoIdentification:" + iNoIdentification);
 
             System.gc();
 
@@ -203,7 +206,7 @@ public class MatWorker extends SwingWorker {
                         new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(iFileNonConfident_oos)));
             }
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            logger.error(ioe.getMessage(), ioe);
         }
     }
 
@@ -221,7 +224,7 @@ public class MatWorker extends SwingWorker {
                 iObjectStream_bad.close();
             }
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
         }
     }
 

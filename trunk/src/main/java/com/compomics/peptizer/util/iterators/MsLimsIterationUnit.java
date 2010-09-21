@@ -1,5 +1,7 @@
 package com.compomics.peptizer.util.iterators;
 
+import org.apache.log4j.Logger;
+
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -8,6 +10,8 @@ import java.util.Iterator;
  * the Iterator interface.
  */
 public class MsLimsIterationUnit implements Iterator {
+	// Class specific log4j logger for MsLimsIterationUnit instances.
+	 private static Logger logger = Logger.getLogger(MsLimsIterationUnit.class);
     // The Datfile identifier of this unit.
     private long iDatfileID;
     // A map of identificationids and corresponding filenames that must be found in this datfile.

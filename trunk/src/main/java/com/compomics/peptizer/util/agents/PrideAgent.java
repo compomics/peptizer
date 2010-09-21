@@ -3,6 +3,7 @@ package com.compomics.peptizer.util.agents;
 import com.compomics.peptizer.interfaces.Agent;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.enumerator.AgentVote;
+import org.apache.log4j.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,6 +13,8 @@ import com.compomics.peptizer.util.enumerator.AgentVote;
  * To change this template use File | Settings | File Templates.
  */
 public class PrideAgent extends Agent {
+	// Class specific log4j logger for PrideAgent instances.
+	 private static Logger logger = Logger.getLogger(PrideAgent.class);
 
     @Override
     protected AgentVote[] inspect(PeptideIdentification aPeptideIdentification) {

@@ -7,6 +7,7 @@ import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -18,6 +19,8 @@ import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
  * Class description: ------------------ This class was developed to
  */
 public class SubSequence extends Agent {
+	// Class specific log4j logger for SubSequence instances.
+	 private static Logger logger = Logger.getLogger(SubSequence.class);
 
     public static final String SUBSEQUENCE = "Subsequence";
 

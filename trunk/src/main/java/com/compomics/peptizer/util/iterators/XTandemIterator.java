@@ -3,6 +3,7 @@ package com.compomics.peptizer.util.iterators;
 import com.compomics.peptizer.interfaces.PeptideIdentificationIterator;
 import com.compomics.peptizer.util.PeptideIdentification;
 import de.proteinms.xtandemparser.xtandem.XTandemFile;
+import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import java.io.File;
@@ -15,6 +16,8 @@ import java.io.File;
  * To change this template use File | Settings | File Templates.
  */
 public class XTandemIterator implements PeptideIdentificationIterator {
+	// Class specific log4j logger for XTandemIterator instances.
+	 private static Logger logger = Logger.getLogger(XTandemIterator.class);
 
     /**
      * The XTandem file instance of the Iterator.

@@ -4,6 +4,7 @@ import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.model.AbstractTableRow;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.util.Properties;
@@ -20,6 +21,8 @@ import java.util.Properties;
  * This class was developed to
  */
 public class IdentityThreshold95TableRowImpl extends AbstractTableRow {
+	// Class specific log4j logger for IdentityThreshold95TableRowImpl instances.
+	 private static Logger logger = Logger.getLogger(IdentityThreshold95TableRowImpl.class);
 
 
     /**

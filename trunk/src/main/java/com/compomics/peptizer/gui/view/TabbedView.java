@@ -4,6 +4,7 @@ import com.compomics.peptizer.gui.Mediator;
 import com.compomics.peptizer.gui.component.TabPanel;
 import com.compomics.peptizer.gui.model.SingleSelectionModelImpl;
 import com.compomics.peptizer.util.PeptideIdentification;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +23,8 @@ import java.awt.*;
  * New TabPanel components are created from PeptideIdentification objects to populate the the TabbedView.
  */
 public class TabbedView extends JTabbedPane {
+	// Class specific log4j logger for TabbedView instances.
+	 private static Logger logger = Logger.getLogger(TabbedView.class);
 
     /**
      * The parent super-controller.

@@ -9,8 +9,11 @@
 package com.compomics.peptizer.util.iterators;
 
 import com.compomics.mascotdatfile.util.interfaces.MascotDatfileInf;
+import org.apache.log4j.Logger;
 
 public class CurrentMascotDatfile {
+	// Class specific log4j logger for CurrentMascotDatfile instances.
+	 private static Logger logger = Logger.getLogger(CurrentMascotDatfile.class);
     /**
      * The current MascotDatfile instance.
      */

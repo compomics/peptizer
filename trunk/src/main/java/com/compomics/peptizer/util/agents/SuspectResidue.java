@@ -6,6 +6,7 @@ import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;
@@ -20,6 +21,8 @@ import java.util.StringTokenizer;
  * Class description: ------------------ This class was developed to
  */
 public class SuspectResidue extends Agent {
+	// Class specific log4j logger for SuspectResidue instances.
+	 private static Logger logger = Logger.getLogger(SuspectResidue.class);
 
     /**
      * This Parameter must define AminoAcid residue(s if separated by DELIM) that point to a missed cleavage if they

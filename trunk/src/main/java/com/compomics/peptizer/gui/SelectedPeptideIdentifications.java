@@ -2,6 +2,7 @@ package com.compomics.peptizer.gui;
 
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerSpectrum;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +22,8 @@ import java.util.HashMap;
  * into the Tree, Table and TabbedPane structure.
  */
 public class SelectedPeptideIdentifications {
+	// Class specific log4j logger for SelectedPeptideIdentifications instances.
+	 private static Logger logger = Logger.getLogger(SelectedPeptideIdentifications.class);
 
     /**
      * The MetaKay for the Iterator description.

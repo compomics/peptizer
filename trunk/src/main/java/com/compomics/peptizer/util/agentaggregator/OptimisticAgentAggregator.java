@@ -5,6 +5,7 @@ import com.compomics.peptizer.interfaces.AgentAggregator;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.enumerator.AgentAggregationResult;
 import com.compomics.peptizer.util.enumerator.AgentVote;
+import org.apache.log4j.Logger;
 
 import java.util.Iterator;
 /**
@@ -19,6 +20,8 @@ import java.util.Iterator;
  * OptimisticAgentAggregator interface.
  */
 public class OptimisticAgentAggregator extends AgentAggregator {
+	// Class specific log4j logger for OptimisticAgentAggregator instances.
+	 private static Logger logger = Logger.getLogger(OptimisticAgentAggregator.class);
 
     /**
      * String for score property.

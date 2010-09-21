@@ -8,6 +8,7 @@ import com.compomics.peptizer.util.datatools.interfaces.PeptizerSpectrum;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.IonTypeEnum;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -20,6 +21,8 @@ import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
  * This class was developed to inspect for mass tolerance error (Da) (experimental vs theory).
  */
 public class NitroTyrosineImmoniumAgent extends Agent {
+	// Class specific log4j logger for NitroTyrosineImmoniumAgent instances.
+	 private static Logger logger = Logger.getLogger(NitroTyrosineImmoniumAgent.class);
 
     /**
      * Identifies the allowed mass tolerance.
@@ -27,7 +30,7 @@ public class NitroTyrosineImmoniumAgent extends Agent {
     public static final String TOLERANCE = "tolerance";
 
     /**
-     * These immomiun ions are to be expected from nitrotyrosin peptides.
+     * These immomiun ions are to be expected from nitrotyrosin peptides (181.06, 165.60, 151.4, 149.3) cfr Sarver et al. (2001).
      * (Sarver et al.
      * Analysis of peptides and proteins containing nitrotyrosine by matrix-assisted laser desorption/ionization mass spectrometry.
      * Journal of the American Society for Mass Spectrometry (2001) vol. 12 (4) pp. 439-48)
@@ -127,6 +130,6 @@ public class NitroTyrosineImmoniumAgent extends Agent {
      * @return String description of the DummyAgent.
      */
     public String getDescription() {
-        return "<html>Inspects for the mass error (Da) of the peptide. <b>Votes 'Positive_for_selection' if the mass error is greater then the allowed tolerance ( " + this.iProperties.get(TOLERANCE) + ")</b>. Votes 'Neutral_for_selection' if less.</html>";
+        return "<html>Inspects for the occurence of tyrosine nitration immonium ions that are to be expected from nitrotyrosin peptides cfr Sarver et al. (2001).mass error (Da) of the peptide. <b>Votes 'Neutral_for_selection' if the nitro-tyrosine immonium ions have been matched (181.06, 165.60, 151.4, 149.3)</b>. Votes 'Positive_for_selection' if none immonium ions have been found.</html>";
     }
 }

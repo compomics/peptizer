@@ -199,6 +199,7 @@
             <property name="active">true</property>
             <property name="veto">false</property>
             <property name="modification">Nitr</property>
+            <property name="residue">Y</property>
         </agent>
 
         <agent>

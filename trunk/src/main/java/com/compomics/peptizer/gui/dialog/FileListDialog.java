@@ -2,6 +2,7 @@ package com.compomics.peptizer.gui.dialog;
 
 import com.compomics.peptizer.gui.component.ImportPanel_File;
 import com.compomics.peptizer.util.datatools.FileToolsFactory;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -21,6 +22,8 @@ import java.util.List;
  * This dialog will allow the user to edit the filelist to proceed.
  */
 public class FileListDialog extends JDialog {
+	// Class specific log4j logger for FileListDialog instances.
+	 private static Logger logger = Logger.getLogger(FileListDialog.class);
 
     // Attributes
 

@@ -3,6 +3,7 @@ package com.compomics.peptizer.gui.model;
 import com.compomics.peptizer.gui.model.tablerowimpl.AgentTableRowImpl;
 import com.compomics.peptizer.gui.view.TableView;
 import com.compomics.peptizer.util.PeptideIdentification;
+import org.apache.log4j.Logger;
 
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
@@ -19,6 +20,8 @@ import javax.swing.table.TableModel;
  * This class was developed to customize the TableModel of the TableView.
  */
 public class TableModelImpl implements TableModel {
+	// Class specific log4j logger for TableModelImpl instances.
+	 private static Logger logger = Logger.getLogger(TableModelImpl.class);
 
     /**
      * The parent TableView.

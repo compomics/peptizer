@@ -6,6 +6,7 @@ import com.compomics.peptizer.gui.interfaces.TreeFilter;
 import com.compomics.peptizer.gui.model.TreeCellRendererImpl;
 import com.compomics.peptizer.gui.model.TreeModelImpl;
 import com.compomics.peptizer.util.PeptideIdentification;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.tree.TreeModel;
@@ -24,6 +25,8 @@ import javax.swing.tree.TreeModel;
  * A group of PeptideIdentification instances from the aggregator is displayed.
  */
 public class TreeView extends JTree {
+	// Class specific log4j logger for TreeView instances.
+	 private static Logger logger = Logger.getLogger(TreeView.class);
 
     /**
      * The parent super-controller.

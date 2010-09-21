@@ -1,5 +1,7 @@
 package com.compomics.peptizer.gui.component;
 
+import org.apache.log4j.Logger;
+
 import javax.swing.*;
 import java.awt.*;
 /**
@@ -15,6 +17,8 @@ import java.awt.*;
  * This class was developed to
  */
 public class JLabelAndTextFieldPanel extends JPanel {
+	// Class specific log4j logger for JLabelAndTextFieldPanel instances.
+	 private static Logger logger = Logger.getLogger(JLabelAndTextFieldPanel.class);
 
     /** This class implements a JPanel that lays out a set of JLabel and a JTextField
      * next to each other. <br />

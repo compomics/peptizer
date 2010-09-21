@@ -5,6 +5,7 @@ import com.compomics.peptizer.interfaces.Agent;
 import com.compomics.peptizer.util.AgentReport;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.enumerator.AgentVote;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -21,6 +22,8 @@ import java.util.Iterator;
  * This class was developed to
  */
 public class AgentTreeFilter implements TreeFilter {
+	// Class specific log4j logger for AgentTreeFilter instances.
+	 private static Logger logger = Logger.getLogger(AgentTreeFilter.class);
 
     /**
      * The Agents this Filter must check on.

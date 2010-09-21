@@ -1,5 +1,7 @@
 package com.compomics.peptizer.gui.component;
 
+import org.apache.log4j.Logger;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -17,6 +19,8 @@ import java.awt.event.ActionListener;
  * This class was developed to
  */
 public class BooleanPanel extends JPanel {
+	// Class specific log4j logger for BooleanPanel instances.
+	 private static Logger logger = Logger.getLogger(BooleanPanel.class);
 
     JLabel[] iKeyLabels = null;
     JRadioButton[] rdbBoolean = null;

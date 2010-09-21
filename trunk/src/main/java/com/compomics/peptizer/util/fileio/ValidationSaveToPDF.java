@@ -14,6 +14,7 @@ import com.lowagie.text.pdf.DefaultFontMapper;
 import com.lowagie.text.pdf.PdfContentByte;
 import com.lowagie.text.pdf.PdfTemplate;
 import com.lowagie.text.pdf.PdfWriter;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,6 +33,8 @@ import java.util.ArrayList;
  * separated file.
  */
 public class ValidationSaveToPDF extends ValidationSaver {
+	// Class specific log4j logger for ValidationSaveToPDF instances.
+	 private static Logger logger = Logger.getLogger(ValidationSaveToPDF.class);
     /**
      * This object holds the data that must be written into the csv file.
      * Can be a SelectedPeptideIdentifications or an ArrayList with PeptideIdentifications.
@@ -158,9 +161,9 @@ public class ValidationSaveToPDF extends ValidationSaver {
                     } catch (EOFException eof) {
                         // The end of the file is reached, go to the next file ..
                     } catch (IOException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
                     } catch (ClassNotFoundException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
                     }
                 }
             }
@@ -206,7 +209,7 @@ public class ValidationSaveToPDF extends ValidationSaver {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 

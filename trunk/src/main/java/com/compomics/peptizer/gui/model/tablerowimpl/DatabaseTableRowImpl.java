@@ -3,6 +3,7 @@ package com.compomics.peptizer.gui.model.tablerowimpl;
 import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.model.AbstractTableRow;
 import com.compomics.peptizer.util.PeptideIdentification;
+import org.apache.log4j.Logger;
 
 import java.util.Properties;
 /**
@@ -16,6 +17,8 @@ import java.util.Properties;
  * Class description: ------------------ This class was developed as a TableRow implementation to populate the table.
  */
 public class DatabaseTableRowImpl extends AbstractTableRow {
+	// Class specific log4j logger for DatabaseTableRowImpl instances.
+	 private static Logger logger = Logger.getLogger(DatabaseTableRowImpl.class);
 
 
     /**

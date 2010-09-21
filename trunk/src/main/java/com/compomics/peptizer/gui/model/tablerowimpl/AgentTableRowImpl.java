@@ -6,6 +6,7 @@ import com.compomics.peptizer.util.AgentFactory;
 import com.compomics.peptizer.util.AgentReport;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.enumerator.AgentVote;
+import org.apache.log4j.Logger;
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -19,6 +20,8 @@ import com.compomics.peptizer.util.enumerator.AgentVote;
  * AgentTableRowImpl can populate a table with Agent information.
  */
 public class AgentTableRowImpl extends AbstractTableRow {
+	// Class specific log4j logger for AgentTableRowImpl instances.
+	 private static Logger logger = Logger.getLogger(AgentTableRowImpl.class);
 
     /**
      * The String identifier for the Agent of this TableRow.

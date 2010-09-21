@@ -5,6 +5,7 @@ import com.compomics.peptizer.gui.SelectedPeptideIdentifications;
 import com.compomics.peptizer.interfaces.ValidationSaver;
 import com.compomics.peptizer.util.MetaKey;
 import com.compomics.peptizer.util.PeptideIdentification;
+import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -18,6 +19,8 @@ import java.sql.SQLException;
  * File Templates.
  */
 public class ValidationSaveToMsLims extends ValidationSaver {
+	// Class specific log4j logger for ValidationSaveToMsLims instances.
+	 private static Logger logger = Logger.getLogger(ValidationSaveToMsLims.class);
 
     // Statistics intergers.
     private int iNumberAccepted;
@@ -39,7 +42,7 @@ public class ValidationSaveToMsLims extends ValidationSaver {
             // 2. Simple log to statuspanel.
             MatLogger.logNormalEvent("Saved task to " + ConnectionManager.getInstance().getConnection().getMetaData().getURL());
         } catch (SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
         }
     }
 
@@ -66,7 +69,7 @@ public class ValidationSaveToMsLims extends ValidationSaver {
                 }
             } catch (SQLException e) {
                 MatLogger.logExceptionalEvent("Failed to find the userid for user '" + lUserName + "'.");
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
             iNumberAccepted = 0;
             iNumberRejected = 0;
@@ -111,7 +114,7 @@ public class ValidationSaveToMsLims extends ValidationSaver {
                             MatLogger.logExceptionalEvent("No identification found in " + ConnectionManager.getInstance().getConnection().getMetaData().getURL() + " for \'" + lSpectrumFile + "\' in datfile \'" + lDatfileID + "\'.");
                         }
                     } catch (SQLException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
                     }
                 }
             }

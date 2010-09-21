@@ -4,8 +4,10 @@ import com.compomics.peptizer.util.datatools.interfaces.PeptizerFragmentIon;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeak;
 import com.compomics.peptizer.util.enumerator.IonTypeEnum;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.awt.*;
+
 import static java.lang.Math.abs;
 
 /**
@@ -16,6 +18,8 @@ import static java.lang.Math.abs;
  * To change this template use File | Settings | File Templates.
  */
 public class Ion extends PeptizerFragmentIon {
+	// Class specific log4j logger for Ion instances.
+	 private static Logger logger = Logger.getLogger(Ion.class);
 
     private double mz;
     private double intensity;

@@ -1,11 +1,11 @@
 package com.compomics.peptizer.gui.component;
 
-import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.dialog.FileListDialog;
 import com.compomics.peptizer.gui.interfaces.ImportPanel;
 import com.compomics.peptizer.gui.progressbars.DefaultProgressBar;
 import com.compomics.peptizer.util.datatools.FileToolsFactory;
 import com.compomics.peptizer.util.datatools.IdentificationFactory;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -26,6 +26,8 @@ import java.util.List;
  * Class description: ------------------ This class was developed for the CreateAssessment Dialog.
  */
 public class ImportPanel_File extends JPanel implements ImportPanel {
+	// Class specific log4j logger for ImportPanel_File instances.
+	 private static Logger logger = Logger.getLogger(ImportPanel_File.class);
 
     private static ImportPanel_File iSingleton = null;
 
@@ -43,12 +45,6 @@ public class ImportPanel_File extends JPanel implements ImportPanel {
         super();
         // Construct JPanel.
         construct();
-
-        // Try to load parameters.
-        String s = null;
-        if ((s = MatConfig.getInstance().getGeneralProperty("ITERATOR_FILE_PATH")) != null) {
-            setFile(new File(s));
-        }
     }
 
     /**

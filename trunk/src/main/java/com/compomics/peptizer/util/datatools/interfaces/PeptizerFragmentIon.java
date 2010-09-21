@@ -3,6 +3,7 @@ package com.compomics.peptizer.util.datatools.interfaces;
 import com.compomics.peptizer.util.enumerator.IonTypeEnum;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import com.compomics.util.gui.interfaces.SpectrumAnnotation;
+import org.apache.log4j.Logger;
 
 import java.awt.*;
 
@@ -14,6 +15,8 @@ import java.awt.*;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class PeptizerFragmentIon implements SpectrumAnnotation {
+	// Class specific log4j logger for PeptizerFragmentIon instances.
+	 private static Logger logger = Logger.getLogger(PeptizerFragmentIon.class);
 
     abstract public SearchEngineEnum getSearchEngineEnum();
 

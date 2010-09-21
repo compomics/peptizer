@@ -8,6 +8,7 @@ import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.IonTypeEnum;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Vector;
@@ -22,6 +23,8 @@ import java.util.Vector;
  * Class description: ------------------ This class was developed to
  */
 public class ProlineAgent extends Agent {
+	// Class specific log4j logger for ProlineAgent instances.
+	 private static Logger logger = Logger.getLogger(ProlineAgent.class);
 
     /**
      * This Property defines the relative intensity of the Proline peak compared to the highest peak in the

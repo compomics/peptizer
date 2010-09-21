@@ -13,6 +13,7 @@ import com.compomics.peptizer.util.AgentFactory;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.ValidationReport;
 import com.compomics.peptizer.util.fileio.MatLogger;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -36,6 +37,8 @@ import java.util.List;
  * It coordinates a custom JTree, JTable and JTabbedPane based on the resultset of the AgentAggregator.
  */
 public class Mediator extends JPanel {
+	// Class specific log4j logger for Mediator instances.
+	 private static Logger logger = Logger.getLogger(Mediator.class);
 
     /**
      * The "datasource" of the mat GUI.

@@ -7,6 +7,7 @@ import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerProteinHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,6 +23,8 @@ import java.util.StringTokenizer;
  * Class description: ------------------ This class was developed to
  */
 public class ProteinAccession extends Agent {
+	// Class specific log4j logger for ProteinAccession instances.
+	 private static Logger logger = Logger.getLogger(ProteinAccession.class);
 
     /**
      * This String serves a static final String for protein accessions to be matched.

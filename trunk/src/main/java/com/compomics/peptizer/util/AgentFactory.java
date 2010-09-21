@@ -3,7 +3,12 @@ package com.compomics.peptizer.util;
 import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.interfaces.Agent;
 import com.compomics.peptizer.util.fileio.MatLogger;
+import org.apache.log4j.Logger;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 /**
  * Created by IntelliJ IDEA.
@@ -21,6 +26,8 @@ import java.util.*;
  * Then they are stored in a private HashMap with unique class references as keys.
  */
 public class AgentFactory {
+	// Class specific log4j logger for AgentFactory instances.
+	 private static Logger logger = Logger.getLogger(AgentFactory.class);
     /**
      * The Agent container. The Agent's class reference serves as a Key to access the Agent itself.
      */
@@ -177,4 +184,71 @@ public class AgentFactory {
     }
 
 
+    public HashMap getUnusedAgents() {
+        HashMap result = new HashMap();
+
+        // Fetch all the agents in the agent_complete.xml file through the MatConfig instance.
+        HashMap lAllAgents = null;
+
+        try {
+            InputStreamReader reader = new InputStreamReader(ClassLoader.getSystemResourceAsStream("conf/agent_complete.xml"));
+            MatConfig config = MatConfig.getInstance();
+            XmlPullParser xpp = config.getPullparserfactory().newPullParser();
+            xpp.setInput(reader);
+
+            int eventType = xpp.getEventType();
+            boolean validated = false;
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                switch (eventType) {
+                    case XmlPullParser.START_DOCUMENT:
+                        eventType = xpp.next();
+                        break;
+
+                    case XmlPullParser.START_TAG:
+                        String start = xpp.getName();
+                        if (start != null) {
+                            if (start.equals("config")) {
+                                validated = true;
+                                eventType = xpp.next();
+                            } else if (start.equals("agents")) {
+                                lAllAgents = config.processAgents(xpp);
+                            }
+                        } else {
+                            xpp.next();
+                        }
+                        break;
+
+                    default:
+                        eventType = xpp.next();
+                        break;
+                }
+            }
+
+
+        } catch (XmlPullParserException e) {
+            logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
+        }
+
+        // Get all the agents currently active in the AgentFactory.
+        Object[] lActiveAgentArray = AgentFactory.getInstance().getActiveAgents().toArray();
+        HashSet lActiveAgentSet = new HashSet();
+
+        for (int i = 0; i < lActiveAgentArray.length; i++) {
+            Agent lActiveAgent = (Agent) lActiveAgentArray[i];
+            lActiveAgentSet.add(lActiveAgent.getUniqueID());
+        }
+
+        Iterator iter = lAllAgents.keySet().iterator();
+        while (iter.hasNext()) {
+            String lAgentID = (String) iter.next();
+            // Only retain those from agent_complete.xml that are not in the table yet.
+            if (!lActiveAgentSet.contains(lAgentID)) {
+                result.put(lAgentID, lAllAgents.get(lAgentID));
+            }
+        }
+
+        return result;
+    }
 }

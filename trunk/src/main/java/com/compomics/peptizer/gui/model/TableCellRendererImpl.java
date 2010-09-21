@@ -1,6 +1,7 @@
 package com.compomics.peptizer.gui.model;
 
 import com.compomics.peptizer.gui.interfaces.TableColor;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -18,6 +19,8 @@ import java.awt.*;
  * This class was developed to
  */
 public class TableCellRendererImpl implements TableCellRenderer {
+	// Class specific log4j logger for TableCellRendererImpl instances.
+	 private static Logger logger = Logger.getLogger(TableCellRendererImpl.class);
 
     // The Table makes use of 4 colors.
     // a dark and light shade for alternating rows

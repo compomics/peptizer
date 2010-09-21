@@ -1,5 +1,7 @@
 package com.compomics.peptizer.gui.component;
 
+import org.apache.log4j.Logger;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.Enumeration;
@@ -17,6 +19,8 @@ import java.util.Properties;
  * This class was developed to
  */
 public class PropertyPanel extends JPanel {
+	// Class specific log4j logger for PropertyPanel instances.
+	 private static Logger logger = Logger.getLogger(PropertyPanel.class);
     Properties iProperties = null;
 
     JLabel[] iKeyLabels = null;

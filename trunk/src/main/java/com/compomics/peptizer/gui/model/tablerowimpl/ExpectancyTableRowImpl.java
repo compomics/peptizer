@@ -4,6 +4,7 @@ import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.model.AbstractTableRow;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ import java.util.Properties;
  * This class was developed to
  */
 public class ExpectancyTableRowImpl extends AbstractTableRow {
+	// Class specific log4j logger for ExpectancyTableRowImpl instances.
+	 private static Logger logger = Logger.getLogger(ExpectancyTableRowImpl.class);
 
 
     /**

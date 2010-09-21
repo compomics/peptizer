@@ -1,6 +1,7 @@
 package com.compomics.peptizer.gui.model;
 
 import com.compomics.peptizer.util.PeptideIdentification;
+import org.apache.log4j.Logger;
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -16,6 +17,8 @@ import com.compomics.peptizer.util.PeptideIdentification;
  * a PeptideIdentification to populate the table.
  */
 public abstract class AbstractTableRow {
+	// Class specific log4j logger for AbstractTableRow instances.
+	 private static Logger logger = Logger.getLogger(AbstractTableRow.class);
 
     /**
      * The name of the TableRow.

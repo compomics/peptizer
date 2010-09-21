@@ -10,6 +10,7 @@ import de.proteinms.omxparser.OmssaOmxFile;
 import de.proteinms.omxparser.util.MSHitSet;
 import de.proteinms.omxparser.util.MSSearchSettings;
 import de.proteinms.omxparser.util.MSSpectrum;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.Date;
@@ -25,6 +26,8 @@ import java.util.Vector;
  * To change this template use File | Settings | File Templates.
  */
 public class OmxfileIterator implements PeptideIdentificationIterator {
+	// Class specific log4j logger for OmxfileIterator instances.
+	 private static Logger logger = Logger.getLogger(OmxfileIterator.class);
 
     /**
      * The Omssa file instance of the Iterator.
@@ -113,7 +116,7 @@ public class OmxfileIterator implements PeptideIdentificationIterator {
                 toPrint = toPrint + ", " + alastFile.getName();
             }
             toPrint = toPrint + ").";
-            System.out.println(toPrint);
+            logger.info(toPrint);
             omxFile = aFile;
             modsFile = anotherFile;
             usermodsFile = alastFile;

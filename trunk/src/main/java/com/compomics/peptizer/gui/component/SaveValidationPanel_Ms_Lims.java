@@ -10,6 +10,7 @@ import com.compomics.peptizer.util.fileio.ConnectionManager;
 import com.compomics.peptizer.util.fileio.ValidationSaveToMsLims;
 import com.compomics.util.gui.dialogs.ConnectionDialog;
 import com.compomics.util.interfaces.Connectable;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,6 +32,8 @@ import java.sql.SQLException;
  * This class was developed to
  */
 public class SaveValidationPanel_Ms_Lims extends JPanel implements SaveValidationPanel, Connectable {
+	// Class specific log4j logger for SaveValidationPanel_Ms_Lims instances.
+	 private static Logger logger = Logger.getLogger(SaveValidationPanel_Ms_Lims.class);
 
     // gui components.
     private JButton btnConnection = null;
@@ -115,7 +118,7 @@ public class SaveValidationPanel_Ms_Lims extends JPanel implements SaveValidatio
                 lblConnection.setText(ConnectionManager.getInstance().getConnection().getMetaData().getURL());
                 lblConnection.setForeground(new Color(0, 200, 0));
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         } else {
             lblConnection.setText("No ms_lims connection.");
@@ -169,7 +172,7 @@ public class SaveValidationPanel_Ms_Lims extends JPanel implements SaveValidatio
                 lValidationSaver.setData(iDialog.getSelectedMediator().getSelectedPeptideIdentifications());
 
             } catch (SQLException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
             }
             return lValidationSaver;
         } else {

@@ -3,6 +3,7 @@ package com.compomics.peptizer.gui.model;
 import com.compomics.peptizer.gui.Mediator;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.plaf.ColorUIResource;
@@ -24,6 +25,8 @@ import java.math.BigDecimal;
  * This class was developed to have full control on the rendering of the Tree.
  */
 public class TreeCellRendererImpl extends JPanel implements TreeCellRenderer {
+	// Class specific log4j logger for TreeCellRendererImpl instances.
+	 private static Logger logger = Logger.getLogger(TreeCellRendererImpl.class);
 
     /**
      * TreeTextArea is the actual object that is displayed.

@@ -6,6 +6,7 @@ import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
 /**
@@ -20,6 +21,8 @@ import java.math.BigDecimal;
  * This class was developed to inspect for mass tolerance error (Da) (experimental vs theory).
  */
 public class DeltaMassPPMAgent extends Agent {
+	// Class specific log4j logger for DeltaMassPPMAgent instances.
+	 private static Logger logger = Logger.getLogger(DeltaMassPPMAgent.class);
 
     /**
      * Identifies the allowed mass tolerance.

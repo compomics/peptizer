@@ -1,7 +1,7 @@
 package com.compomics.peptizer.gui.model;
 
-
 import com.compomics.peptizer.gui.view.TabbedView;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 /**
@@ -17,6 +17,8 @@ import javax.swing.*;
  * This class was developed to customize the SingleSelectionModel of the TabbedView.
  */
 public class SingleSelectionModelImpl extends DefaultSingleSelectionModel {
+	// Class specific log4j logger for SingleSelectionModelImpl instances.
+	 private static Logger logger = Logger.getLogger(SingleSelectionModelImpl.class);
 
     /**
      * The parent TabbedView.

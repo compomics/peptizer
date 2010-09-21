@@ -10,6 +10,7 @@ import com.compomics.peptizer.util.datatools.interfaces.PeptizerModification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,8 +25,10 @@ import java.util.Arrays;
  * Class description: ------------------ This class was developed to
  */
 public class SialylationAgent extends Agent {
+	// Class specific log4j logger for SialylationAgent instances.
+	 private static Logger logger = Logger.getLogger(SialylationAgent.class);
 
-    private final ArrayList<String> prideAccessions = new ArrayList<String>(Arrays.asList(new String[]{"MOD:00137", "MOD:00219", "MOD:00400", "MOD:00565", "MOD:00657", "MOD:00791", "MOD:01293", "MOD:01294", "MOD:01336", "MOD:01337", "MOD:01369", "MOD:01371"}));
+    private final ArrayList<String> prideAccessions = new ArrayList<String>(Arrays.asList("MOD:00137", "MOD:00219", "MOD:00400", "MOD:00565", "MOD:00657", "MOD:00791", "MOD:01293", "MOD:01294", "MOD:01336", "MOD:01337", "MOD:01369", "MOD:01371"));
 
 
     public SialylationAgent() {

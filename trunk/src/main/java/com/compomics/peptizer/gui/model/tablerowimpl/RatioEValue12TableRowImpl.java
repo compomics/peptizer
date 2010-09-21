@@ -4,6 +4,7 @@ import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.model.AbstractTableRow;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -21,6 +22,8 @@ import java.util.Properties;
  * This class was developed as a TableRow implementation to populate the table.
  */
 public class RatioEValue12TableRowImpl extends AbstractTableRow {
+	// Class specific log4j logger for RatioEValue12TableRowImpl instances.
+	 private static Logger logger = Logger.getLogger(RatioEValue12TableRowImpl.class);
 
     /**
      * {@inheritDoc}

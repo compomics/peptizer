@@ -1,6 +1,7 @@
 package com.compomics.peptizer.util;
 
 import com.compomics.peptizer.util.fileio.MatLogger;
+import org.apache.log4j.Logger;
 
 import java.io.Serializable;
 
@@ -19,6 +20,8 @@ import java.io.Serializable;
  * The AgentReport has defines static final ReportKeys ("RK_*") that serve as keys in this map.
  */
 public class ValidationReport implements Serializable {
+	// Class specific log4j logger for ValidationReport instances.
+	 private static Logger logger = Logger.getLogger(ValidationReport.class);
 
     /**
      * Report on the validation status.<br>

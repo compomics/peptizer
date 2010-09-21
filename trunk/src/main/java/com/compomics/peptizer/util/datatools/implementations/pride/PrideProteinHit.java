@@ -2,6 +2,7 @@ package com.compomics.peptizer.util.datatools.implementations.pride;
 
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerProteinHit;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.io.Serializable;
 
@@ -13,6 +14,8 @@ import java.io.Serializable;
  * To change this template use File | Settings | File Templates.
  */
 public class PrideProteinHit implements PeptizerProteinHit, Serializable {
+	// Class specific log4j logger for PrideProteinHit instances.
+	 private static Logger logger = Logger.getLogger(PrideProteinHit.class);
 
     private String accession;
     private SearchEngineEnum searchEngine;

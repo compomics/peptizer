@@ -3,6 +3,8 @@ package com.compomics.peptizer.util.fileio;
 import com.compomics.peptizer.gui.PeptizerGUI;
 import com.compomics.peptizer.gui.dialog.AdvancedMessageDialog;
 import com.compomics.peptizer.gui.interfaces.StatusView;
+import com.compomics.util.io.StartBrowser;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 /**
@@ -18,6 +20,8 @@ import javax.swing.*;
  * This class was developed to have simple logging funcionality in the System resources & the StatusView panel.
  */
 public class MatLogger {
+    // Class specific log4j logger for MatLogger instances.
+    private static Logger logger = Logger.getLogger(MatLogger.class);
 
     /**
      * The boolean defining the status of the System out logging.
@@ -42,7 +46,8 @@ public class MatLogger {
      */
     public static void logNormalEvent(String aMessage) {
         if (boolSystemOut) {
-            System.out.println(aMessage);
+            logger.info(aMessage);
+            logger.info(aMessage);
         }
         if (boolStatusView) {
             iStatusView.setStatus(aMessage);
@@ -61,9 +66,23 @@ public class MatLogger {
         if (boolStatusView) {
             iStatusView.setError(aMessage);
             if (iStatusView instanceof PeptizerGUI) {
-                JOptionPane.showMessageDialog((PeptizerGUI) iStatusView, aMessage, "Exceptional event!", JOptionPane.ERROR_MESSAGE);
+                //JOptionPane.showMessageDialog((PeptizerGUI) iStatusView, aMessage, "Exceptional event!", JOptionPane.ERROR_MESSAGE);
+                int lResult = javax.swing.JOptionPane.showOptionDialog(null,
+                        aMessage,
+                        "Peptizer: Exceptional Event!!",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.ERROR_MESSAGE,
+                        UIManager.getIcon("OptionPane.errorIcon"),
+                        new Object[]{"Report issue", "Exit"},
+                        "Report issue");
+
+                if (lResult == JOptionPane.OK_OPTION) {
+                    String lIssuesPage = new String("http://code.google.com/p/peptizer/issues/list");
+                    StartBrowser.start(lIssuesPage);
+                }
             }
         }
+
     }
 
     /**

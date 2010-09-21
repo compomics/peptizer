@@ -10,6 +10,7 @@ import com.compomics.peptizer.util.enumerator.TempFileEnum;
 import com.compomics.peptizer.util.fileio.FileManager;
 import com.compomics.peptizer.util.fileio.TempManager;
 import com.compomics.peptizer.util.fileio.ValidationSaveToPDF;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -31,6 +32,8 @@ import java.util.HashMap;
  * This class was developed to
  */
 public class SaveValidationPanel_PDF extends JPanel implements SaveValidationPanel {
+	// Class specific log4j logger for SaveValidationPanel_PDF instances.
+	 private static Logger logger = Logger.getLogger(SaveValidationPanel_PDF.class);
 
     /**
      * The Singleton instance of this Panel.
@@ -184,7 +187,7 @@ public class SaveValidationPanel_PDF extends JPanel implements SaveValidationPan
             try {
                 txtPDF.setText(iOutput.getCanonicalPath());
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
     }
@@ -220,7 +223,7 @@ public class SaveValidationPanel_PDF extends JPanel implements SaveValidationPan
         try {
             txtPDF.setText(iOutput.getCanonicalPath());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 

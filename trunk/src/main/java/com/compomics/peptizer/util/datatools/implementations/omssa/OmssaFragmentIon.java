@@ -5,6 +5,7 @@ import com.compomics.peptizer.util.enumerator.IonTypeEnum;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import com.compomics.util.gui.interfaces.SpectrumAnnotation;
 import de.proteinms.omxparser.util.MSMZHit;
+import org.apache.log4j.Logger;
 
 import java.awt.*;
 
@@ -16,6 +17,8 @@ import java.awt.*;
  * To change this template use File | Settings | File Templates.
  */
 public class OmssaFragmentIon extends PeptizerFragmentIon implements SpectrumAnnotation {
+	// Class specific log4j logger for OmssaFragmentIon instances.
+	 private static Logger logger = Logger.getLogger(OmssaFragmentIon.class);
     private final SearchEngineEnum iSearchEngineEnum = SearchEngineEnum.OMSSA;
     private MSMZHit msMZHit;
     private OmssaPeak peak;

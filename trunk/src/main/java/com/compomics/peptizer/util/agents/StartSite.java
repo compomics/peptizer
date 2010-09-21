@@ -7,6 +7,7 @@ import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerProteinHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -18,6 +19,8 @@ import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
  * Class description: ------------------ This class was developed to
  */
 public class StartSite extends Agent {
+	// Class specific log4j logger for StartSite instances.
+	 private static Logger logger = Logger.getLogger(StartSite.class);
 
     /**
      * This String serves a static final String for the lower start site position boundary.

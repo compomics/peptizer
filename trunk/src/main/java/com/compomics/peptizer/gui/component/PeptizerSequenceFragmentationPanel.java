@@ -1,7 +1,7 @@
 package com.compomics.peptizer.gui.component;
 
-
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerFragmentIon;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +19,8 @@ import java.util.Vector;
  * This class imported from the MascotDatfile parser was developed to display fragmentation information on the modified sequence as inspired by X!Tandem.
  */
 public class PeptizerSequenceFragmentationPanel extends JPanel {
+	// Class specific log4j logger for PeptizerSequenceFragmentationPanel instances.
+	 private static Logger logger = Logger.getLogger(PeptizerSequenceFragmentationPanel.class);
 
     /**
      * Elementary data for composing the Panel.

@@ -1,6 +1,7 @@
 package com.compomics.peptizer.gui.component;
 
 import com.compomics.peptizer.gui.interfaces.ImportPanel;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,6 +14,8 @@ import java.util.Vector;
  * File Templates.
  */
 public class DataSourcePanel extends JPanel {
+	// Class specific log4j logger for DataSourcePanel instances.
+	 private static Logger logger = Logger.getLogger(DataSourcePanel.class);
 
     private JPanel jpanSourceProperties;
     private JComboBox cmbIterators;

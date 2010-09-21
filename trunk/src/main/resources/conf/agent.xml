@@ -2,6 +2,7 @@
 <!--  Peptizer agents properties -->
 <config name="agents">
     <agents>
+
         <agent>
             <!-- Inspects for score units above threshold. Scores +1 if identity score minus confidence threshold is less then delta score (10). Scores 0 if else. -->
             <uniqueid>com.compomics.peptizer.util.agents.DeltaScore</uniqueid>
@@ -10,6 +11,7 @@
             <property name="veto">false</property>
             <property name="delta">10</property>
         </agent>
+
         <agent>
             <!-- Inspects for score units above threshold. Scores +1 if identity score minus confidence threshold is less then delta score (10). Scores 0 if else. -->
             <uniqueid>com.compomics.peptizer.util.agents.Homology</uniqueid>
@@ -17,6 +19,7 @@
             <property name="active">true</property>
             <property name="veto">false</property>
         </agent>
+
         <agent>
             <!-- Inspects for the number of ProteinHits of a peptidehit. Scores +1 if a peptide could be correlated to a single protein, Scores 0 if more.-->
             <uniqueid>com.compomics.peptizer.util.agents.ImmoniumIonAgent</uniqueid>
@@ -26,6 +29,7 @@
             <property name="aminoacids">WYFH</property>
             <property name="error">0.5</property>
         </agent>
+
         <agent>
             <!-- Inspects for the length of the peptide. Scores +1 if the peptide is smaller then the given length (9). Scores 0 if more. -->
             <uniqueid>com.compomics.peptizer.util.agents.Length</uniqueid>
@@ -34,6 +38,7 @@
             <property name="veto">false</property>
             <property name="length">9</property>
         </agent>
+
         <agent>
             <!-- Inspects for a Modification property of the peptide. Scores +1 if the PeptideHit is modified ( mox). Scores 0 if else. -->
             <uniqueid>com.compomics.peptizer.util.agents.ModificationAgent</uniqueid>
@@ -42,6 +47,7 @@
             <property name="veto">false</property>
             <property name="modification">mox</property>
         </agent>
+
         <agent>
             <!-- Inspects for if there are more confident identifications from one spectrum. Scores +1 if the identification is followed by a lower ranked but confident identification.property is fullfilled. Scores 0 if else. -->
             <uniqueid>com.compomics.peptizer.util.agents.MultipleConfidentHits</uniqueid>
@@ -50,6 +56,7 @@
             <property name="veto">false</property>
             <property name="delta">0</property>
         </agent>
+
         <agent>
             <!-- Inspects for acetylation (Ace) modification on the NTerminus. Scores -1 if the NTerminus contains an Acetylation (Ace/Ace3D) as expected in COFRADIC . 0 if there is no NTerminal Acetylation. -->
             <uniqueid>com.compomics.peptizer.util.agents.NTermAcetylation</uniqueid>
@@ -57,6 +64,7 @@
             <property name="active">true</property>
             <property name="veto">false</property>
         </agent>
+
         <agent>
             <!-- Inspects for the Proline fragmentation properties. Scores +1 if the peptide contains a Pro and no relative intense (max intensity x 0.4) b or y ion Nterminal of the Pro is found.. Scores 0 if no Proline. Scores -1 if an intens fragment ion NTerminal to the Pro is found. -->
             <uniqueid>com.compomics.peptizer.util.agents.ProlineAgent</uniqueid>
@@ -65,6 +73,7 @@
             <property name="veto">false</property>
             <property name="intensity">0.4</property>
         </agent>
+
         <agent>
             <!-- Inspects whether the peptide sequence matches a given regular expression(). Scores +1 if the regular expression is matched.(.*[LI]3.*). Scores 0 if not. -->
             <uniqueid>com.compomics.peptizer.util.agents.SequenceRegexp</uniqueid>
@@ -73,6 +82,7 @@
             <property name="veto">false</property>
             <property name="regular expression">.*[li]3.*</property>
         </agent>
+
         <agent>
             <!-- Inspects for the Start Site of the peptide in its best proteinhit. Scores +1 if the start site of the peptide is more then the high limit ( 200). Scores 0 if the start site of the peptide is more then the low limit (2) but less then the high limit.( 200). Scores -1 if the peptide is less then the low limit (2) . -->
             <uniqueid>com.compomics.peptizer.util.agents.StartSite</uniqueid>
@@ -82,14 +92,7 @@
             <property name="low">2</property>
             <property name="high">200</property>
         </agent>
-        <agent>
-            <!-- Inspects whether the peptide contains a given subsequence. Scores +1 if the peptide contains the subsequence (TESTPEPTIDE). Scores 0 if else. -->
-            <uniqueid>com.compomics.peptizer.util.agents.SubSequence</uniqueid>
-            <property name="name">SubSequence</property>
-            <property name="active">false</property>
-            <property name="veto">false</property>
-            <property name="subsequence">testpeptide</property>
-        </agent>
+
         <agent>
             <!-- Inspects for missed cleavages in a peptide. Scores +1 if the sequence contains an amino acid that must have been cleaved. Multiple aminoacids can be entered. (rh). Scores 0 if else. -->
             <uniqueid>com.compomics.peptizer.util.agents.SuspectResidue</uniqueid>
@@ -98,6 +101,7 @@
             <property name="veto">true</property>
             <property name="sites">R;H</property>
         </agent>
+
         <agent>
             <!-- Inspects for missed cleavages in a peptide. Scores +1 if the sequence contains an amino acid that must have been cleaved. Multiple aminoacids can be entered. (rh). Scores 0 if else. -->
             <uniqueid>com.compomics.peptizer.util.agents.ProteinAccession</uniqueid>
@@ -106,6 +110,7 @@
             <property name="veto">true</property>
             <property name="accession">SHUFFLED</property>
         </agent>
+
         <agent>
             <!-- Inspects for the b-ion coverage of the peptide. Scores +1 if the b-ion coverage is equal or less then ( 30.0%). Scores 0 if better. -->
             <uniqueid>com.compomics.peptizer.util.agents.BCoverage</uniqueid>
@@ -121,13 +126,6 @@
             <property name="active">true</property>
             <property name="veto">false</property>
             <property name="percentage">0.30</property>
-        </agent>
-        <agent>
-            <!-- Inspects for the number of ProteinHits of a peptidehit. Scores +1 if a peptide could be correlated to a single protein, Scores 0 if more.-->
-            <uniqueid>com.compomics.peptizer.util.agents.SingleProteinHit</uniqueid>
-            <property name="name">Single Proteinhit</property>
-            <property name="active">true</property>
-            <property name="veto">false</property>
         </agent>
 
         <agent>
@@ -185,5 +183,6 @@
             <property name="prefix">KR</property>
             <property name="suffix"></property>
         </agent>
+
     </agents>
 </config>

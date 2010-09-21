@@ -12,6 +12,7 @@ import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -26,6 +27,8 @@ import java.math.RoundingMode;
  * Class description: ------------------ This class was developed to
  */
 public class NtermCoverage extends Agent {
+	// Class specific log4j logger for NtermCoverage instances.
+	 private static Logger logger = Logger.getLogger(NtermCoverage.class);
 
     /**
      * The b-ion coverage must be above the given percentage.

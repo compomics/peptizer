@@ -2,6 +2,7 @@ package com.compomics.peptizer.gui.dialog;
 
 import com.compomics.peptizer.gui.PeptizerGUI;
 import com.compomics.peptizer.gui.component.HyperLinkLabel;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +20,8 @@ import java.net.URL;
  * DBToolkit project (http://genesis.ugent.be/dbtoolkit/)
  */
 public class AboutDialog extends JDialog {
+	// Class specific log4j logger for AboutDialog instances.
+	 private static Logger logger = Logger.getLogger(AboutDialog.class);
 
     /**
      * The textarea that will display the help text.
@@ -175,7 +178,7 @@ public class AboutDialog extends JDialog {
         jpanMain.add(Box.createRigidArea(new Dimension(txtHelp.getWidth(), 15)));
         for (int i = 0; i < lblLabels.length; i++) {
             JLabel lLabel = lblLabels[i];
-            System.out.println(i);
+            logger.info(i);
             lLabel.setForeground(Color.black);
             jpanTextLabels.add(lLabel);
             jpanTextLabels.add(Box.createRigidArea(new Dimension(txtHelp.getWidth(), 5)));
@@ -237,7 +240,7 @@ public class AboutDialog extends JDialog {
                 iHelpText = sb.toString();
             }
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            logger.error(ioe.getMessage(), ioe);
         }
     }
 
@@ -254,7 +257,7 @@ public class AboutDialog extends JDialog {
                 lblImageTools = new JLabel(icon);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
 
         // IWT icon for the label.
@@ -266,7 +269,7 @@ public class AboutDialog extends JDialog {
                 lblImageIWT = new JLabel(icon);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
 
         // UGENT icon for the window.
@@ -277,7 +280,7 @@ public class AboutDialog extends JDialog {
                 lblImageUGENT = new JLabel(iUGENT);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 }

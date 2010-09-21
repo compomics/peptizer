@@ -6,6 +6,7 @@ import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,6 +22,8 @@ import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
  */
 
 public class SingleProteinHit extends Agent {
+	// Class specific log4j logger for SingleProteinHit instances.
+	 private static Logger logger = Logger.getLogger(SingleProteinHit.class);
 
 
     public SingleProteinHit() {

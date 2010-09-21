@@ -7,6 +7,7 @@ import com.compomics.peptizer.util.datatools.interfaces.PeptizerModification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.IonTypeEnum;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 import uk.ac.ebi.pride.jaxb.model.*;
 
 import java.io.Serializable;
@@ -22,6 +23,8 @@ import java.util.Vector;
  * To change this template use File | Settings | File Templates.
  */
 public class PridePeptideHit extends PeptizerPeptideHit implements Serializable {
+	// Class specific log4j logger for PridePeptideHit instances.
+	 private static Logger logger = Logger.getLogger(PridePeptideHit.class);
 
     // peptide relative informations
     private PeptideItem originalPeptideItem;

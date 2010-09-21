@@ -9,6 +9,7 @@ import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeak;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import de.proteinms.omxparser.util.*;
+import org.apache.log4j.Logger;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ import java.util.Vector;
  * To change this template use File | Settings | File Templates.
  */
 public class OmssaPeptideHit extends PeptizerPeptideHit implements Serializable {
+	// Class specific log4j logger for OmssaPeptideHit instances.
+	 private static Logger logger = Logger.getLogger(OmssaPeptideHit.class);
     private MSHits msHits;
     private MSSearchSettings msSearchSettings;
     private int msResponseScale;

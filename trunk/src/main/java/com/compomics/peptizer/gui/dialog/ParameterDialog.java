@@ -1,7 +1,7 @@
 package com.compomics.peptizer.gui.dialog;
 
-
 import com.compomics.peptizer.gui.component.JLabelAndTextFieldPanel;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,6 +21,8 @@ import java.util.Properties;
  * This class was developed to
  */
 public class ParameterDialog extends JDialog {
+	// Class specific log4j logger for ParameterDialog instances.
+	 private static Logger logger = Logger.getLogger(ParameterDialog.class);
 
     private JTextField[] txtFields = null;
     private JLabel[] lblFields = null;

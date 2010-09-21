@@ -1,5 +1,7 @@
 package com.compomics.peptizer.util.fileio;
 
+import org.apache.log4j.Logger;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.io.File;
@@ -17,6 +19,8 @@ import java.io.IOException;
  * This class was developed as a central object to Manage Files for input and output.
  */
 public class FileManager {
+	// Class specific log4j logger for FileManager instances.
+	 private static Logger logger = Logger.getLogger(FileManager.class);
 
     /**
      * Singleton instance
@@ -334,7 +338,7 @@ public class FileManager {
                         boolSelection = true;
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(), e);
                 }
             }
 
@@ -459,7 +463,7 @@ public class FileManager {
                         boolSelection = true;
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(), e);
                 }
             }
 
@@ -711,7 +715,7 @@ public class FileManager {
                         boolSelection = true;
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(), e);
                 }
             }
 

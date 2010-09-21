@@ -8,6 +8,7 @@ import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerProteinHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 
@@ -19,6 +20,8 @@ import java.util.ArrayList;
  * To change this template use File | Settings | File Templates.
  */
 public class PrefixSufixAminoAcid extends Agent{
+	// Class specific log4j logger for PrefixSufixAminoAcid instances.
+	 private static Logger logger = Logger.getLogger(PrefixSufixAminoAcid.class);
 
 
     /**

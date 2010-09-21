@@ -10,6 +10,7 @@ import com.compomics.peptizer.util.AgentReport;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.enumerator.AgentAggregationResult;
 import com.compomics.util.sun.SwingWorker;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 /**
@@ -25,6 +26,8 @@ import java.io.*;
  * network.
  */
 public class ArffWorker extends SwingWorker {
+	// Class specific log4j logger for ArffWorker instances.
+	 private static Logger logger = Logger.getLogger(ArffWorker.class);
 
     /**
      * The Iterator with PeptideIdentifications.
@@ -85,7 +88,7 @@ public class ArffWorker extends SwingWorker {
         try {
             iBufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(iTargetFile)));
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
 
         // 1. Set Agent identifiers,
@@ -136,13 +139,13 @@ public class ArffWorker extends SwingWorker {
             ((PeptizerGUI) iProgress.getOwner()).setStatus(iMessage.toString());
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } finally {
             try {
                 iBufferedWriter.flush();
                 iBufferedWriter.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
         return "";

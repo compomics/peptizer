@@ -1,15 +1,10 @@
-package com.compomics.peptizer.interfaces;/**
- * Created by IntelliJ IDEA.
- * User: Kenni
- * Date: 2-jun-2006
- * Time: 10:32:08
- * To change this template use File | Settings | File Templates.
- */
+package com.compomics.peptizer.interfaces;
 
 import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.enumerator.AgentAggregationResult;
 import com.compomics.peptizer.util.fileio.MatLogger;
+import org.apache.log4j.Logger;
 
 import java.util.Collection;
 import java.util.Properties;
@@ -18,6 +13,8 @@ import java.util.Properties;
  * This interface must be implemented by classes that want to score PeptideHits by their properties.
  */
 public abstract class AgentAggregator implements Comparable {
+	// Class specific log4j logger for AgentAggregator instances.
+	 private static Logger logger = Logger.getLogger(AgentAggregator.class);
 
     /**
      * The Agent's used by the AgentAggregator.

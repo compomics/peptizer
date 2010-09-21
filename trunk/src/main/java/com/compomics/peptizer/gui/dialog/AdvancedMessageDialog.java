@@ -1,5 +1,7 @@
 package com.compomics.peptizer.gui.dialog;
 
+import org.apache.log4j.Logger;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -18,6 +20,8 @@ import java.awt.event.KeyEvent;
  * This class was developed to offer a more complex Information dialog for help functions and instructions.
  */
 public class AdvancedMessageDialog extends JDialog {
+	// Class specific log4j logger for AdvancedMessageDialog instances.
+	 private static Logger logger = Logger.getLogger(AdvancedMessageDialog.class);
 
     /**
      * The textarea that will display the help text.

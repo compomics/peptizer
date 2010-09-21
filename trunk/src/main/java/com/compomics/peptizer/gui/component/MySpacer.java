@@ -1,5 +1,7 @@
 package com.compomics.peptizer.gui.component;
 
+import org.apache.log4j.Logger;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -12,6 +14,8 @@ import java.awt.*;
  * This class
  */
 public class MySpacer extends JPanel {
+	// Class specific log4j logger for MySpacer instances.
+	 private static Logger logger = Logger.getLogger(MySpacer.class);
     private static Color iColor = Color.WHITE;
 
     public MySpacer(final LayoutManager layout, final boolean isDoubleBuffered) {

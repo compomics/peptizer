@@ -4,6 +4,7 @@ import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeak;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerSpectrum;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import de.proteinms.omxparser.util.MSSpectrum;
+import org.apache.log4j.Logger;
 
 import java.io.Serializable;
 
@@ -15,6 +16,8 @@ import java.io.Serializable;
  * To change this template use File | Settings | File Templates.
  */
 public class OmssaSpectrum implements PeptizerSpectrum, Serializable {
+	// Class specific log4j logger for OmssaSpectrum instances.
+	 private static Logger logger = Logger.getLogger(OmssaSpectrum.class);
     private final SearchEngineEnum iSearchEngineEnum = SearchEngineEnum.OMSSA;
     private int msResponseScale;
     private MSSpectrum aSpectrum;

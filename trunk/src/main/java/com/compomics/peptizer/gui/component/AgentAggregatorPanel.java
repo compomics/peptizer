@@ -5,6 +5,7 @@ import com.compomics.peptizer.gui.dialog.ParameterDialog;
 import com.compomics.peptizer.interfaces.AgentAggregator;
 import com.compomics.peptizer.util.AgentAggregatorFactory;
 import com.compomics.peptizer.util.AgentFactory;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -26,6 +27,8 @@ import java.util.Properties;
  * Class description: ------------------ This class was developed to
  */
 public class AgentAggregatorPanel extends JPanel {
+	// Class specific log4j logger for AgentAggregatorPanel instances.
+	 private static Logger logger = Logger.getLogger(AgentAggregatorPanel.class);
 
     // Instance data
     private AgentAggregator[] iAgentAggregators;

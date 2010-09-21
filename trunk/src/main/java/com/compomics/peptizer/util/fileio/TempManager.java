@@ -2,6 +2,7 @@ package com.compomics.peptizer.util.fileio;
 
 import com.compomics.peptizer.gui.SelectedPeptideIdentifications;
 import com.compomics.peptizer.util.enumerator.TempFileEnum;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +22,8 @@ import java.util.Vector;
  * This class was created to manage the creation and handling of temporary files.
  */
 public class TempManager {
+	// Class specific log4j logger for TempManager instances.
+	 private static Logger logger = Logger.getLogger(TempManager.class);
 
 
     /**
@@ -80,7 +83,7 @@ public class TempManager {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
         }
     }
 

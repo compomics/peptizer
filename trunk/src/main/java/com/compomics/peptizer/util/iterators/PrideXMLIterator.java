@@ -8,6 +8,7 @@ import com.compomics.peptizer.util.datatools.implementations.pride.PrideProteinH
 import com.compomics.peptizer.util.datatools.implementations.pride.PrideSpectrum;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 import uk.ac.ebi.pride.jaxb.model.GelFreeIdentification;
 import uk.ac.ebi.pride.jaxb.model.Identification;
 import uk.ac.ebi.pride.jaxb.model.PeptideItem;
@@ -27,6 +28,8 @@ import java.util.Vector;
  * To change this template use File | Settings | File Templates.
  */
 public class PrideXMLIterator implements PeptideIdentificationIterator {
+	// Class specific log4j logger for PrideXMLIterator instances.
+	 private static Logger logger = Logger.getLogger(PrideXMLIterator.class);
 
     private HashMap<String, ArrayList<String>> spectrumToPrideID;
     private HashMap<String, ArrayList<PrideProteinHit>> peptideToProteinMap;

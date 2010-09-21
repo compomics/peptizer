@@ -2,6 +2,7 @@ package com.compomics.peptizer.interfaces;
 
 import com.compomics.peptizer.gui.progressbars.DefaultProgressBar;
 import com.compomics.util.sun.SwingWorker;
+import org.apache.log4j.Logger;
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -15,6 +16,8 @@ import com.compomics.util.sun.SwingWorker;
  * This Interface was developed to be implemented by IO objects that can save a group of PeptideIdentifications.
  */
 public abstract class ValidationSaver extends SwingWorker {
+	// Class specific log4j logger for ValidationSaver instances.
+	 private static Logger logger = Logger.getLogger(ValidationSaver.class);
 
     /**
      * Object that will be saved.

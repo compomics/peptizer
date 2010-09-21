@@ -5,6 +5,7 @@ import com.compomics.peptizer.util.datatools.Advocate;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerSpectrum;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.io.Serializable;
 import java.util.*;
@@ -19,6 +20,8 @@ import java.util.*;
  * Class description: ------------------ This class was developed to wrap a MS/MS spectrum and its identifications.
  */
 public class PeptideIdentification implements Comparable, Serializable {
+	// Class specific log4j logger for PeptideIdentification instances.
+	 private static Logger logger = Logger.getLogger(PeptideIdentification.class);
 
     /**
      * The MS/MS Spectrum.

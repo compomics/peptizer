@@ -2,6 +2,7 @@ package com.compomics.peptizer.util.iterators;
 
 import com.compomics.peptizer.util.fileio.ConnectionManager;
 import com.compomics.peptizer.util.fileio.MatLogger;
+import org.apache.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,6 +21,8 @@ import java.sql.SQLException;
  * This Class will iterate all PeptideIdentifications from a given ms_lims project.
  */
 public class Ms_Lims_ProjectIterator extends Ms_Lims_Iterator {
+	// Class specific log4j logger for Ms_Lims_ProjectIterator instances.
+	 private static Logger logger = Logger.getLogger(Ms_Lims_ProjectIterator.class);
     /**
      * The project that must be iterated.
      */
@@ -88,7 +91,7 @@ public class Ms_Lims_ProjectIterator extends Ms_Lims_Iterator {
             // All user information from the query was transformed into IterationUnit's, the construction is completed.
 
         } catch (SQLException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
         }
     }
 

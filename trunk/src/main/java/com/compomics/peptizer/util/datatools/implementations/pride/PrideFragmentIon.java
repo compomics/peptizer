@@ -4,6 +4,7 @@ import com.compomics.peptizer.util.datatools.interfaces.PeptizerFragmentIon;
 import com.compomics.peptizer.util.enumerator.IonTypeEnum;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import com.compomics.util.gui.interfaces.SpectrumAnnotation;
+import org.apache.log4j.Logger;
 import uk.ac.ebi.pride.jaxb.model.CvParam;
 import uk.ac.ebi.pride.jaxb.model.FragmentIon;
 
@@ -18,6 +19,8 @@ import java.io.Serializable;
  * To change this template use File | Settings | File Templates.
  */
 public class PrideFragmentIon extends PeptizerFragmentIon implements SpectrumAnnotation, Serializable {
+	// Class specific log4j logger for PrideFragmentIon instances.
+	 private static Logger logger = Logger.getLogger(PrideFragmentIon.class);
 
     private FragmentIon originalFragmentIon;
     private SearchEngineEnum searchEngine;

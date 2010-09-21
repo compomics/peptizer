@@ -9,6 +9,7 @@ import com.compomics.peptizer.gui.component.SaveValidationPanel_PDF;
 import com.compomics.peptizer.gui.interfaces.SaveValidationPanel;
 import com.compomics.peptizer.gui.model.MediatorListCellRendererImpl;
 import com.compomics.peptizer.interfaces.ValidationSaver;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,6 +30,8 @@ import java.util.Vector;
  * This class was developed to
  */
 public class SaveValidationDialog extends JDialog {
+	// Class specific log4j logger for SaveValidationDialog instances.
+	 private static Logger logger = Logger.getLogger(SaveValidationDialog.class);
     /**
      * The main frame.
      */

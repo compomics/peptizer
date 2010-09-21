@@ -2,8 +2,9 @@ package com.compomics.peptizer.util.datatools;
 
 import com.compomics.peptizer.interfaces.PeptideIdentificationIterator;
 import com.compomics.peptizer.util.PeptideIdentification;
-import com.compomics.peptizer.util.fileio.MatLogger;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import com.compomics.peptizer.util.fileio.MatLogger;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.sql.Connection;
@@ -20,6 +21,8 @@ import java.util.Iterator;
  * This factory will provide the identifications after preprocessing when necessary.
  */
 public class IdentificationFactory {
+	// Class specific log4j logger for IdentificationFactory instances.
+	 private static Logger logger = Logger.getLogger(IdentificationFactory.class);
 
     // Attributes
 

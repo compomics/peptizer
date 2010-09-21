@@ -3,6 +3,7 @@ package com.compomics.peptizer.util;
 import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.interfaces.AgentAggregator;
 import com.compomics.peptizer.util.fileio.MatLogger;
+import org.apache.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,6 +22,8 @@ import java.util.HashMap;
  * this singleton instance.
  */
 public class AgentAggregatorFactory {
+	// Class specific log4j logger for AgentAggregatorFactory instances.
+	 private static Logger logger = Logger.getLogger(AgentAggregatorFactory.class);
 
     /**
      * The Map with Aggregators.

@@ -1,5 +1,7 @@
 package com.compomics.peptizer.util.fileio;
 
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,6 +19,8 @@ import java.sql.SQLException;
  * This Class has a Singleton structure that holds one Connection.
  */
 public class ConnectionManager {
+	// Class specific log4j logger for ConnectionManager instances.
+	 private static Logger logger = Logger.getLogger(ConnectionManager.class);
 
     /**
      * Singleton instance.
@@ -97,7 +101,7 @@ public class ConnectionManager {
             try {
                 iConnection.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
     }
