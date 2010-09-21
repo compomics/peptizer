@@ -10,6 +10,7 @@ import com.compomics.mslims.util.fileio.MascotGenericFile;
 import com.compomics.util.gui.events.RescalingEvent;
 import com.compomics.util.gui.interfaces.SpectrumAnnotation;
 import com.compomics.util.gui.interfaces.SpectrumPanelListener;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -36,6 +37,8 @@ import java.util.*;
  * @version $Id: SpectrumpanelMcp.java,v 1.1 2009/05/14 14:33:58 kenny Exp $
  */
 public class SpectrumpanelMcp extends JPanel {
+	// Class specific log4j logger for SpectrumpanelMcp instances.
+	 private static Logger logger = Logger.getLogger(SpectrumpanelMcp.class);
 
     /**
      * This status indicates that no annotation will be displayed,

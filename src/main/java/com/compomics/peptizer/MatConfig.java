@@ -9,6 +9,7 @@ package com.compomics.peptizer;
 import com.compomics.peptizer.util.AgentAggregatorFactory;
 import com.compomics.peptizer.util.AgentFactory;
 import com.compomics.peptizer.util.fileio.MatLogger;
+import org.apache.log4j.Logger;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -25,6 +26,8 @@ import java.util.Set;
  * This class was developed as a singleton instance to manage configuration settings of mat.
  */
 public class MatConfig {
+	// Class specific log4j logger for MatConfig instances.
+	 private static Logger logger = Logger.getLogger(MatConfig.class);
 
     // Singleton preferences instance
     private static MatConfig ourInstance;
@@ -97,7 +100,7 @@ public class MatConfig {
             pullparserfactory = XmlPullParserFactory.newInstance(System.getProperty(XmlPullParserFactory.PROPERTY_NAME), null);
             pullparserfactory.setNamespaceAware(true);
         } catch (XmlPullParserException xppe) {
-            xppe.printStackTrace();
+            logger.error(xppe.getMessage(), xppe);
             System.exit(1);
         }
     }
@@ -157,13 +160,13 @@ public class MatConfig {
 
         } catch (XmlPullParserException e) {
             MatLogger.logExceptionalEvent("XML pull parser encountered an error while parsing configuration file ( " + lCurrent + ").");
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } catch (IOException e) {
             MatLogger.logExceptionalEvent("IOE exception while reading configuration file ( " + lCurrent + ").");
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } catch (NullPointerException e) {
             MatLogger.logExceptionalEvent("NullPointer Exception while initiating configuration file (" + lCurrent + "). Please make sure this configuration file (" + lCurrent + ") is availlable in the classpath.\n");
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -604,10 +607,10 @@ public class MatConfig {
             }
         } catch (XmlPullParserException e) {
             MatLogger.logExceptionalEvent("Agent configuration xml parsing from " + aFile.getName() + " failed.");
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } catch (IOException e) {
             MatLogger.logExceptionalEvent("Agent configuration loading from " + aFile.getName() + " failed due to IOEexception.");
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -636,14 +639,13 @@ public class MatConfig {
             // Reset factories.
             AgentFactory.reset();
             AgentAggregatorFactory.reset();
-            System.out.println("lala");
 
         } catch (XmlPullParserException e) {
             MatLogger.logExceptionalEvent("Agent, General and AgentAggregator configuration xml parsing from " + aFile.getName() + " failed.");
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } catch (IOException e) {
             MatLogger.logExceptionalEvent("Agent, General and AgentAggregator configuration loading from " + aFile.getName() + " failed due to IOEexception.");
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 

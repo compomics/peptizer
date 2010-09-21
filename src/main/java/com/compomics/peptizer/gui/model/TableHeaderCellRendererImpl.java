@@ -3,6 +3,7 @@ package com.compomics.peptizer.gui.model;
 import com.compomics.peptizer.gui.view.TableView;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -20,6 +21,8 @@ import java.awt.*;
  * This class was developed to allow colored Table Headers according to their Validation state.
  */
 public class TableHeaderCellRendererImpl implements TableCellRenderer {
+	// Class specific log4j logger for TableHeaderCellRendererImpl instances.
+	 private static Logger logger = Logger.getLogger(TableHeaderCellRendererImpl.class);
 
     /**
      * The Label used as a dynamic component.

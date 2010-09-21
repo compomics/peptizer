@@ -1,6 +1,7 @@
 package com.compomics.peptizer.util.fileio;
 
 import com.compomics.peptizer.util.PeptideIdentification;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ import java.util.Vector;
  * This class was developed to provide static methods concerning Serialization of object of peptizer.
  */
 public class PeptizerSerialization {
+	// Class specific log4j logger for PeptizerSerialization instances.
+	 private static Logger logger = Logger.getLogger(PeptizerSerialization.class);
 
     public PeptizerSerialization() {
         // empty

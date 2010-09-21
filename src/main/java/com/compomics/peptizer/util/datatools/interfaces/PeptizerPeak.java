@@ -1,6 +1,7 @@
 package com.compomics.peptizer.util.datatools.interfaces;
 
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -10,6 +11,8 @@ import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class PeptizerPeak {
+	// Class specific log4j logger for PeptizerPeak instances.
+	 private static Logger logger = Logger.getLogger(PeptizerPeak.class);
     protected double iMZ;
     protected double iIntensity;
 

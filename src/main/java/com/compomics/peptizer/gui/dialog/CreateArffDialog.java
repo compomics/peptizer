@@ -13,6 +13,7 @@ import com.compomics.peptizer.util.AgentFactory;
 import com.compomics.peptizer.util.datatools.IdentificationFactory;
 import com.compomics.peptizer.util.fileio.MatLogger;
 import com.compomics.peptizer.util.worker.ArffWorker;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -32,6 +33,8 @@ import java.io.File;
  * Class description: ------------------ This class was developed to
  */
 public class CreateArffDialog extends JDialog {
+	// Class specific log4j logger for CreateArffDialog instances.
+	 private static Logger logger = Logger.getLogger(CreateArffDialog.class);
 
     /**
      * The main frame.

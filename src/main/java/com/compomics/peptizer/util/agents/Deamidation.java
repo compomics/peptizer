@@ -10,6 +10,7 @@ import com.compomics.peptizer.util.datatools.interfaces.PeptizerModification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,10 +26,12 @@ import java.util.Arrays;
  * This class is an extension of the Agent abstract class.
  */
 public class Deamidation extends Agent {
+	// Class specific log4j logger for Deamidation instances.
+	 private static Logger logger = Logger.getLogger(Deamidation.class);
 
     public static final String COUNT = "count";
 
-    private final ArrayList<String> prideAccessions = new ArrayList<String>(Arrays.asList(new String[]{"MOD:00137", "MOD:00219", "MOD:00400", "MOD:00565", "MOD:00657", "MOD:00791", "MOD:01293", "MOD:01294", "MOD:01336", "MOD:01337", "MOD:01369", "MOD:01371"}));
+    private final ArrayList<String> prideAccessions = new ArrayList<String>(Arrays.asList("MOD:00137", "MOD:00219", "MOD:00400", "MOD:00565", "MOD:00657", "MOD:00791", "MOD:01293", "MOD:01294", "MOD:01336", "MOD:01337", "MOD:01369", "MOD:01371"));
 
     /**
      * This empty private constructor can only be accessed from a static method getInstance.

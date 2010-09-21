@@ -9,6 +9,7 @@ import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerProteinHit;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerSpectrum;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -27,6 +28,8 @@ import java.util.Vector;
  * This class
  */
 public class PeptideIdentificationPanel {
+	// Class specific log4j logger for PeptideIdentificationPanel instances.
+	 private static Logger logger = Logger.getLogger(PeptideIdentificationPanel.class);
     private JLabel lblSequence;
     private JLabel lblScore;
     private JLabel lblThreshold;

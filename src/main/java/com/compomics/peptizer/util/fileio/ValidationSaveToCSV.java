@@ -6,6 +6,7 @@ import com.compomics.peptizer.gui.progressbars.DefaultProgressBar;
 import com.compomics.peptizer.interfaces.ValidationSaver;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.enumerator.TempFileEnum;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -23,6 +24,8 @@ import java.util.StringTokenizer;
  * separated file.
  */
 public class ValidationSaveToCSV extends ValidationSaver {
+	// Class specific log4j logger for ValidationSaveToCSV instances.
+	 private static Logger logger = Logger.getLogger(ValidationSaveToCSV.class);
     /**
      * This object holds the data that must be written into the csv file.
      * Can be a SelectedPeptideIdentifications or an ArrayList with PeptideIdentifications.
@@ -173,9 +176,9 @@ public class ValidationSaveToCSV extends ValidationSaver {
                     } catch (EOFException eof) {
                         // The end of the file is reached, go to the next file ..
                     } catch (IOException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
                     } catch (ClassNotFoundException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
                     }
                 }
             }
@@ -203,9 +206,9 @@ public class ValidationSaveToCSV extends ValidationSaver {
                     } catch (EOFException eof) {
                         // The end of the file is reached, go to the next file ..
                     } catch (IOException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
                     } catch (ClassNotFoundException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
                     }
                 }
             }
@@ -257,7 +260,7 @@ public class ValidationSaveToCSV extends ValidationSaver {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -463,7 +466,7 @@ public class ValidationSaveToCSV extends ValidationSaver {
                 iBufferedWriter.flush();
                 iBufferedWriter.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
     }

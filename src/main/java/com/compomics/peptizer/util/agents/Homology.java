@@ -8,6 +8,7 @@ import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.Advocate;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -19,6 +20,8 @@ import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
  * Class description: ------------------ This class was developed to use information
  */
 public class Homology extends Agent {
+	// Class specific log4j logger for Homology instances.
+	 private static Logger logger = Logger.getLogger(Homology.class);
 
     /**
      * The alpha value to estimate the confidence.

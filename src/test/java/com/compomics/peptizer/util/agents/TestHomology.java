@@ -12,6 +12,7 @@ import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import junit.TestCaseLM;
 import junit.framework.Assert;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.Vector;
@@ -27,6 +28,8 @@ import java.util.Vector;
  * TestClass description: ------------------ This TestClass was developed to test the Deamidation Agent.
  */
 public class TestHomology extends TestCaseLM {
+	// Class specific log4j logger for TestHomology instances.
+	 private static Logger logger = Logger.getLogger(TestHomology.class);
     Homology iHomology;
 
     public TestHomology() {

@@ -1,6 +1,7 @@
 package com.compomics.peptizer.gui.component;
 
 import com.compomics.peptizer.MatConfig;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +20,8 @@ import java.awt.event.ActionListener;
  * This class was developed to display a simple JPanel with a synchronized textfield that sync the MatConfig instance
  */
 public class ConfidencePanel extends JPanel {
+	// Class specific log4j logger for ConfidencePanel instances.
+	 private static Logger logger = Logger.getLogger(ConfidencePanel.class);
 
     private JLabel lblMascot = null;
     private JTextField txtMascot = null;

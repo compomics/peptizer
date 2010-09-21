@@ -1,5 +1,6 @@
 package com.compomics.peptizer.util.datatools;
 
+import org.apache.log4j.Logger;
 import uk.ac.ebi.kraken.interfaces.uniprot.UniProtEntry;
 import uk.ac.ebi.kraken.uuw.services.remoting.EntryRetrievalService;
 import uk.ac.ebi.kraken.uuw.services.remoting.UniProtJAPI;
@@ -15,6 +16,8 @@ import java.util.HashMap;
  * Note that only UNIPROT accessions are allowed.
  */
 public class AccessionToSequenceMap extends HashMap {
+	// Class specific log4j logger for AccessionToSequenceMap instances.
+	 private static Logger logger = Logger.getLogger(AccessionToSequenceMap.class);
 
 
     // Singleton instance.
@@ -71,7 +74,7 @@ public class AccessionToSequenceMap extends HashMap {
         if (this.get(aAccession) == null) {
             UniProtEntry lEntry = getEntryFromRetrievalService(aAccession);
             if (lEntry == null) {
-                System.out.println("No Entry found for accession '" + aAccession + "'.");
+                logger.info("No Entry found for accession '" + aAccession + "'.");
             } else {
                 String lSequence = lEntry.getSequence().getValue();
                 this.put(aAccession, lSequence);

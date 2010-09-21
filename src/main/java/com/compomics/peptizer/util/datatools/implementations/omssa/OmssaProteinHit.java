@@ -3,6 +3,7 @@ package com.compomics.peptizer.util.datatools.implementations.omssa;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerProteinHit;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import de.proteinms.omxparser.util.MSPepHit;
+import org.apache.log4j.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,6 +13,8 @@ import de.proteinms.omxparser.util.MSPepHit;
  * To change this template use File | Settings | File Templates.
  */
 public class OmssaProteinHit implements PeptizerProteinHit {
+	// Class specific log4j logger for OmssaProteinHit instances.
+	 private static Logger logger = Logger.getLogger(OmssaProteinHit.class);
     private final SearchEngineEnum iSearchEngineEnum = SearchEngineEnum.OMSSA;
     private MSPepHit msPepHit;
 

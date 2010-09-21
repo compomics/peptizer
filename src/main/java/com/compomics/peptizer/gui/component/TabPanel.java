@@ -8,6 +8,7 @@ import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeak;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerSpectrum;
 import com.compomics.util.gui.spectrum.SpectrumPanel;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -29,6 +30,8 @@ import java.util.Vector;
  * Class description: ------------------ TabPanel is a Panel that is added on a Pane in TabbedView.
  */
 public class TabPanel extends JPanel {
+	// Class specific log4j logger for TabPanel instances.
+	 private static Logger logger = Logger.getLogger(TabPanel.class);
     /**
      * The index of the selectod radiobutton. Static variable so changes in one TabPanel are valid to all TabPanels.
      */

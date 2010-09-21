@@ -4,6 +4,7 @@ import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.model.tablerowimpl.AgentTableRowImpl;
 import com.compomics.peptizer.util.AgentFactory;
 import com.compomics.peptizer.util.fileio.MatLogger;
+import org.apache.log4j.Logger;
 
 import java.util.*;
 /**
@@ -19,6 +20,8 @@ import java.util.*;
  * This class was developed to manage a fixed number of AbstractTableRows.
  */
 public class TableRowManager {
+	// Class specific log4j logger for TableRowManager instances.
+	 private static Logger logger = Logger.getLogger(TableRowManager.class);
     /**
      * The General abstract TableRow implementations.
      */

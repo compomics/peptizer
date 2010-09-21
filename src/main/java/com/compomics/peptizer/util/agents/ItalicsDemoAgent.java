@@ -6,6 +6,7 @@ import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -18,6 +19,8 @@ import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
  * simply controls whether the Identification scores below 95% confidence.
  */
 public class ItalicsDemoAgent extends Agent {
+	// Class specific log4j logger for ItalicsDemoAgent instances.
+	 private static Logger logger = Logger.getLogger(ItalicsDemoAgent.class);
 
     /**
      * This empty private constructor can only be accessed from a static method getInstance.

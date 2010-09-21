@@ -8,11 +8,14 @@ import com.compomics.peptizer.util.datatools.interfaces.PeptizerModification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 /**
  * Created by IntelliJ IDEA. User: kenny Date: 28-sep-2006 Time: 14:49:25
  */
 public class NTermAcetylation extends Agent {
+	// Class specific log4j logger for NTermAcetylation instances.
+	 private static Logger logger = Logger.getLogger(NTermAcetylation.class);
 
     /**
      * This empty private constructor can only be accessed from a static method getInstance().

@@ -6,6 +6,7 @@ import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,6 +21,8 @@ import java.util.regex.Pattern;
  * Class description: ------------------ This class was developed to
  */
 public class SequenceRegexp extends Agent {
+	// Class specific log4j logger for SequenceRegexp instances.
+	 private static Logger logger = Logger.getLogger(SequenceRegexp.class);
 
     public static final String SEQUENCEREGEXP = "regular expression";
 

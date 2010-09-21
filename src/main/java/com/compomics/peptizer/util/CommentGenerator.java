@@ -1,6 +1,7 @@
 package com.compomics.peptizer.util;
 
 import com.compomics.peptizer.util.enumerator.AgentVote;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 
@@ -16,6 +17,8 @@ import java.util.List;
  * This class was developped to generate comments for peptide identifications.
  */
 public class CommentGenerator {
+	// Class specific log4j logger for CommentGenerator instances.
+	 private static Logger logger = Logger.getLogger(CommentGenerator.class);
 
     /**
      * empty constructor.

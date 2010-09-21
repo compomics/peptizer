@@ -11,6 +11,7 @@ import com.compomics.peptizer.util.datatools.interfaces.PeptizerSpectrum;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +27,8 @@ import java.util.Vector;
  * If low, this means the spectrum has not fragmented very well.
  */
 public class RelativeIntensityAgent extends Agent {
+	// Class specific log4j logger for RelativeIntensityAgent instances.
+	 private static Logger logger = Logger.getLogger(RelativeIntensityAgent.class);
 
     public static final String INTENSITY_THRESHOLD = "threshold";
 

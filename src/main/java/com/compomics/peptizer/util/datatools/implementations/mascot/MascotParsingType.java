@@ -3,6 +3,7 @@ package com.compomics.peptizer.util.datatools.implementations.mascot;
 import com.compomics.mascotdatfile.util.mascot.enumeration.MascotDatfileType;
 import com.compomics.peptizer.util.datatools.interfaces.ParsingType;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,6 +13,8 @@ import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
  * To change this template use File | Settings | File Templates.
  */
 public class MascotParsingType implements ParsingType {
+	// Class specific log4j logger for MascotParsingType instances.
+	 private static Logger logger = Logger.getLogger(MascotParsingType.class);
     private final SearchEngineEnum iSearchEngineEnum = SearchEngineEnum.Mascot;
     private MascotDatfileType iMascotDatfileType = MascotDatfileType.INDEX; // default is MEMORY
     private String iName;

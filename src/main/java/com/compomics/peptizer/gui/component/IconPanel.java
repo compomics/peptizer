@@ -5,6 +5,7 @@ import com.compomics.peptizer.gui.dialog.CommentValidationDialog;
 import com.compomics.peptizer.util.ValidationReport;
 import com.compomics.peptizer.util.fileio.ConfigurationWriter;
 import com.compomics.peptizer.util.fileio.FileManager;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,6 +26,8 @@ import java.net.URL;
  * IconPanel is an Iconbar JPanel with actionlisteners coupled to the Mediator.
  */
 public class IconPanel extends JPanel {
+	// Class specific log4j logger for IconPanel instances.
+	 private static Logger logger = Logger.getLogger(IconPanel.class);
     /**
      * The parent Mediator.
      */

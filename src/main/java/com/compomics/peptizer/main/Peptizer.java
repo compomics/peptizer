@@ -1,7 +1,6 @@
 package com.compomics.peptizer.main;
 
 import com.compomics.peptizer.MatConfig;
-import com.compomics.peptizer.gui.SelectedPeptideIdentifications;
 import com.compomics.peptizer.gui.model.AbstractTableRow;
 import com.compomics.peptizer.gui.model.TableRowManager;
 import com.compomics.peptizer.interfaces.Agent;
@@ -14,7 +13,10 @@ import com.compomics.peptizer.util.datatools.IdentificationFactory;
 import com.compomics.peptizer.util.enumerator.AgentAggregationResult;
 import com.compomics.peptizer.util.fileio.MatLogger;
 import com.compomics.peptizer.util.fileio.ValidationSaveToCSV;
+import com.compomics.util.enumeration.CompomicsTools;
 import com.compomics.util.general.CommandLineParser;
+import com.compomics.util.io.PropertiesManager;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,6 +34,8 @@ import java.util.List;
  * Class description: ------------------ This class was developed to start peptizer by command line.
  */
 public class Peptizer {
+	// Class specific log4j logger for Peptizer instances.
+	 private static Logger logger = Logger.getLogger(Peptizer.class);
 
 
     /**
@@ -46,6 +50,10 @@ public class Peptizer {
      * @param args String[] with the start-up arguments.
      */
     public static void main(String[] args) {
+        PropertiesManager.getInstance().updateLog4jConfiguration(logger, CompomicsTools.PEPTIZER);
+        logger.debug("Starting peptizer-cli");
+        logger.debug("OS : " + System.getProperties().getProperty("os.name"));
+        
         // First see if we should output anything useful.
         if (args == null || args.length == 0) {
             flagError("Usage:\n\tPeptizer " +
@@ -137,19 +145,16 @@ public class Peptizer {
                 IdentificationFactory.getInstance().load(input);
                 PeptideIdentificationIterator iter = IdentificationFactory.getInstance().getIterator();
 
-                // Create a holder for the selected peptideidentifications.
-                SelectedPeptideIdentifications results = new SelectedPeptideIdentifications();
-
-                //System.out.println("*****************");
-                System.out.println("Peptizer to CSV");
-                System.out.println("*****************");
-                System.out.println("\tAll data gathered by all active agents and preset tablerows on the input will be written to the output in the csv file format.\n");
-                System.out.println("\tSource:" + "\t\t" + input);
-                System.out.println("\tTarget:" + "\t\t\t\t" + output);
-                System.out.println("\n\tSettings");
-                System.out.println("\t\tAgent:" + "\t\t\t\t" + agent);
-                System.out.println("\t\tAgentAggregator:" + "\t" + agentaggregator);
-                System.out.println("\t\tGeneral:" + "\t\t\t" + general + "\n");
+                //logger.infoln("*****************");
+                logger.info("Peptizer to CSV");
+                logger.info("*****************");
+                logger.info("\tAll data gathered by all active agents and preset tablerows on the input will be written to the output in the csv file format.\n");
+                logger.info("\tSource:" + "\t\t" + input);
+                logger.info("\tTarget:" + "\t\t\t\t" + output);
+                logger.info("\n\tSettings");
+                logger.info("\t\tAgent:" + "\t\t\t\t" + agent);
+                logger.info("\t\tAgentAggregator:" + "\t" + agentaggregator);
+                logger.info("\t\tGeneral:" + "\t\t\t" + general + "\n");
 
                 AgentAggregator lAgentAggregator = AgentAggregatorFactory.getInstance().getAgentAggregators()[0];
                 lAgentAggregator.setAgentsCollection(AgentFactory.getInstance().getActiveAgents());
@@ -164,7 +169,7 @@ public class Peptizer {
 
 
                 long start = System.currentTimeMillis();
-                System.out.println("1) Peptizer started applying profile \"" + agent.getName() + "\" to \"" + input.getName() + "\" at " + new Date(System.currentTimeMillis()) + ".");
+                logger.info("1) Peptizer started applying profile \"" + agent.getName() + "\" to \"" + input.getName() + "\" at " + new Date(System.currentTimeMillis()) + ".");
 
                 ValidationSaveToCSV saver = null;
 
@@ -172,7 +177,7 @@ public class Peptizer {
                 while (iter.hasNext()) {
                     lIterationCounter++;
 
-                    PeptideIdentification lPeptideIdentification = (PeptideIdentification) iter.next();
+                    PeptideIdentification lPeptideIdentification = iter.next();
                     // If the PeptideIdentification matches the AgentAggregator.
                     AgentAggregationResult lAggregationResult = lAgentAggregator.match(lPeptideIdentification);
 
@@ -208,29 +213,27 @@ public class Peptizer {
                         // Save the identification!
                         saver.savePeptideIdentification(lPeptideIdentification);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(), e);
                     }
 
                     if (lIterationCounter % 100 == 0) {
-                        System.out.print(".");
+                        logger.info(".");
                     }
                     if (lIterationCounter % 5000 == 0) {
-                        System.out.print("\n");
+                        logger.info(".");
                     }
-
-                    //updateProgressBar();
                 }
 
 
                 long end = System.currentTimeMillis();
-                System.out.println("");
-                System.out.println("2) Finished processing " + lIterationCounter + " MS/MS spectra after " + ((end - start) / 1000) + " seconds.");
-                System.out.println("");
-                System.out.println(lNonMatchCounter + " MS/MS spectra were not matched by the profile.");
-                System.out.println(lMatchCounter + " MS/MS spectra were matched by the profile.");
-                System.out.println(lNonConfidentCounter + " MS/MS spectra had no confident identification.");
-                System.out.println(lNoIdentificationCounter + " MS/MS spectra had no identification.");
-                System.out.println("\nExit.");
+                logger.info("");
+                logger.info("2) Finished processing " + lIterationCounter + " MS/MS spectra after " + ((end - start) / 1000) + " seconds.");
+                logger.info("");
+                logger.info(lNonMatchCounter + " MS/MS spectra were not matched by the profile.");
+                logger.info(lMatchCounter + " MS/MS spectra were matched by the profile.");
+                logger.info(lNonConfidentCounter + " MS/MS spectra had no confident identification.");
+                logger.info(lNoIdentificationCounter + " MS/MS spectra had no identification.");
+                logger.info("\nExit.");
 
             }
         }

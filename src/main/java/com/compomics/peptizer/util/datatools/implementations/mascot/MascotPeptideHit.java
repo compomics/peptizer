@@ -12,6 +12,7 @@ import com.compomics.peptizer.util.datatools.AnnotationType;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerModification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ import java.util.Vector;
  * To change this template use File | Settings | File Templates.
  */
 public class MascotPeptideHit extends PeptizerPeptideHit implements Serializable {
+	// Class specific log4j logger for MascotPeptideHit instances.
+	 private static Logger logger = Logger.getLogger(MascotPeptideHit.class);
 
     private PeptideHit iPeptideHit;
     private ArrayList<PeptizerModification> modifications;

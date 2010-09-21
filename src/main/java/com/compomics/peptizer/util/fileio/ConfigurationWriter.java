@@ -5,6 +5,7 @@ import com.compomics.peptizer.interfaces.Agent;
 import com.compomics.peptizer.interfaces.AgentAggregator;
 import com.compomics.peptizer.util.AgentAggregatorFactory;
 import com.compomics.peptizer.util.AgentFactory;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.util.Iterator;
@@ -21,6 +22,8 @@ import java.util.Set;
  * accessed to save the different configuration objects being Agents, Table or General.
  */
 public class ConfigurationWriter {
+	// Class specific log4j logger for ConfigurationWriter instances.
+	 private static Logger logger = Logger.getLogger(ConfigurationWriter.class);
 
     /**
      * Empty constructor.
@@ -54,9 +57,12 @@ public class ConfigurationWriter {
             writeGeneralConfiguration(bw);
 
             bw.write("--SEPARATOR--\n");
+
+            MatLogger.logNormalEvent("Saved Task configuration to '" + aFile.getName() + "'.");
+
         } catch (IOException e) {
             MatLogger.logExceptionalEvent("IOEException while saving AgentConfiguration to " + aFile.getName());
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -73,15 +79,18 @@ public class ConfigurationWriter {
             bw.write(getXMLVersionHeader());
             writeAgentConfiguration(bw);
 
+            MatLogger.logNormalEvent("Saved Agent configuration to '" + aFile.getName() + "'.");
+
+
         } catch (IOException e) {
             MatLogger.logExceptionalEvent("IOEException while saving AgentConfiguration to " + aFile.getName());
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } finally {
             if (bw != null) {
                 try {
                     bw.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(), e);
                 }
             }
         }
@@ -102,13 +111,13 @@ public class ConfigurationWriter {
 
         } catch (IOException e) {
             MatLogger.logExceptionalEvent("IOEException while saving AgentAggregatorConfiguration to " + aFile.getName());
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } finally {
             if (bw != null) {
                 try {
                     bw.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(), e);
                 }
             }
         }
@@ -133,7 +142,6 @@ public class ConfigurationWriter {
         aBufferedWriter.write(getXMLStop(lConfigurationName));
         aBufferedWriter.newLine();
         aBufferedWriter.flush();
-        MatLogger.logNormalEvent("Saved Agent configuration to '" + aBufferedWriter.toString() + "'.");
     }
 
     /**
@@ -155,7 +163,6 @@ public class ConfigurationWriter {
         aBufferedWriter.write(getXMLStop(lConfigurationName));
         aBufferedWriter.newLine();
         aBufferedWriter.flush();
-        MatLogger.logNormalEvent("Saved AgentAggregator configuration to '" + aBufferedWriter.toString() + "'.");
     }
 
     /**
@@ -191,7 +198,6 @@ public class ConfigurationWriter {
         aBufferedWriter.write(getXMLStop(lConfigurationName));
         aBufferedWriter.flush();
         aBufferedWriter.newLine();
-        MatLogger.logNormalEvent("Saved General configuration to '" + aBufferedWriter.toString() + "'.");
     }
 
 

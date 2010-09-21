@@ -2,18 +2,17 @@ package com.compomics.peptizer.gui.dialog;
 
 import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.interfaces.Updateable;
-import com.compomics.peptizer.interfaces.Agent;
 import com.compomics.peptizer.util.AgentFactory;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Properties;
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,6 +22,8 @@ import java.util.*;
  * To change this template use File | Settings | File Templates.
  */
 public class AddAgentDialog extends JDialog {
+	// Class specific log4j logger for AddAgentDialog instances.
+	 private static Logger logger = Logger.getLogger(AddAgentDialog.class);
 
     private JPanel jpanMain;
 
@@ -61,7 +62,7 @@ public class AddAgentDialog extends JDialog {
 
 
         // Build the list from unused AgentID's.
-        iAgentList = getUnusedAgents();
+        iAgentList = AgentFactory.getInstance().getUnusedAgents();
         listAllAgents = new JList(iAgentList.keySet().toArray());
 
         listAllAgents.setCellRenderer(new ListCellRenderer() {
@@ -207,72 +208,5 @@ public class AddAgentDialog extends JDialog {
         cancelPressed();
     }
 
-    private HashMap getUnusedAgents() {
-        HashMap result = new HashMap();
-
-        // Fetch all the agents in the agent_complete.xml file through the MatConfig instance.
-        HashMap lAllAgents = null;
-
-        try {
-            InputStreamReader reader = new InputStreamReader(ClassLoader.getSystemResourceAsStream("conf/agent_complete.xml"));
-            MatConfig config = MatConfig.getInstance();
-            XmlPullParser xpp = config.getPullparserfactory().newPullParser();
-            xpp.setInput(reader);
-
-            int eventType = xpp.getEventType();
-            boolean validated = false;
-            while (eventType != XmlPullParser.END_DOCUMENT) {
-                switch (eventType) {
-                    case XmlPullParser.START_DOCUMENT:
-                        eventType = xpp.next();
-                        break;
-
-                    case XmlPullParser.START_TAG:
-                        String start = xpp.getName();
-                        if (start != null) {
-                            if (start.equals("config")) {
-                                validated = true;
-                                eventType = xpp.next();
-                            } else if (start.equals("agents")) {
-                                lAllAgents = config.processAgents(xpp);
-                            }
-                        } else {
-                            xpp.next();
-                        }
-                        break;
-
-                    default:
-                        eventType = xpp.next();
-                        break;
-                }
-            }
-
-
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-
-        // Get all the agents currently active in the AgentFactory.
-        Object[] lActiveAgentArray = AgentFactory.getInstance().getActiveAgents().toArray();
-        HashSet lActiveAgentSet = new HashSet();
-
-        for (int i = 0; i < lActiveAgentArray.length; i++) {
-            Agent lActiveAgent = (Agent) lActiveAgentArray[i];
-            lActiveAgentSet.add(lActiveAgent.getUniqueID());
-        }
-
-        Iterator iter = lAllAgents.keySet().iterator();
-        while (iter.hasNext()) {
-            String lAgentID = (String) iter.next();
-            // Only retain those from agent_complete.xml that are not in the table yet.
-            if (!lActiveAgentSet.contains(lAgentID)) {
-                result.put(lAgentID, lAllAgents.get(lAgentID));
-            }
-        }
-
-        return result;
-    }
 
 }

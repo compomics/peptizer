@@ -1,8 +1,8 @@
 package com.compomics.peptizer.gui.dialog;
 
-
 import com.compomics.peptizer.gui.component.BooleanPanel;
 import com.compomics.peptizer.interfaces.Agent;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,6 +23,8 @@ import java.util.Properties;
  * This class was developed to
  */
 public class AgentFilterDialog extends JDialog {
+	// Class specific log4j logger for AgentFilterDialog instances.
+	 private static Logger logger = Logger.getLogger(AgentFilterDialog.class);
 
     private JButton btnOK = null;
     private JButton btnCancel = null;

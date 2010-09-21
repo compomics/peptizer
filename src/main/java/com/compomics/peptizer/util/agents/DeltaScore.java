@@ -7,6 +7,7 @@ import com.compomics.peptizer.util.AgentReport;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
 /**
@@ -21,6 +22,8 @@ import java.math.BigDecimal;
  * and threshold.
  */
 public class DeltaScore extends Agent {
+	// Class specific log4j logger for DeltaScore instances.
+	 private static Logger logger = Logger.getLogger(DeltaScore.class);
 
 
     /**

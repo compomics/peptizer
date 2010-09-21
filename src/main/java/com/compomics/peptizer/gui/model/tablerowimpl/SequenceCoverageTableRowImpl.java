@@ -4,6 +4,7 @@ import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.model.AbstractTableRow;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
+import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
 import java.util.Properties;
@@ -19,6 +20,8 @@ import java.util.Properties;
  * with sequence coverage information.
  */
 public class SequenceCoverageTableRowImpl extends AbstractTableRow {
+	// Class specific log4j logger for SequenceCoverageTableRowImpl instances.
+	 private static Logger logger = Logger.getLogger(SequenceCoverageTableRowImpl.class);
 
 
     /**

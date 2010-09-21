@@ -14,6 +14,7 @@ import com.compomics.peptizer.util.datatools.implementations.mascot.MascotSpectr
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import com.compomics.peptizer.util.fileio.ConnectionManager;
 import com.compomics.peptizer.util.fileio.MatLogger;
+import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.sql.*;
@@ -27,6 +28,8 @@ import java.util.Vector;
  * classes such as the toString method.
  */
 public abstract class Ms_Lims_Iterator implements PeptideIdentificationIterator {
+	// Class specific log4j logger for Ms_Lims_Iterator instances.
+	 private static Logger logger = Logger.getLogger(Ms_Lims_Iterator.class);
 
     public final static String MK_IDENTIFICATION_ID = "IDENTIFICATIONID";
 
@@ -188,7 +191,7 @@ public abstract class Ms_Lims_Iterator implements PeptideIdentificationIterator 
                 ps.close();
 
                 // Set the current DatfileIterator to new MascotDatfile.
-                System.out.println("LOG: MOVED TO " + (iIterationUnitIndex + 1) + " " + iIterationUnits.get(iIterationUnitIndex) + "\n");
+                logger.info("LOG: MOVED TO " + (iIterationUnitIndex + 1) + " " + iIterationUnits.get(iIterationUnitIndex) + "\n");
 
                 // Raise the index!
                 iIterationUnitIndex = iIterationUnitIndex + 1;
@@ -196,10 +199,10 @@ public abstract class Ms_Lims_Iterator implements PeptideIdentificationIterator 
                 result = true;
 
             } catch (SQLException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
 
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         } else {
             // The move to next file method did not succeed, no more files left!
@@ -292,7 +295,7 @@ public abstract class Ms_Lims_Iterator implements PeptideIdentificationIterator 
             return false;
         } else {
             // All was fine, set connection and continue.
-            System.out.println("Connection to '" + lUrl + "' established!");
+            logger.info("Connection to '" + lUrl + "' established!");
             ConnectionManager.getInstance().setConnection(lConnection);
             return true;
         }

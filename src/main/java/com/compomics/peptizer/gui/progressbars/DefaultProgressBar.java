@@ -1,5 +1,7 @@
 package com.compomics.peptizer.gui.progressbars;
 
+import org.apache.log4j.Logger;
+
 import javax.swing.*;
 import java.awt.*;
 /**
@@ -13,6 +15,8 @@ import java.awt.*;
  * Class description: ------------------ This class implements JDialog and offers a simple message and progressbar.
  */
 public class DefaultProgressBar extends JDialog {
+	// Class specific log4j logger for DefaultProgressBar instances.
+	 private static Logger logger = Logger.getLogger(DefaultProgressBar.class);
     /**
      * The message to display on the progress bar.
      */

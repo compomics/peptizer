@@ -4,6 +4,7 @@ import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.model.AbstractTableRow;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerProteinHit;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Properties;
@@ -20,6 +21,8 @@ import java.util.Properties;
  * This class was developed as a TableRow implementation to populate the table.
  */
 public class ProteinTableRowImpl extends AbstractTableRow {
+	// Class specific log4j logger for ProteinTableRowImpl instances.
+	 private static Logger logger = Logger.getLogger(ProteinTableRowImpl.class);
 
 
     /**

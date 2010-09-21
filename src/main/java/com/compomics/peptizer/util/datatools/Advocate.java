@@ -1,6 +1,7 @@
 package com.compomics.peptizer.util.datatools;
 
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,6 +16,8 @@ import java.util.Iterator;
  * This class will list the search engines supporting a peptide hit.
  */
 public class Advocate implements Serializable {
+	// Class specific log4j logger for Advocate instances.
+	 private static Logger logger = Logger.getLogger(Advocate.class);
 
     private HashMap<SearchEngineEnum, Integer> advocates = new HashMap();
 

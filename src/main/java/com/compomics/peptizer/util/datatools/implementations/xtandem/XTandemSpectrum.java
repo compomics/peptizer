@@ -5,6 +5,7 @@ import com.compomics.peptizer.util.datatools.interfaces.PeptizerSpectrum;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import de.proteinms.xtandemparser.xtandem.Spectrum;
 import de.proteinms.xtandemparser.xtandem.SupportData;
+import org.apache.log4j.Logger;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ import java.util.Collections;
  * To change this template use File | Settings | File Templates.
  */
 public class XTandemSpectrum implements PeptizerSpectrum, Serializable {
+	// Class specific log4j logger for XTandemSpectrum instances.
+	 private static Logger logger = Logger.getLogger(XTandemSpectrum.class);
 
     private final SearchEngineEnum iSearchEngineEnum = SearchEngineEnum.XTandem;
     private Spectrum iSpectrum;

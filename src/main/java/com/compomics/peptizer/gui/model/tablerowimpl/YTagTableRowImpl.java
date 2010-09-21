@@ -4,6 +4,7 @@ import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.model.AbstractTableRow;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
+import org.apache.log4j.Logger;
 
 import java.util.Properties;
 /**
@@ -17,6 +18,8 @@ import java.util.Properties;
  * Class description: ------------------ This class was developed to
  */
 public class YTagTableRowImpl extends AbstractTableRow {
+	// Class specific log4j logger for YTagTableRowImpl instances.
+	 private static Logger logger = Logger.getLogger(YTagTableRowImpl.class);
 
     /**
      * {@inheritDoc}
@@ -40,7 +43,7 @@ public class YTagTableRowImpl extends AbstractTableRow {
             result = Integer.toString(ph.getYTag(aPeptideIdentification));
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return result;
 

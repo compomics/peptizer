@@ -10,6 +10,7 @@ import com.compomics.peptizer.util.fileio.MatLogger;
 import com.compomics.peptizer.util.iterators.Ms_Lims_ProjectIterator;
 import com.compomics.util.gui.dialogs.ConnectionDialog;
 import com.compomics.util.interfaces.Connectable;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,6 +24,8 @@ import java.sql.SQLException;
  * File Templates.
  */
 public class IteratorPanel_Ms_Lims_Project extends JPanel implements IteratorPanel, Connectable {
+	// Class specific log4j logger for IteratorPanel_Ms_Lims_Project instances.
+	 private static Logger logger = Logger.getLogger(IteratorPanel_Ms_Lims_Project.class);
 
     /**
      * Singleton instance of the JPanel.
@@ -127,7 +130,7 @@ public class IteratorPanel_Ms_Lims_Project extends JPanel implements IteratorPan
             }
         } catch (SQLException e) {
             MatLogger.logExceptionalGUIMessage("SQLException thrown while creating the Iterator.", e.toString());
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
         }
 
         return lPeptideIdentificationIterator;
@@ -172,7 +175,7 @@ public class IteratorPanel_Ms_Lims_Project extends JPanel implements IteratorPan
                 lblConnection.setForeground(new Color(0, 200, 0));
 
             } catch (SQLException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
             }
         } else {
             lblConnection.setText("No ms_lims connection.");
@@ -250,7 +253,7 @@ public class IteratorPanel_Ms_Lims_Project extends JPanel implements IteratorPan
                     ListCellRenderer renderer = new ProjectListRenderer();
                     cmb1.setRenderer(renderer);
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    logger.error(e.getMessage(), e);
                 }
 
                 this.removeAll();

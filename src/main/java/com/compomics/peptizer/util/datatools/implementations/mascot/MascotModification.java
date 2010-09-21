@@ -3,6 +3,7 @@ package com.compomics.peptizer.util.datatools.implementations.mascot;
 import com.compomics.mascotdatfile.util.interfaces.Modification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerModification;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.io.Serializable;
 
@@ -14,6 +15,8 @@ import java.io.Serializable;
  * To change this template use File | Settings | File Templates.
  */
 public class MascotModification implements PeptizerModification, Serializable {
+	// Class specific log4j logger for MascotModification instances.
+	 private static Logger logger = Logger.getLogger(MascotModification.class);
 
     private Modification modification;
     private int position;
@@ -28,7 +31,7 @@ public class MascotModification implements PeptizerModification, Serializable {
     }
 
     public String getName() {
-        return modification.getType().replaceAll("-", "");
+        return modification.getShortType();
     }
 
     public String getPrideAccession() {

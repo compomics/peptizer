@@ -10,6 +10,7 @@ import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import de.proteinms.xtandemparser.xtandem.Peptide;
 import de.proteinms.xtandemparser.xtandem.XTandemFile;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.io.Serializable;
@@ -25,6 +26,8 @@ import java.util.Vector;
  * To change this template use File | Settings | File Templates.
  */
 public class XTandemPeptideHit extends PeptizerPeptideHit implements Serializable {
+	// Class specific log4j logger for XTandemPeptideHit instances.
+	 private static Logger logger = Logger.getLogger(XTandemPeptideHit.class);
     /**
      * The original Peptide(hit)
      */

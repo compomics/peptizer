@@ -6,6 +6,7 @@ import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import com.compomics.peptizer.util.fileio.MatLogger;
+import org.apache.log4j.Logger;
 
 import java.util.Properties;
 
@@ -21,6 +22,8 @@ import java.util.Properties;
  * identification.
  */
 public abstract class Agent implements Comparable {
+	// Class specific log4j logger for Agent instances.
+	 private static Logger logger = Logger.getLogger(Agent.class);
 
     /**
      * Fixed reply

@@ -4,6 +4,7 @@ import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.interfaces.IteratorPanel;
 import com.compomics.peptizer.interfaces.PeptideIdentificationIterator;
 import com.compomics.peptizer.util.datatools.FileToolsFactory;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -24,6 +25,8 @@ import java.util.List;
  * Class description: ------------------ This class was developed for the CreateAssessment Dialog.
  */
 public class IteratorPanel_File extends JPanel implements IteratorPanel {
+	// Class specific log4j logger for IteratorPanel_File instances.
+	 private static Logger logger = Logger.getLogger(IteratorPanel_File.class);
 
     private static IteratorPanel_File iSingleton = null;
     private PeptideIdentificationIterator iter = null;
@@ -170,7 +173,7 @@ public class IteratorPanel_File extends JPanel implements IteratorPanel {
         try {
             txtFile.setText(iFile.getCanonicalPath());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 

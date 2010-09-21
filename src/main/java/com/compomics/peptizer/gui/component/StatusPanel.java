@@ -1,5 +1,7 @@
 package com.compomics.peptizer.gui.component;
 
+import org.apache.log4j.Logger;
+
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
@@ -30,6 +32,8 @@ import java.util.Date;
  * @author Lennart Martens
  */
 public class StatusPanel extends JPanel {
+	// Class specific log4j logger for StatusPanel instances.
+	 private static Logger logger = Logger.getLogger(StatusPanel.class);
 
     /**
      * The JLabel holding the state information.

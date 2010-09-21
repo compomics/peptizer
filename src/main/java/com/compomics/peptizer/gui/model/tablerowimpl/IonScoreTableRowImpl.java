@@ -4,6 +4,7 @@ import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.model.AbstractTableRow;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.util.Properties;
 /**
@@ -19,6 +20,8 @@ import java.util.Properties;
  * This class was developed as a TableRow implementation to populate the table with the ionscore
  */
 public class IonScoreTableRowImpl extends AbstractTableRow {
+	// Class specific log4j logger for IonScoreTableRowImpl instances.
+	 private static Logger logger = Logger.getLogger(IonScoreTableRowImpl.class);
 
     /**
      * {@inheritDoc}

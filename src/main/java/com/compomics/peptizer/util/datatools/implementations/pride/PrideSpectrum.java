@@ -3,6 +3,7 @@ package com.compomics.peptizer.util.datatools.implementations.pride;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeak;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerSpectrum;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 import uk.ac.ebi.pride.jaxb.model.CvParam;
 import uk.ac.ebi.pride.jaxb.model.Spectrum;
 
@@ -16,6 +17,8 @@ import java.io.Serializable;
  * To change this template use File | Settings | File Templates.
  */
 public class PrideSpectrum implements PeptizerSpectrum, Serializable {
+	// Class specific log4j logger for PrideSpectrum instances.
+	 private static Logger logger = Logger.getLogger(PrideSpectrum.class);
 
     private Spectrum originalSpectrum;
 

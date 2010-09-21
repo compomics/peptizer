@@ -8,6 +8,7 @@ import com.compomics.peptizer.util.fileio.MatLogger;
 import com.compomics.peptizer.util.iterators.Ms_Lims_IdentificationIDIterator;
 import com.compomics.util.gui.dialogs.ConnectionDialog;
 import com.compomics.util.interfaces.Connectable;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -28,6 +29,8 @@ import java.util.ArrayList;
  * File Templates.
  */
 public class IteratorPanel_Ms_Lims_IdentificationIDList extends JPanel implements IteratorPanel, Connectable {
+	// Class specific log4j logger for IteratorPanel_Ms_Lims_IdentificationIDList instances.
+	 private static Logger logger = Logger.getLogger(IteratorPanel_Ms_Lims_IdentificationIDList.class);
 
     /**
      * Singleton instance of the JPanel.
@@ -126,7 +129,7 @@ public class IteratorPanel_Ms_Lims_IdentificationIDList extends JPanel implement
                     updateScrollPaneBorder();
 
                 } catch (IOException e1) {
-                    e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    logger.error(e1.getMessage(), e1);  //To change body of catch statement use File | Settings | File Templates.
                 } catch (NumberFormatException nfe) {
                     JOptionPane.showMessageDialog(txaIdentificationIDs, "'" + line + "' cannot be an identificationid.", "Incorrect input!", JOptionPane.ERROR_MESSAGE);
                 }
@@ -229,7 +232,7 @@ public class IteratorPanel_Ms_Lims_IdentificationIDList extends JPanel implement
             }
         } catch (SQLException e) {
             MatLogger.logExceptionalGUIMessage("SQLException thrown while creating the Iterator.", e.toString());
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
         }
 
         return lPeptideIdentificationIterator;
@@ -245,7 +248,7 @@ public class IteratorPanel_Ms_Lims_IdentificationIDList extends JPanel implement
                 lblConnection.setForeground(new Color(0, 200, 0));
 
             } catch (SQLException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
             }
         } else {
             lblConnection.setText("No ms_lims connection.");

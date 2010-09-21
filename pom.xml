@@ -13,7 +13,7 @@
     <properties>
         <version.number>1.6</version.number>
         <logging.level.default>DEBUG</logging.level.default>
-        <logging.file.path.name>peptizerlog4j.log</logging.file.path.name>
+        <logging.file.path.name>peptizer-log4j.log</logging.file.path.name>
         <logging.file.max.size>5000KB</logging.file.max.size>
         <logging.pattern>[%d{dd-MMM-yyyy HH:mm:ss} - %p] "%m" (%C:%L)%n</logging.pattern>
     </properties>
@@ -115,18 +115,9 @@
                         </configuration>
                     </execution>
 
-                </executions>
-            </plugin>
-
-
-            <!-- Resources plugin -->
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.3</version>
-                <executions>
-                    <!-- Copy main resources to test resources before testing. Peptizer config files! -->
+                    <!-- Copy main resources to target folder before package! -->
                     <execution>
-                        <id>copy conf resources</id>
+                        <id>copy-package-resources</id>
                         <phase>package</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -145,16 +136,9 @@
                         </configuration>
                     </execution>
 
-                </executions>
-            </plugin>
-
-            <!-- Resources plugin - classes -->
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.3</version>
-                <executions>
+                    <!-- Copies the properties files during compilation.-->
                     <execution>
-                        <id>copy-resources</id>
+                        <id>copy-compile-properties-resources</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -172,8 +156,34 @@
                             </resources>
                         </configuration>
                     </execution>
+
+                    <!-- Copies the log4j properties during compilation. -->
                     <execution>
-                        <id>copy-resources-conf</id>
+                        <id>copy-compile-log4j-properties-resources</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources/conf</directory>
+                                    <includes>
+                                        <include>log4j.properties</include>
+                                    </includes>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+
+                    </execution>
+
+
+                    <!-- Copies the configuration files during compilation.-->
+                    <execution>
+                        <id>copy-compile-configuration-resources</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -184,14 +194,20 @@
                                 <resource>
                                     <directory>src/main/resources/conf</directory>
                                     <includes>
-                                        <include>*.xml</include>
+                                        <include>agent.xml</include>
+                                        <include>agent_complete.xml</include>
+                                        <include>aggregator.xml</include>
+                                        <include>general.xml</include>
+                                        <include>table.xml</include>
                                     </includes>
                                 </resource>
                             </resources>
                         </configuration>
                     </execution>
+
+                    <!-- Copies the image files during compilation.-->
                     <execution>
-                        <id>copy-resources-image</id>
+                        <id>copy-compile-image-resources</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -210,6 +226,7 @@
                     </execution>
                 </executions>
             </plugin>
+
 
             <!-- Create javadoc on build -->
             <plugin>
@@ -245,7 +262,6 @@
         </plugins>
     </build>
 
-    <!-- Repositores -->
     <!-- Repositores -->
     <repositories>
         <!-- UGent Genesis Maven 1 repository -->
@@ -291,7 +307,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>3.8.1</version>
-            <scope>build</scope>
+            <scope>test</scope>
         </dependency>
 
         <!-- This project depends on the JAR file "lmjunit-1.0.2.jar" (TestCaseLM)
@@ -319,7 +335,7 @@
         <dependency>
             <groupId>com.compomics</groupId>
             <artifactId>mascotdatfile</artifactId>
-            <version>3.2</version>
+            <version>3.2.1</version>
             <type>jar</type>
         </dependency>
 

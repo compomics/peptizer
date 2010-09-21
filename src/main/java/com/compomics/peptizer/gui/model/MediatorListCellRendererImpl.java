@@ -2,6 +2,7 @@ package com.compomics.peptizer.gui.model;
 
 import com.compomics.peptizer.gui.Mediator;
 import com.compomics.peptizer.gui.PeptizerGUI;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +19,8 @@ import java.awt.*;
  * This class was developed for Rendering Mediators in a List. (ex. List distinct Mediators in a ComboBox)
  */
 public class MediatorListCellRendererImpl extends DefaultListCellRenderer {
+	// Class specific log4j logger for MediatorListCellRendererImpl instances.
+	 private static Logger logger = Logger.getLogger(MediatorListCellRendererImpl.class);
 
     private JLabel lbl = null;
     private PeptizerGUI iPeptizerGUI = null;

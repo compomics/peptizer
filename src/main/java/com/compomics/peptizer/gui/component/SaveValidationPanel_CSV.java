@@ -11,6 +11,7 @@ import com.compomics.peptizer.util.enumerator.TempFileEnum;
 import com.compomics.peptizer.util.fileio.FileManager;
 import com.compomics.peptizer.util.fileio.TempManager;
 import com.compomics.peptizer.util.fileio.ValidationSaveToCSV;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -39,6 +40,8 @@ import java.util.HashMap;
  * This class was developed to
  */
 public class SaveValidationPanel_CSV extends JPanel implements SaveValidationPanel {
+	// Class specific log4j logger for SaveValidationPanel_CSV instances.
+	 private static Logger logger = Logger.getLogger(SaveValidationPanel_CSV.class);
 
     /**
      * The Singleton instance of this Panel.
@@ -236,7 +239,7 @@ public class SaveValidationPanel_CSV extends JPanel implements SaveValidationPan
             try {
                 txtCSV.setText(iCSV.getCanonicalPath());
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
     }
@@ -282,7 +285,7 @@ public class SaveValidationPanel_CSV extends JPanel implements SaveValidationPan
         try {
             txtCSV.setText(iCSV.getCanonicalPath());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -440,7 +443,7 @@ public class SaveValidationPanel_CSV extends JPanel implements SaveValidationPan
             try {
                 c = getValueAt(0, columnIndex).getClass();
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
             return c;
         }

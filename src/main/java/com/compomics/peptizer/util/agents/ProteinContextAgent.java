@@ -7,6 +7,7 @@ import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.InputStreamReader;
@@ -25,6 +26,8 @@ import java.util.HashMap;
  * The Agent retrieves the Protein Sequence from Uniprot and then reports whether its an Nterminal, Cterminal or internal peptide.
  */
 public class ProteinContextAgent extends Agent {
+	// Class specific log4j logger for ProteinContextAgent instances.
+	 private static Logger logger = Logger.getLogger(ProteinContextAgent.class);
 
     private HashMap<String, String> iProteins = new HashMap<String, String>();
 
@@ -64,7 +67,7 @@ public class ProteinContextAgent extends Agent {
                     lProteinSequence = retriever.getSequence();
                     iProteins.put(lAccession, lProteinSequence);
                 } catch (Exception e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
                 }
 
             }

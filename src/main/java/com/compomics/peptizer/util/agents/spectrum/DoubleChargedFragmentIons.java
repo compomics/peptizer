@@ -12,6 +12,7 @@ import com.compomics.peptizer.util.MetaKey;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,6 +26,8 @@ import java.util.Iterator;
  * To change this template use File | Settings | File Templates.
  */
 public class DoubleChargedFragmentIons  extends Agent {
+	// Class specific log4j logger for DoubleChargedFragmentIons instances.
+	 private static Logger logger = Logger.getLogger(DoubleChargedFragmentIons.class);
 
     public static final String INTENSITY = "intensity";
 
@@ -155,6 +158,6 @@ public class DoubleChargedFragmentIons  extends Agent {
      * @return String description of the DummyAgent.
      */
     public String getDescription() {
-        return "<html>Inspects for double charged fragmentionds. <b>Votes 'Positive_for_selection' if the maximum relative intensity of a double charged fragement ions is less then( " + this.iProperties.get(INTENSITY) + ")</b>. Votes 'Neutral_for_selection' if else.</html>";
+        return "<html>Inspects for double charged fragmentions. <b>Votes 'Positive_for_selection' if the maximum relative intensity of a double charged fragement ions is less then( " + this.iProperties.get(INTENSITY) + ")</b>. Votes 'Neutral_for_selection' if else.</html>";
     }
 }

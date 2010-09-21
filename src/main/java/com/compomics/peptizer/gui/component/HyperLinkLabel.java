@@ -1,12 +1,6 @@
 package com.compomics.peptizer.gui.component;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Kenny
- * Date: 28-mei-2008
- * Time: 11:12:09
- * To change this template use File | Settings | File Templates.
- */
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +9,8 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class HyperLinkLabel extends JLabel {
+	// Class specific log4j logger for HyperLinkLabel instances.
+	 private static Logger logger = Logger.getLogger(HyperLinkLabel.class);
     String url;
     Color rc;
 
@@ -76,7 +72,7 @@ public class HyperLinkLabel extends JLabel {
                     // check for an exit value. If the exit command is 0,
                     // it worked, otherwise we need to start the browser.
                     // cmd = 'netscape -remote openURL
-                    cmd = UNIX_PATH + " " + UNIX_FLAG + "(" + url + ")";
+                    cmd = UNIX_PATH + " " + url;
                     Process p = Runtime.getRuntime().exec(cmd);
                     try {
                         // wait for exit code -- if it's 0, command worked,
@@ -136,10 +132,9 @@ public class HyperLinkLabel extends JLabel {
                 = "url.dll,FileProtocolHandler";
 
         // The default browser under unix.
-        private static final String UNIX_PATH = "netscape";
+        private static final String UNIX_PATH = "open";
 
-        // The flag to display a url.
-        private static final String UNIX_FLAG = "-remote openURL";
+
     }
 }// end of class
 

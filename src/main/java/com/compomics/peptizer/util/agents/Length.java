@@ -6,6 +6,7 @@ import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -17,6 +18,8 @@ import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
  * Class description: ------------------ This class was developed to inspect on PeptideIdentifications length.
  */
 public class Length extends Agent {
+	// Class specific log4j logger for Length instances.
+	 private static Logger logger = Logger.getLogger(Length.class);
 
     /**
      * Property tag for length.

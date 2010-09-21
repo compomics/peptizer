@@ -17,6 +17,7 @@ import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.IonTypeEnum;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import de.proteinms.omxparser.util.MSHits;
+import org.apache.log4j.Logger;
 
 import java.util.Vector;
 /**
@@ -30,6 +31,8 @@ import java.util.Vector;
  * Class description: ------------------ This class was developed to
  */
 public class ModificationCoverageAgent extends Agent {
+	// Class specific log4j logger for ModificationCoverageAgent instances.
+	 private static Logger logger = Logger.getLogger(ModificationCoverageAgent.class);
 
     /**
      * The name of the modification that has to be traced.
@@ -76,6 +79,7 @@ public class ModificationCoverageAgent extends Agent {
 
             // 1. Get the nth confident PeptideHit.
             PeptizerPeptideHit lPeptideHit = aPeptideIdentification.getPeptideHit(i);
+
             int lModificationLocation = isModified(lPeptideHit, lModificationName, lModifiedResidue);
             int lLength = lPeptideHit.getSequence().length();
 
@@ -310,9 +314,10 @@ public class ModificationCoverageAgent extends Agent {
         boolean lModified = false;
         for (PeptizerModification mod : aPh.getModifications()) {
             if (mod.getModificationSite() > 0 && mod.getModificationSite() < aPh.getSequence().length()) {
-                if (mod.getName().toLowerCase().equals(aModificationName.toLowerCase())
-                        && aModifiedResidue.toUpperCase().equals(aPh.getSequence().charAt(mod.getModificationSite() - 1) + "")) {
-                    return mod.getModificationSite();
+                if (aModifiedResidue.toUpperCase().equals(aPh.getSequence().charAt(mod.getModificationSite() - 1) + "")) {
+                    if (mod.getName().toLowerCase().indexOf(aModificationName.toLowerCase()) > -1){
+                        return mod.getModificationSite();
+                    }
                 }
             }
         }

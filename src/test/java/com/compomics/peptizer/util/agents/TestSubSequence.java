@@ -3,6 +3,7 @@ package com.compomics.peptizer.util.agents;
 import com.compomics.mascotdatfile.util.mascot.MascotDatfile;
 import com.compomics.mascotdatfile.util.mascot.PeptideHit;
 import com.compomics.mascotdatfile.util.mascot.Query;
+import com.compomics.peptizer.InitializeJUnit;
 import com.compomics.peptizer.util.AgentFactory;
 import com.compomics.peptizer.util.AgentReport;
 import com.compomics.peptizer.util.PeptideIdentification;
@@ -12,6 +13,7 @@ import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import junit.TestCaseLM;
 import junit.framework.Assert;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.Vector;
@@ -27,11 +29,18 @@ import java.util.Vector;
  * TestClass description: ------------------ This TestClass was developed to test the Deamidation Agent.
  */
 public class TestSubSequence extends TestCaseLM {
+	// Class specific log4j logger for TestSubSequence instances.
+	private static Logger logger = Logger.getLogger(TestSubSequence.class);
     SubSequence iSubSequence;
+
 
     public TestSubSequence() {
         super("Testscenario TestSubSequence. ");
-        iSubSequence = (SubSequence) AgentFactory.getInstance().getAgent("com.compomics.peptizer.util.agents.SubSequence");
+
+        InitializeJUnit.initialize();
+
+        String lAgentReference = "com.compomics.peptizer.util.agents.SubSequence";
+        iSubSequence = (SubSequence) AgentFactory.getInstance().getAgent(lAgentReference);
         iSubSequence.setProperty(SubSequence.SUBSEQUENCE, "LLGDVAPNGEANT");
     }
 

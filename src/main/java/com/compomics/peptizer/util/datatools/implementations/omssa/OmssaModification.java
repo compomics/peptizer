@@ -2,6 +2,7 @@ package com.compomics.peptizer.util.datatools.implementations.omssa;
 
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerModification;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,6 +15,8 @@ import java.util.ArrayList;
  * To change this template use File | Settings | File Templates.
  */
 public class OmssaModification implements PeptizerModification, Serializable {
+	// Class specific log4j logger for OmssaModification instances.
+	 private static Logger logger = Logger.getLogger(OmssaModification.class);
     /**
      * modification at particular amino acids
      */

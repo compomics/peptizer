@@ -3,6 +3,7 @@ package com.compomics.peptizer.gui.view;
 import com.compomics.peptizer.gui.Mediator;
 import com.compomics.peptizer.gui.model.*;
 import com.compomics.peptizer.util.PeptideIdentification;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -25,6 +26,8 @@ import java.awt.*;
  * The PeptideIdentification is controlled by the Tree.
  */
 public class TableView extends JTable {
+	// Class specific log4j logger for TableView instances.
+	 private static Logger logger = Logger.getLogger(TableView.class);
 
     /**
      * The parent super-controller.

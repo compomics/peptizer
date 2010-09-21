@@ -5,6 +5,7 @@ import com.compomics.peptizer.interfaces.AgentAggregator;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.enumerator.AgentAggregationResult;
 import com.compomics.peptizer.util.enumerator.AgentVote;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 /**
@@ -19,6 +20,8 @@ import java.util.ArrayList;
  * best peptidehit. For the rest it works identical as the SimpleAgentAggregator.
  */
 public class BestHitAggregator extends AgentAggregator {
+	// Class specific log4j logger for BestHitAggregator instances.
+	 private static Logger logger = Logger.getLogger(BestHitAggregator.class);
 
     /**
      * String for score property.

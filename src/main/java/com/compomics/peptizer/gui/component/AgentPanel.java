@@ -9,6 +9,7 @@ import com.compomics.peptizer.util.AgentFactory;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import com.compomics.peptizer.util.fileio.ConfigurationWriter;
 import com.compomics.peptizer.util.fileio.FileManager;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -32,6 +33,8 @@ import java.util.Properties;
  * Class description: ------------------ This class was developed to present a group of Agents in an editable Table.
  */
 public class AgentPanel extends JPanel implements Updateable {
+	// Class specific log4j logger for AgentPanel instances.
+	 private static Logger logger = Logger.getLogger(AgentPanel.class);
 
     /**
      * The table to display the Agents.
@@ -126,6 +129,9 @@ public class AgentPanel extends JPanel implements Updateable {
         iAgentTable.setColumnSelectionAllowed(false);
         // This enable's the JScrollpane again for some reason!
         iAgentTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+
+        // Add descriptive popup if right clicking on the name.
+        iAgentTable.addMouseListener(new AgentTableMouseListener());
 
         // Second create buttons to add, load and save Agent configurations.
 
@@ -256,9 +262,7 @@ public class AgentPanel extends JPanel implements Updateable {
                         lTableColumn.setMinWidth(lColumnWidth + lSpacer);
                         lTableColumn.setMaxWidth(lColumnWidth + lSpacer);
                     } else if ((lName.equals(PARAMETERS))) {
-                        int lTotalColumnWidth = iAgentTable.getColumnModel().getTotalColumnWidth();
-                        int lTableWidth = scroll1.getSize().width;
-                        lTableColumn.setMinWidth(lColumnWidth);
+                        //lTableColumn.setMinWidth(lColumnWidth);
                     }
                 }
 
@@ -564,5 +568,30 @@ public class AgentPanel extends JPanel implements Updateable {
             return c;
         }
 
+    }
+
+    private class AgentTableMouseListener extends MouseAdapter {
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            super.mouseClicked(e);    //To change body of overridden methods use File | Settings | File Templates.
+            if (e.getButton() == MouseEvent.BUTTON3) {
+                int lSelectedColumn = iAgentTable.getSelectedColumn();
+                String lSelectedColumnName = iAgentTable.getModel().getColumnName(lSelectedColumn);
+                if(lSelectedColumnName.equals(NAME)){
+                    int lSelectedRow = iAgentTable.getSelectedRow();
+                    JDialog lDialog = new JDialog();
+                    lDialog.setTitle("Agent Info Dialog: '" + iAgents[lSelectedRow].getName() + "'");
+                    JTextArea lArea = new JTextArea(iAgents[lSelectedRow].getTagFreeDescription());
+                    lArea.setEditable(false);
+                    lArea.setLineWrap(true);
+                    lArea.setText(lArea.getText());
+                    lDialog.add(new JScrollPane(lArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
+                    lDialog.setLocation(new Point(100,100));
+                    lDialog.setSize(new Dimension(320,240));
+                    lDialog.setVisible(true);
+                }
+            }
+        }
     }
 }

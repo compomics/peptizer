@@ -5,6 +5,7 @@ import com.compomics.mascotdatfile.util.mascot.Peak;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeak;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerSpectrum;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.io.Serializable;
 
@@ -16,6 +17,8 @@ import java.io.Serializable;
  * To change this template use File | Settings | File Templates.
  */
 public class MascotSpectrum implements PeptizerSpectrum, Serializable {
+	// Class specific log4j logger for MascotSpectrum instances.
+	 private static Logger logger = Logger.getLogger(MascotSpectrum.class);
     private SearchEngineEnum iSearchEngineEnum = SearchEngineEnum.Mascot;
     private Spectrum aSpectrum;
 

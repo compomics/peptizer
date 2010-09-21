@@ -13,7 +13,10 @@ import com.compomics.peptizer.util.datatools.IdentificationFactory;
 import com.compomics.peptizer.util.enumerator.AgentAggregationResult;
 import com.compomics.peptizer.util.fileio.MatLogger;
 import com.compomics.peptizer.util.fileio.ValidationSaveToCSV;
+import com.compomics.util.enumeration.CompomicsTools;
 import com.compomics.util.general.CommandLineParser;
+import com.compomics.util.io.PropertiesManager;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,8 +38,9 @@ import java.util.Properties;
  * Class description: ------------------ This class was developed to start peptizer by command line.
  */
 public class Peptizer_MsLims {
-
-
+// Class specific log4j logger for Peptizer instances.
+    private static Logger logger = Logger.getLogger(Peptizer_MsLims.class);
+    
     /**
      * Default Constructor.
      */
@@ -49,6 +53,11 @@ public class Peptizer_MsLims {
      * @param args String[] with the start-up arguments.
      */
     public static void main(String[] args) {
+
+        PropertiesManager.getInstance().updateLog4jConfiguration(logger, CompomicsTools.PEPTIZER);
+        logger.debug("Starting peptizer-cli-mslims");
+        logger.debug("OS : " + System.getProperties().getProperty("os.name"));
+
         // First see if we should output anything useful.
         if (args == null || args.length == 0) {
             flagError("Usage:\n\tPeptizer  " +
@@ -134,13 +143,13 @@ public class Peptizer_MsLims {
                 }
 
             } catch (InstantiationException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
             } catch (IllegalAccessException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
             } catch (SQLException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
             }
 
             long lProjectID = -1l;
@@ -191,15 +200,15 @@ public class Peptizer_MsLims {
 
 
                 //System.out.println("*****************");
-                System.out.println("Peptizer_MsLims to CSV");
-                System.out.println("*****************");
-                System.out.println("\tAll data gathered by all active agents and preset tablerows on the input will be written to the output in the csv file format.\n");
-                System.out.println("\tSource '" + url + "':" + "\t\tProject" + project);
-                System.out.println("\tTarget:" + "\t\t\t\t" + output);
-                System.out.println("\n\tSettings");
-                System.out.println("\t\tAgent:" + "\t\t\t\t" + agent);
-                System.out.println("\t\tAgentAggregator:" + "\t" + agentaggregator);
-                System.out.println("\t\tGeneral:" + "\t\t\t" + general + "\n");
+                logger.info("Peptizer_MsLims to CSV");
+                logger.info("*****************");
+                logger.info("\tAll data gathered by all active agents and preset tablerows on the input will be written to the output in the csv file format.\n");
+                logger.info("\tSource '" + url + "':" + "\t\tProject" + project);
+                logger.info("\tTarget:" + "\t\t\t\t" + output);
+                logger.info("\n\tSettings");
+                logger.info("\t\tAgent:" + "\t\t\t\t" + agent);
+                logger.info("\t\tAgentAggregator:" + "\t" + agentaggregator);
+                logger.info("\t\tGeneral:" + "\t\t\t" + general + "\n");
 
                 AgentAggregator lAgentAggregator = AgentAggregatorFactory.getInstance().getAgentAggregators()[0];
                 lAgentAggregator.setAgentsCollection(AgentFactory.getInstance().getActiveAgents());
@@ -213,7 +222,7 @@ public class Peptizer_MsLims {
 
 
                 long start = System.currentTimeMillis();
-                System.out.println("1) Peptizer started applying profile \"" + agent.getName() + "\" to \"" + agent.getName() + "\" at " + new Date(System.currentTimeMillis()) + ".");
+                logger.info("1) Peptizer started applying profile \"" + agent.getName() + "\" to \"" + agent.getName() + "\" at " + new Date(System.currentTimeMillis()) + ".");
 
                 ValidationSaveToCSV saver = null;
 
@@ -257,28 +266,25 @@ public class Peptizer_MsLims {
                         // Save the identification!
                         saver.savePeptideIdentification(lPeptideIdentification);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage(), e);
                     }
 
-                    if (lIterationCounter % 100 == 0) {
-                        System.out.print(".");
-                    }
-                    if (lIterationCounter % 5000 == 0) {
-                        System.out.print("\n");
+                    if (lIterationCounter % 1000 == 0) {
+                        logger.info(".");
                     }
                 }
 
                 try {
                     // close the connection, not needed anymore now.
                     lConnection.close();
-                    System.out.println("Connection to '" + url + "' closed.");
+                    logger.info("Connection to '" + url + "' closed.");
                 } catch (SQLException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
                 }
 
 
                 // Rename the file if successfull!
-                System.out.println("\nExit.");
+                logger.info("\nExit.");
                 System.exit(0);
             }
         }

@@ -1,6 +1,7 @@
 package com.compomics.peptizer;
 
 import junit.framework.TestSuite;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.net.URL;
@@ -14,6 +15,8 @@ import java.net.URL;
  * This class
  */
 public class InitializeJUnit {
+	// Class specific log4j logger for InitializeJUnit instances.
+	 private static Logger logger = Logger.getLogger(InitializeJUnit.class);
     // This static boolean keeps track of the initialization status.
     private static boolean isInitialized = false;
 

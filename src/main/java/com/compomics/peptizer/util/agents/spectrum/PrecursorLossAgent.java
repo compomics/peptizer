@@ -10,6 +10,7 @@ import com.compomics.peptizer.util.MetaKey;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
 
@@ -22,6 +23,8 @@ import java.math.BigDecimal;
  * This class
  */
 public class PrecursorLossAgent extends Agent {
+	// Class specific log4j logger for PrecursorLossAgent instances.
+	 private static Logger logger = Logger.getLogger(PrecursorLossAgent.class);
 
     public static final String PRECURSOR_LOSS = "precursor_loss";
 
@@ -118,6 +121,6 @@ public class PrecursorLossAgent extends Agent {
      * @return String description of the DummyAgent.
      */
     public String getDescription() {
-        return "<html>Inspects for the dummy property of the peptide. <b>Votes 'Positive_for_selection' if the dummy property is fullfilled ( " + this.iProperties.get(PRECURSOR_LOSS) + ")</b>. Votes 'Neutral_for_selection' if else.</html>";
+        return "<html>Inspects for the occurence of a precursor loss ion. <b>Votes 'Positive_for_selection' if the precursor loss ion has not been matched ( precursor mass - " + this.iProperties.get(PRECURSOR_LOSS) + "Da)</b>. Votes 'Negative_for_selection' if else.</html>";
     }
 }

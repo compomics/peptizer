@@ -1,6 +1,7 @@
 package com.compomics.peptizer.gui;
 
 import com.compomics.peptizer.MatConfig;
+import com.compomics.peptizer.gui.component.HyperLinkLabel;
 import com.compomics.peptizer.gui.component.StatusPanel;
 import com.compomics.peptizer.gui.dialog.*;
 import com.compomics.peptizer.gui.interfaces.StatusView;
@@ -12,16 +13,22 @@ import com.compomics.peptizer.util.fileio.ConnectionManager;
 import com.compomics.peptizer.util.fileio.FileManager;
 import com.compomics.peptizer.util.fileio.MatLogger;
 import com.compomics.peptizer.util.fileio.PeptizerSerialization;
+import com.compomics.util.enumeration.CompomicsTools;
+import com.compomics.util.io.PropertiesManager;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Properties;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,6 +42,8 @@ import java.util.Iterator;
  * SelectedPeptideIdentifications class to test the GUI.
  */
 public class PeptizerGUI extends JFrame implements StatusView {
+	// Class specific log4j logger for PeptizerGUI instances.
+	 private static Logger logger = Logger.getLogger(PeptizerGUI.class);
 
     // MAT variables
     public static String PEPTIZER_VERSION;
@@ -52,6 +61,11 @@ public class PeptizerGUI extends JFrame implements StatusView {
     private JTabbedPane iTabPanel;
 
     private boolean iEnclosedByLims;
+
+    /**
+     * Constant for the startup-title tab.
+     */
+    private static final String START_TAB_TITLE = "Welcome";
 
 
     /**
@@ -124,6 +138,17 @@ public class PeptizerGUI extends JFrame implements StatusView {
         //
         iTabPanel = new JTabbedPane();
 
+        // This home panel will only be shown after starting Peptizer.
+        JPanel jpanStart = new JPanel();
+        URL urlStartImage = URLClassLoader.getSystemResource("image/IMAGE_start_panel.png");
+        Image lStartImage = Toolkit.getDefaultToolkit().getImage(urlStartImage);
+        JLabel lbl = new JLabel(new ImageIcon(lStartImage));
+        HyperLinkLabel lblStartImage = new HyperLinkLabel("", new ImageIcon(lStartImage), "http://code.google.com/p/peptizer/");
+
+        jpanStart.add(lblStartImage, BorderLayout.CENTER);
+        iTabPanel.add(START_TAB_TITLE, jpanStart);
+
+
         jpanContent = new JPanel(new BorderLayout());
         jpanContent.add(iTabPanel, BorderLayout.CENTER);
 
@@ -155,42 +180,10 @@ public class PeptizerGUI extends JFrame implements StatusView {
      * @return String with the String of the latest version, or '
      */
     public String getLastVersion() {
-        String lAboutFile = "about.txt";
-        String lAboutContent = "";
-        try {
-            // First of all, try it via the classloader for this file.
-            InputStream is = this.getClass().getClassLoader().getResourceAsStream(lAboutFile);
-            if (is == null) {
-                // Apparently not found, try again with the System (bootstrap) classloader.
-                is = ClassLoader.getSystemResourceAsStream(lAboutFile);
-                if (is == null) {
-                    lAboutContent = "No help file (" + lAboutFile + ") could be found in the classpath!";
-                }
-            }
-
-            // See if we have an input stream.
-            if (is != null) {
-                BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                StringBuffer sb = new StringBuffer();
-                String line = null;
-                while ((line = br.readLine()) != null) {
-                    sb.append(line + "\n");
-                }
-                lAboutContent = sb.toString();
-            }
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-
         String result = null;
-
-        int start = lAboutContent.lastIndexOf("- Version ") + 10;
-        int end = lAboutContent.indexOf("\n", start);
-        if (start > 0 && end > 0) {
-            result = lAboutContent.substring(start, end).trim();
-        } else {
-            result = "";
-        }
+        // get the version number set in the pom file
+        Properties properties = PropertiesManager.getInstance().getProperties(CompomicsTools.PEPTIZER, "peptizer.properties");
+        result = properties.getProperty("version");
 
         return result;
     }
@@ -331,7 +324,7 @@ public class PeptizerGUI extends JFrame implements StatusView {
                                 ((Mediator) PeptizerGUI.this.getTabs()[PeptizerGUI.this.getSelectedTabIndex()]).getSelectedPeptideIdentifications();
                         PeptizerSerialization.serializePeptideIdentificationsToFile(lSelectedPeptideIdentifications.getSelectedPeptideIdentificationList(), lFile);
                     } catch (IOException e1) {
-                        e1.printStackTrace();
+                        logger.error(e1.getMessage(), e1);
                     }
                 }
             }
@@ -362,7 +355,7 @@ public class PeptizerGUI extends JFrame implements StatusView {
                     try {
                         PeptizerSerialization.serializePeptideIdentificationsToFile(lArrayList, lFile);
                     } catch (IOException e1) {
-                        e1.printStackTrace();
+                        logger.error(e1.getMessage(), e1);
                     }
                 }
             }
@@ -443,9 +436,9 @@ public class PeptizerGUI extends JFrame implements StatusView {
             try {
                 lArrayList = PeptizerSerialization.readSerializedPeptideIdentifications(lFile);
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
 
             if (lArrayList != null) {
@@ -544,7 +537,7 @@ public class PeptizerGUI extends JFrame implements StatusView {
                                 try {
                                     PeptizerSerialization.serializePeptideIdentificationsToFile(lArrayList, lFile);
                                 } catch (IOException e1) {
-                                    e1.printStackTrace();
+                                    logger.error(e1.getMessage(), e1);
                                 }
                             }
                         }
@@ -565,7 +558,7 @@ public class PeptizerGUI extends JFrame implements StatusView {
                                             ((Mediator) PeptizerGUI.this.getTabs()[PeptizerGUI.this.getSelectedTabIndex()]).getSelectedPeptideIdentifications();
                                     PeptizerSerialization.serializePeptideIdentificationsToFile(lSelectedPeptideIdentifications.getSelectedPeptideIdentificationList(), lFile);
                                 } catch (IOException e1) {
-                                    e1.printStackTrace();
+                                    logger.error(e1.getMessage(), e1);
                                 }
                             }
                         }
@@ -627,17 +620,12 @@ public class PeptizerGUI extends JFrame implements StatusView {
      */
     public static void main(String[] args) {
         // initiate a new mat gui.
+        PropertiesManager.getInstance().updateLog4jConfiguration(logger, CompomicsTools.PEPTIZER);
+        logger.debug("Starting peptizer");
+        logger.debug("OS : " + System.getProperties().getProperty("os.name"));
 
         new PeptizerGUI();
-    }
 
-
-    /**
-     * This method prints the usage information and exits with error flag raised.
-     */
-    private static void printUsage() {
-        System.err.println("\n\nUsage:\n\n\tDemoRunner <identification_file_input_file>\n\n");
-        System.exit(1);
     }
 
     /**
@@ -675,10 +663,10 @@ public class PeptizerGUI extends JFrame implements StatusView {
         if (!iEnclosedByLims) {
             if (ConnectionManager.getInstance().hasConnection()) {
                 try {
-                    System.out.println("Closing connection to '" + ConnectionManager.getInstance().getConnection().getMetaData().getURL() + "'.");
+                    logger.info("Closing connection to '" + ConnectionManager.getInstance().getConnection().getMetaData().getURL() + "'.");
                     ConnectionManager.getInstance().closeConnection();
                 } catch (SQLException e1) {
-                    e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    logger.error(e1.getMessage(), e1);  //To change body of catch statement use File | Settings | File Templates.
                 }
             }
 
@@ -699,6 +687,9 @@ public class PeptizerGUI extends JFrame implements StatusView {
      */
     public void passTask(SelectedPeptideIdentifications aSelectedPeptideIdentifications) {
         Mediator lMediator = new Mediator(aSelectedPeptideIdentifications);
+        if(iTabPanel.getTabCount() == 1 && iTabPanel.getTitleAt(0) == START_TAB_TITLE){
+            iTabPanel.remove(0);
+        }
 
         // Name the tabs by number, howerver display the Mediator toString in the Tooltip to supply the necessairy information.
         iTabPanel.add("Task " + (iTabPanel.getTabCount() + 1), lMediator);

@@ -7,6 +7,7 @@ import com.compomics.peptizer.util.datatools.interfaces.ParsingType;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import com.compomics.peptizer.util.iterators.*;
 import com.compomics.util.io.FilenameExtensionFilter;
+import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
 import javax.swing.*;
@@ -26,6 +27,8 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class FileToolsFactory {
+	// Class specific log4j logger for FileToolsFactory instances.
+	 private static Logger logger = Logger.getLogger(FileToolsFactory.class);
     private static FileToolsFactory iSingleton = null;
     private List<ParsingType> iParsingType;
 
@@ -118,7 +121,7 @@ public class FileToolsFactory {
             try {
                 return new XTandemIterator(idFile);
             } catch (SAXException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
 

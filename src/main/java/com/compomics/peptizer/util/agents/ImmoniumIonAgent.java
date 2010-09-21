@@ -9,6 +9,7 @@ import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.IonTypeEnum;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import com.compomics.peptizer.util.fileio.MatLogger;
+import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 
@@ -17,6 +18,8 @@ import java.util.HashMap;
  * File Templates.
  */
 public class ImmoniumIonAgent extends Agent {
+	// Class specific log4j logger for ImmoniumIonAgent instances.
+	 private static Logger logger = Logger.getLogger(ImmoniumIonAgent.class);
 
     public static final String AMINOACIDS = "aminoacids";
     public static final String ERROR = "error";

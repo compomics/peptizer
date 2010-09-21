@@ -2,6 +2,7 @@ package com.compomics.peptizer.util.datatools.implementations.xtandem;
 
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeak;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 /**
  * Created by IntelliJ IDEA.
@@ -11,6 +12,8 @@ import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
  * To change this template use File | Settings | File Templates.
  */
 public class XTandemPeak extends PeptizerPeak {
+	// Class specific log4j logger for XTandemPeak instances.
+	 private static Logger logger = Logger.getLogger(XTandemPeak.class);
     private final SearchEngineEnum iSearchEngineEnum = SearchEngineEnum.XTandem;
 
     public XTandemPeak() {

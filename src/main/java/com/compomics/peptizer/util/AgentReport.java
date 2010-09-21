@@ -1,5 +1,7 @@
 package com.compomics.peptizer.util;
 
+import org.apache.log4j.Logger;
+
 import java.util.HashMap;
 /**
  * Created by IntelliJ IDEA.
@@ -16,6 +18,8 @@ import java.util.HashMap;
  * The AgentReport has defines static final ReportKeys ("RK_*") that serve as keys in this map.
  */
 public class AgentReport extends HashMap {
+	// Class specific log4j logger for AgentReport instances.
+	 private static Logger logger = Logger.getLogger(AgentReport.class);
 
     // These Report Key can be used in the AgentReport
 

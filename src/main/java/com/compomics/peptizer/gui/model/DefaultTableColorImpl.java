@@ -1,6 +1,7 @@
 package com.compomics.peptizer.gui.model;
 
 import com.compomics.peptizer.gui.interfaces.TableColor;
+import org.apache.log4j.Logger;
 
 import java.awt.*;
 /**
@@ -16,6 +17,8 @@ import java.awt.*;
  * This class was developed as a default Color scheme for the Table coloring.
  */
 public class DefaultTableColorImpl implements TableColor {
+	// Class specific log4j logger for DefaultTableColorImpl instances.
+	 private static Logger logger = Logger.getLogger(DefaultTableColorImpl.class);
 
     /**
      * The light color for selected column.

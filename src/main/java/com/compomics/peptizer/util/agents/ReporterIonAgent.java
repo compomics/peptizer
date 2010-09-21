@@ -7,6 +7,7 @@ import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeak;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerSpectrum;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.math.BigDecimal;
 /**
@@ -20,6 +21,8 @@ import java.math.BigDecimal;
  * Class description: ------------------ This class was developed to inspect for deviating reporter ion intensities.
  */
 public class ReporterIonAgent extends Agent {
+	// Class specific log4j logger for ReporterIonAgent instances.
+	 private static Logger logger = Logger.getLogger(ReporterIonAgent.class);
 
     /**
      * PARAMETERS ---------- String identifiers for the parameters in the agent.xml configuration file.

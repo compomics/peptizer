@@ -12,6 +12,7 @@ import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.implementations.mascot.MascotPeptideHit;
 import com.compomics.peptizer.util.datatools.implementations.mascot.MascotSpectrum;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +29,8 @@ import java.util.Vector;
  * Class description: ------------------ This class was developed to
  */
 public class DatfileIterator implements PeptideIdentificationIterator {
+	// Class specific log4j logger for DatfileIterator instances.
+	 private static Logger logger = Logger.getLogger(DatfileIterator.class);
 
     /**
      * The MascotDatfile instance of the Iterator.
@@ -80,7 +83,7 @@ public class DatfileIterator implements PeptideIdentificationIterator {
      */
     public void setDatfile(File aFile, final MascotDatfileType aMascotDatfileType) {
         if (aFile != null) {
-            System.out.println("NEW DATFILE \' " + aFile.getName() + "\' INITIATED AT " + new Date(System.currentTimeMillis()) + "(" + aMascotDatfileType + ").");
+            logger.info("NEW DATFILE \' " + aFile.getName() + "\' INITIATED AT " + new Date(System.currentTimeMillis()) + "(" + aMascotDatfileType + ").");
             iFile = aFile;
             hasConstructedMascotDatfile = false;
             iCountIndex = 0;
@@ -154,7 +157,7 @@ public class DatfileIterator implements PeptideIdentificationIterator {
 
                 hasConstructedMascotDatfile = true;
             } catch (IOException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
             }
         }
 

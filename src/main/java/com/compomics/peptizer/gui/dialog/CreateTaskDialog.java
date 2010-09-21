@@ -14,6 +14,7 @@ import com.compomics.peptizer.util.fileio.ConfigurationWriter;
 import com.compomics.peptizer.util.fileio.FileManager;
 import com.compomics.peptizer.util.fileio.MatLogger;
 import com.compomics.peptizer.util.worker.MatWorker;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,6 +33,8 @@ import java.util.ArrayList;
  * Class description: ------------------ This class was developed to
  */
 public class CreateTaskDialog extends JDialog {
+	// Class specific log4j logger for CreateTaskDialog instances.
+	 private static Logger logger = Logger.getLogger(CreateTaskDialog.class);
 
     /**
      * The main frame.
@@ -180,12 +183,12 @@ public class CreateTaskDialog extends JDialog {
 
     private void setSize() {
 
-        int lNewWidth = new Double((iPeptizerGUI.getSize().width) * 0.9).intValue();
+        int lNewWidth = new Double((iPeptizerGUI.getSize().width) * 0.64).intValue();
         Dimension lScreenResolutionToolkit = Toolkit.getDefaultToolkit().getScreenSize();
-        int lNewHeight = new Double(lScreenResolutionToolkit.getHeight() * 0.40).intValue();
+        int lNewHeight = new Double(lScreenResolutionToolkit.getHeight() * 0.48).intValue();
 
-        this.setMinimumSize(new Dimension(lNewWidth, lNewHeight));
-        jpanSource.setMinimumSize(new Dimension(lNewWidth - 50, jpanSource.getSize().height + 50));
+        this.setPreferredSize(new Dimension(lNewWidth, lNewHeight));
+        jpanSource.setPreferredSize(new Dimension(lNewWidth - 50, jpanSource.getSize().height + 50));
     }
 
     /**

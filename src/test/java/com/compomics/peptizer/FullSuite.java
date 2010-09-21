@@ -4,9 +4,7 @@ import com.compomics.peptizer.util.agents.*;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
-import java.io.File;
-import java.net.URL;
+import org.apache.log4j.Logger;
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -20,6 +18,8 @@ import java.net.URL;
  * This class was developed to group all tests for peptizer.
  */
 public class FullSuite extends TestCase {
+	// Class specific log4j logger for FullSuite instances.
+	 private static Logger logger = Logger.getLogger(FullSuite.class);
     public FullSuite() {
         this("Full suite of tests for peptizer project.");
     }

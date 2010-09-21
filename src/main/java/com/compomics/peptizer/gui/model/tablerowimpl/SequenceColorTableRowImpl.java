@@ -4,6 +4,7 @@ import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.model.AbstractTableRow;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.util.Properties;
@@ -18,6 +19,8 @@ import java.util.Properties;
  * Class description: ------------------ This class was developed as a TableRow implementation to populate the table.
  */
 public class SequenceColorTableRowImpl extends AbstractTableRow {
+	// Class specific log4j logger for SequenceColorTableRowImpl instances.
+	 private static Logger logger = Logger.getLogger(SequenceColorTableRowImpl.class);
 
 
     /**
@@ -42,7 +45,7 @@ public class SequenceColorTableRowImpl extends AbstractTableRow {
             label = ph.getColoredModifiedSequence(aPeptideIdentification);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
         return label;
 
