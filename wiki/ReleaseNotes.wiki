@@ -1,0 +1,14 @@
+# Short summary of changes for each version of Peptizer. (as from version 1.6)
+
+----
+
+*Changes in Peptizer 1.7 (September 22. 2010):*
+ * FEATURE: Created centralized property and log location into ./user_home/.compomics/peptizer/
+ * FEATURE: Implemented log4j.  
+ * FEATURE IMPROVEMENT: At times, the description was to long for the tooltip. Right-clicking the Agent name shows a small popup with the description.  
+ * FEATURE: Read and Write the inform property for an Agent. Thereby, the Agent inspection will be performed but is excluded from the AgentAggregation. 
+----
+
+*Changes in Peptizer 1.6 (August 1. 2010):*
+ * NEW FEATURE: Added initial support for X!Tandem, OMSSA and PRIDE result files.
+----
