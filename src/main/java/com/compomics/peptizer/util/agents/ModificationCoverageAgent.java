@@ -104,9 +104,11 @@ public class ModificationCoverageAgent extends Agent {
                         if (lIon.getNumber() == lModificationLocation - 1) {
                             // Nterm covered!
                             ntermCount++;
+                            sb.append(lIon.getLabel() + "-");
                         } else if (lIon.getNumber() == lModificationLocation) {
                             // Cterm covered!
                             ctermCount++;
+                            sb.append(lIon.getLabel() + "-");
                         } else {
                             assert false;
                         }
@@ -114,14 +116,20 @@ public class ModificationCoverageAgent extends Agent {
                         if (lIon.getNumber() == lLength - (lModificationLocation - 1)) {
                             // Nterm covered!
                             ntermCount++;
+                            sb.append(lIon.getLabel() + "-");
                         } else if (lIon.getNumber() == lLength - lModificationLocation) {
                             // Cterm covered!
                             ctermCount++;
+                            sb.append(lIon.getLabel() + "-");
                         } else {
                             assert false;
                         }
                     }
                 }
+            }
+            String lIonNames = sb.toString();
+            if(lIonNames.length() > 0){
+                lIonNames = lIonNames.substring(0, lIonNames.length() - 1);
             }
 
 
@@ -136,17 +144,17 @@ public class ModificationCoverageAgent extends Agent {
                     } else if (lModificationLocation > 1) {
                         // Internal mod.
                         lScore[i] = AgentVote.NEUTRAL_FOR_SELECTION;
-                        lTableData = "Semi|" + sb.toString();
+                        lTableData = "Semi|" + lIonNames;
                         lARFFData = 0;
                     } else {
                         // Nterm nitro!
                         lScore[i] = AgentVote.NEGATIVE_FOR_SELECTION;
-                        lTableData = "Full-term|" + sb.toString();
+                        lTableData = "Full-term|" + lIonNames;
                         lARFFData = -1;
                     }
                 } else {
                     lScore[i] = AgentVote.NEGATIVE_FOR_SELECTION;
-                    lTableData = "Full|" + sb.toString();
+                    lTableData = "Full|" + lIonNames;
                     lARFFData = -1;
                 }
             } else {
@@ -239,6 +247,7 @@ public class ModificationCoverageAgent extends Agent {
 
         // Ok, lets now let each of these ions examine whether they occur in the spectrum.
         double lErrorMargin = Double.parseDouble(aParameters.getITOL());
+
         for (int i = 0; i < lNeighbourIons.size(); i++) {
             Ion lIon = lNeighbourIons.elementAt(i);
             if (lIon.isMatch(aSpectrum.getPeakList(), lErrorMargin)) {

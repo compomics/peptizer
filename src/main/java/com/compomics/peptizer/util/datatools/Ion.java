@@ -72,6 +72,7 @@ public class Ion extends PeptizerFragmentIon {
         return iSearchEngineEnum;
     }
 
+
     public boolean isMatch(PeptizerPeak[] peakList, double errorMargin) {
         boolean match = false;
         for (int i = 0; i < peakList.length; i++) {
@@ -93,6 +94,6 @@ public class Ion extends PeptizerFragmentIon {
     }
 
     public String getLabel() {
-        return "#";
+        return "" + getType() + getNumber();
     }
 }

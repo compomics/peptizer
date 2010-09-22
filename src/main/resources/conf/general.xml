@@ -25,7 +25,7 @@
           if Peptizer is used to connect to the ms_lims database system. -->
         <property name="CONNECTION_PROPERTIES">conf/connection.properties</property>
         <!-- Default percentage for matching fragmentions in the fused . -->
-        <property name="FUSED_INTENSITY_PERCENTAGE">0.02</property>
+        <property name="FUSED_INTENSITY_PERCENTAGE">0.01</property>
         <!-- Set Peptizer to stream confident peptide hypothesises that were not selected into a temporary file.
         If set to true, an extra option appears in the SavetoCSV function to save these peptide hypothesises as well.
         Note that this temporary file is deleted after Peptizer is closed and this comes along with a performance cost. -->
