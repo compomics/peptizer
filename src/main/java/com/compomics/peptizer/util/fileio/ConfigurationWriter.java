@@ -248,6 +248,7 @@ public class ConfigurationWriter {
                 "            <uniqueid>" + aAgent.getUniqueID() + "</uniqueid>\n" +
                 "            <property name=\"name\">" + aAgent.getName() + "</property>\n" +
                 "            <property name=\"active\">" + aAgent.isActive() + "</property>\n" +
+                "            <property name=\"inform\">" + aAgent.isInforming() + "</property>\n" +
                 "            <property name=\"veto\">" + aAgent.hasVeto() + "</property>\n");
 
         while (iter.hasNext()) {

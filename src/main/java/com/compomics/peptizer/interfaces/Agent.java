@@ -144,7 +144,7 @@ public abstract class Agent implements Comparable {
         this.setName(prop.getProperty("name"));
         this.setActive(Boolean.valueOf(prop.getProperty("active")));
         this.setVeto(Boolean.valueOf(prop.getProperty("veto")));
-
+        this.setInforming(Boolean.valueOf(prop.getProperty("inform")));
     }
 
     /**

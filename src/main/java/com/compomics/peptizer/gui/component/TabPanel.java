@@ -220,10 +220,15 @@ public class TabPanel extends JPanel {
                 }
             }
             jpanSpectrum.setAnnotations(annotations);
-            jpanFragmentsInner.setFragmentions(annotations);
             jpanSpectrum.validate();
             jpanSpectrum.repaint();
+
+            jpanFragmentsInner = new PeptizerSequenceFragmentationPanel(lSequence, annotations, boolModifedSequenceFragmentation);
+            jpanFragmentsInner.setBackground(Color.white);
             jpanFragmentsInner.repaint();
+            jpanFragments.add(jpanFragmentsInner, BorderLayout.CENTER);
+            this.validate();
+            this.repaint();
         }
     }
 

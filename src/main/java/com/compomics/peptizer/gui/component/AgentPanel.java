@@ -183,6 +183,7 @@ public class AgentPanel extends JPanel implements Updateable {
             public void actionPerformed(ActionEvent e) {
                 AgentFactory.getInstance().setAllActiveFalse();
                 AgentFactory.getInstance().setAllVetoFalse();
+                AgentFactory.getInstance().setAllInformingFalse();
                 AgentPanel.this.repaint();
             }
         });
