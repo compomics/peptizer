@@ -26,8 +26,8 @@ import java.util.List;
  * Class description: ------------------ This class was developed for the CreateAssessment Dialog.
  */
 public class ImportPanel_File extends JPanel implements ImportPanel {
-	// Class specific log4j logger for ImportPanel_File instances.
-	 private static Logger logger = Logger.getLogger(ImportPanel_File.class);
+    // Class specific log4j logger for ImportPanel_File instances.
+    private static Logger logger = Logger.getLogger(ImportPanel_File.class);
 
     private static ImportPanel_File iSingleton = null;
 
@@ -38,6 +38,7 @@ public class ImportPanel_File extends JPanel implements ImportPanel {
 
     private ArrayList<File> iFile = new ArrayList();
     private FileToolsFactory iFileToolsFactory = FileToolsFactory.getInstance();
+    private String lPath;
 
 
     private ImportPanel_File() {
@@ -134,10 +135,11 @@ public class ImportPanel_File extends JPanel implements ImportPanel {
         // Previous selected path.
         String lPath = "";
 
+
         if (iFile.size() > 0) {
             lPath = iFile.get(iFile.size() - 1).getPath();
         } else {
-            lPath = "/";
+            lPath = new File(System.getProperty("user.home")).getPath();
         }
         // The file filter to use.
         FileFilter filter = new FileFilter() {
