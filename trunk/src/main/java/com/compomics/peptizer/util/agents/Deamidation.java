@@ -60,7 +60,7 @@ public class Deamidation extends Agent {
             if (lPeptideHit instanceof MascotPeptideHit) {
                 for (PeptizerModification mod : lPeptideHit.getModifications()) {
                     if (mod.getModificationSite() > 0 && mod.getModificationSite() < lPeptideHit.getSequence().length()) {
-                        if (mod.getName().toLowerCase().equals("deamidated") && lPeptideHit.getSequence().charAt(mod.getModificationSite()) == 'G') {
+                        if (mod.getName().toLowerCase().contains("dam") && lPeptideHit.getSequence().charAt(mod.getModificationSite()) == 'G') {
                             lNumberOfDeamidations++;
                         }
                     }

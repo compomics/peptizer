@@ -36,7 +36,7 @@ public class TestModification extends TestCaseLM {
         super("Testscenario TestModification. ");
         iModification =
                 (ModificationAgent) AgentFactory.getInstance().getAgent("com.compomics.peptizer.util.agents.ModificationAgent");
-        iModification.setProperty(ModificationAgent.MODIFICATION_NAME, "oxidation");
+        iModification.setProperty(ModificationAgent.MODIFICATION_NAME, "ox");
     }
 
     public void testInspect() {
@@ -67,12 +67,12 @@ public class TestModification extends TestCaseLM {
         Assert.assertEquals(1, lResult[1].score);
         Assert.assertTrue(lResult.length == 2);
 
-        Assert.assertEquals("oxidation", iModification.getProperty(ModificationAgent.MODIFICATION_NAME));
+        Assert.assertEquals("ox", iModification.getProperty(ModificationAgent.MODIFICATION_NAME));
         Assert.assertEquals(0, lPeptideIdentification.getAgentReport(1, iModification.getUniqueID()).getReport(AgentReport.RK_ARFF));
         Assert.assertEquals("NA", lPeptideIdentification.getAgentReport(1, iModification.getUniqueID()).getReport(AgentReport.RK_TABLEDATA));
         Assert.assertEquals(AgentVote.NEUTRAL_FOR_SELECTION, lPeptideIdentification.getAgentReport(1, iModification.getUniqueID()).getReport(AgentReport.RK_RESULT));
         Assert.assertEquals(1, lPeptideIdentification.getAgentReport(2, iModification.getUniqueID()).getReport(AgentReport.RK_ARFF));
-        Assert.assertEquals("oxidation", lPeptideIdentification.getAgentReport(2, iModification.getUniqueID()).getReport(AgentReport.RK_TABLEDATA));
+        Assert.assertEquals("ox", lPeptideIdentification.getAgentReport(2, iModification.getUniqueID()).getReport(AgentReport.RK_TABLEDATA));
         Assert.assertEquals(AgentVote.POSITIVE_FOR_SELECTION, lPeptideIdentification.getAgentReport(2, iModification.getUniqueID()).getReport(AgentReport.RK_RESULT));
     }
 }

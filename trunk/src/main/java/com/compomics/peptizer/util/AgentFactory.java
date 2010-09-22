@@ -175,7 +175,7 @@ public class AgentFactory {
     /**
      * Sets all Agents observing booleans False.
      */
-    public void setAllInforming() {
+    public void setAllInformingFalse() {
         Iterator iter = iAgents.values().iterator();
         while (iter.hasNext()) {
             Agent lAgent = (Agent) iter.next();

@@ -68,7 +68,7 @@ public class ModificationAgent extends Agent {
 
             boolean found = false;
             for (PeptizerModification mod : lPeptideHit.getModifications()) {
-                if (mod.getName().toLowerCase().equals(lModificationName.toLowerCase())) {
+                if (mod.getName().toLowerCase().contains(lModificationName.toLowerCase())) {
                     found = true;
                     break;
                 }

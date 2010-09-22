@@ -320,22 +320,21 @@
             <type>jar</type>
         </dependency>
 
-        <!-- This project depends on the utilities JAR file.
-                  -->
-        <dependency>
-            <groupId>com.compomics</groupId>
-            <artifactId>utilities</artifactId>
-            <version>3.0.3</version>
-            <type>jar</type>
-        </dependency>
-
-
         <!-- This project depends on the MascotDatfile library.
                             -->
         <dependency>
             <groupId>com.compomics</groupId>
             <artifactId>mascotdatfile</artifactId>
             <version>3.2.1</version>
+            <type>jar</type>
+        </dependency>
+
+        <!-- This project depends on the utilities JAR file.
+                  -->
+        <dependency>
+            <groupId>com.compomics</groupId>
+            <artifactId>utilities</artifactId>
+            <version>3.0.3</version>
             <type>jar</type>
         </dependency>
 
