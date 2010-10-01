@@ -87,7 +87,7 @@ public class ImportPanel_Ms_Lims_IdentificationIDList extends JPanel implements 
         btnConnection.setText("Create Connection");
         btnConnection.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
-                Properties lProperties = PropertiesManager.getInstance().getProperties(CompomicsTools.PEPTIZER, "peptizer.properties");
+                Properties lProperties = PropertiesManager.getInstance().getProperties(CompomicsTools.MSLIMS, "ms-lims.properties");
                 JDialog lConnectionDialog =
                         new ConnectionDialog(null,
                                 ImportPanel_Ms_Lims_IdentificationIDList.this,

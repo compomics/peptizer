@@ -3,10 +3,14 @@ package com.compomics.peptizer.util.fileio;
 import com.compomics.mslims.db.accessors.Validation;
 import com.compomics.peptizer.gui.SelectedPeptideIdentifications;
 import com.compomics.peptizer.interfaces.ValidationSaver;
+import com.compomics.peptizer.util.CommentGenerator;
 import com.compomics.peptizer.util.MetaKey;
 import com.compomics.peptizer.util.PeptideIdentification;
+import com.compomics.peptizer.util.enumerator.TempFileEnum;
 import org.apache.log4j.Logger;
 
+import javax.swing.*;
+import java.io.*;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,18 +23,17 @@ import java.sql.SQLException;
  * File Templates.
  */
 public class ValidationSaveToMsLims extends ValidationSaver {
-	// Class specific log4j logger for ValidationSaveToMsLims instances.
-	 private static Logger logger = Logger.getLogger(ValidationSaveToMsLims.class);
+    // Class specific log4j logger for ValidationSaveToMsLims instances.
+    private static Logger logger = Logger.getLogger(ValidationSaveToMsLims.class);
 
     // Statistics intergers.
-    private int iNumberAccepted;
-    private int iNumberRejected;
-    private int iNumberOfSpectra;
-    private int iValidationCount;
+    private int iNumberPersisted = 0;
+    private int iNumberRejected = 0;
+    private int iNumberAccepted = 0;
+    private boolean iOverWriteExistingValidation = false;
+    private boolean iApplyToall = false;
+    private JComponent iParentComponent = null;
 
-    public ValidationSaveToMsLims() {
-        // Nothing needed to construct this panel!
-    }
 
     /**
      * Finish the ValidationSaveToMsLims by popping up a report to the user.
@@ -71,53 +74,46 @@ public class ValidationSaveToMsLims extends ValidationSaver {
                 MatLogger.logExceptionalEvent("Failed to find the userid for user '" + lUserName + "'.");
                 logger.error(e.getMessage(), e);
             }
-            iNumberAccepted = 0;
-            iNumberRejected = 0;
-            iValidationCount = 0;
 
-            iNumberOfSpectra = ((SelectedPeptideIdentifications) iData).getNumberOfSpectra();
-            for (int i = 0; i < iNumberOfSpectra; i++) {
+            // First persist all the selected ids.
+            int lNumberOfSpectra = ((SelectedPeptideIdentifications) iData).getNumberOfSpectra();
+            for (int i = 0; i < lNumberOfSpectra; i++) {
                 PeptideIdentification lPeptideIdentification =
                         ((SelectedPeptideIdentifications) iData).getPeptideIdentification(i);
-                if (((PeptideIdentification) lPeptideIdentification).isValidated()) {
-                    iValidationCount++;
-                    // Here we get all of the PeptideIdentifications that were validated.
+                String lComment = CommentGenerator.getCommentForSelectiveAgents(lPeptideIdentification, 1);
+                lPeptideIdentification.getValidationReport().setComment(lComment);
+                this.persistValidation(lConnection, lL_userid, lPeptideIdentification);
+            }
+
+            // Second, persist all the confident but not selected ids.
+            File[] lFiles = TempManager.getInstance().getFiles((SelectedPeptideIdentifications) iData, TempFileEnum.CONFIDENT_NOT_SELECTED);
+            if (lFiles != null) {
+                for (int i = 0; i < lFiles.length; i++) {
                     try {
-                        boolean lResult = lPeptideIdentification.getValidationReport().getResult();
-
-                        // Allocate the identification id!
-                        String lSpectrumFile = lPeptideIdentification.getSpectrum().getName();
-                        String lDatfileID = lPeptideIdentification.getMetaData(MetaKey.Datfile_id).toString();
-
-                        ResultSet rs = performSelect(lDatfileID, lSpectrumFile);
-                        if (rs.next()) {
-                            Validation lValidation = new Validation();
-                            lValidation.setL_identificationid((Long) lPeptideIdentification.getMetaData(MetaKey.Identification_id));
-                            lValidation.setL_userid(lL_userid);
-                            lValidation.setComment(lPeptideIdentification.getValidationReport().getComment());
-                            // We expect only a single row in the ResultSet, if the call to next() returns true, there are more identifications which is basically impossible..
-                            if (!rs.next()) {
-                                if (lResult) {
-                                    // Set valid to '2' if the identification was set to true.
-                                    lValidation.setStatus(true);
-                                    iNumberAccepted++;
-                                } else {
-                                    // Set valid to '0' if the identification was set to false.
-                                    lValidation.setStatus(false);
-                                    iNumberRejected++;
-                                }
-                                lValidation.persist(lConnection);
-                            } else {
-                                MatLogger.logExceptionalEvent("Multiple identifications found in " + ConnectionManager.getInstance().getConnection().getMetaData().getURL() + " for \'" + lSpectrumFile + "\' in datfile \'" + lDatfileID + "\'!!");
+                        File lFile = lFiles[i];
+                        ObjectInputStream ois1 = new ObjectInputStream(new FileInputStream(lFile));
+                        Object o = null;
+                        // Loop through object input stream.
+                        // I know this is messy, though I do not see any method to check EOF on the ObjectInputStream.o
+                        while ((o = ois1.readObject()) != null) {
+                            if (o instanceof PeptideIdentification && o != null) {
+                                PeptideIdentification lPeptideIdentification = (PeptideIdentification) o;
+                                lPeptideIdentification.getValidationReport().setComment("AUTO_ACCEPT");
+                                lPeptideIdentification.getValidationReport().setResult(true);
+                                this.persistValidation(lConnection, lL_userid, lPeptideIdentification);
                             }
-                        } else {
-                            MatLogger.logExceptionalEvent("No identification found in " + ConnectionManager.getInstance().getConnection().getMetaData().getURL() + " for \'" + lSpectrumFile + "\' in datfile \'" + lDatfileID + "\'.");
                         }
-                    } catch (SQLException e) {
+                    } catch (EOFException eof) {
+                        // The end of the file is reached, go to the next file ..
+                    } catch (IOException e) {
+                        logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
+                    } catch (ClassNotFoundException e) {
                         logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
                     }
                 }
             }
+
+
         } else {
             MatLogger.logExceptionalEvent("ValidationSaveToCSV does not yet implements \'" + iData.getClass() + "\' instances!!");
         }
@@ -125,28 +121,131 @@ public class ValidationSaveToMsLims extends ValidationSaver {
     }
 
     /**
-     * Performs a SELECT statement by a spectrumfileID and a datfileID to select the PeptideIdentification that was
-     * validated.
+     * This method stores the Validation of an PeptideIdentification into the ms-lims connections,.
      *
-     * @param aDatfileID    datfile identifier that contains the peptide identification.
-     * @param aSpectrumFile spectrumfile identifier as the source of the peptide identification.
-     * @return ResultSet of the SELECT statement.
-     * @throws SQLException for errors in the SELECT statement.
+     * @param aConnection            Connection to the ms-lims databse.
+     * @param aL_userid
+     * @param aPeptideIdentification
      */
-    private ResultSet performSelect(String aDatfileID, String aSpectrumFile) throws SQLException {
-        String lQuery =
-                "select * from identification as i, spectrum as s where i.l_spectrumid=s.spectrumid and s.filename=\"" + aSpectrumFile + "\" and i.l_datfileid=" + aDatfileID;
-        PreparedStatement lPreparedStatement = ConnectionManager.getInstance().getConnection().prepareStatement(lQuery);
-        return lPreparedStatement.executeQuery();
+    private void persistValidation(Connection aConnection, Integer aL_userid, PeptideIdentification aPeptideIdentification) {
+        boolean lResult = aPeptideIdentification.getValidationReport().getResult();
+
+
+        Long lIdentificationid = (Long) aPeptideIdentification.getMetaData(MetaKey.Identification_id);
+        try {
+            Validation lValidation = Validation.getValidation(lIdentificationid, aConnection);
+
+            if (lValidation == null) {
+
+                // Validation is non existing. create a new entry!
+                lValidation = new Validation();
+                lValidation.setL_identificationid(lIdentificationid);
+                lValidation.setStatus(lResult);
+                lValidation.setL_userid(aL_userid);
+                lValidation.setComment(aPeptideIdentification.getValidationReport().getComment());
+                // store!
+                lValidation.persist(aConnection);
+
+            } else {
+
+                // Validation already exists for this identificationid. Update? is it overwrite
+                if (iApplyToall) {
+                    if (iOverWriteExistingValidation) {
+                        lValidation.setStatus(lResult);
+                        lValidation.setL_userid(aL_userid);
+                        lValidation.setComment(aPeptideIdentification.getValidationReport().getComment());
+
+                        lValidation.update(aConnection);
+                    } else {
+                        // Keep the old validation.
+                    }
+                } else {
+                    if (iParentComponent != null) {
+                        Icon lQuestionIcon = UIManager.getIcon("OptionPane.questionIcon");
+                        String[] lOptions = new String[]{"Yes", "Yes to all", "No", "No to all"};
+                        int choice = JOptionPane.showOptionDialog(
+                                null,
+                                "Validation allready exists. Update?",
+                                "Option",
+                                JOptionPane.YES_NO_CANCEL_OPTION,
+                                JOptionPane.QUESTION_MESSAGE,
+                                null,
+                                lOptions,
+                                lOptions[0]);
+
+                        switch (choice) {
+                            case 0:   // YES
+                                iOverWriteExistingValidation = true;
+                                iApplyToall = false;
+                                break;
+
+                            case 1: // YES TO ALL
+                                iOverWriteExistingValidation = true;
+                                iApplyToall = true;
+                                break;
+
+                            case 2: // NO
+                                iOverWriteExistingValidation = false;
+                                iApplyToall = false;
+                                break;
+
+                            case 3:  // NO TO ALL
+                                iOverWriteExistingValidation = false;
+                                iApplyToall = true;
+                                break;
+                        }
+                    } else {
+                        iApplyToall = true;
+                        logger.info("No parentcomponent defined. Overwrite existing validation set all to " + iOverWriteExistingValidation);
+                    }
+
+                    // Ok, now do we have to do the update?
+                    if (iOverWriteExistingValidation) {
+                        lValidation.setL_userid(aL_userid);
+                        lValidation.setComment(aPeptideIdentification.getValidationReport().getComment());
+                        lValidation.setStatus(lResult);
+                        lValidation.update(aConnection);
+                    } else {
+                        // Keep the old validation.
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
+        }
+        doCounts(lResult);
     }
+
+    /**
+     * This method counts the number of accepted and rejected peptide identifications.
+     *
+     * @param aResult
+     */
+    private void doCounts(boolean aResult) {
+        if (iOverWriteExistingValidation) {
+            iNumberPersisted++;
+            if (aResult) {
+                iNumberAccepted++;
+            } else {
+                iNumberRejected++;
+            }
+        }
+    }
+
 
     public String getHTMLMessage() throws SQLException {
 
         // Prepare statistics,
-        BigDecimal lRelativeAccepted = new BigDecimal(iNumberAccepted * 100 / iNumberOfSpectra).setScale(2);
-        BigDecimal lRelativeRejected = new BigDecimal(iNumberRejected * 100 / iNumberOfSpectra).setScale(2);
-        BigDecimal lRelativeNotValidated =
-                new BigDecimal((iNumberOfSpectra - (iNumberAccepted + iNumberRejected)) * 100 / iNumberOfSpectra).setScale(2);
+
+        BigDecimal lRelativeAccepted;
+        BigDecimal lRelativeRejected;
+        if(iNumberPersisted != 0){
+            lRelativeAccepted = new BigDecimal(iNumberAccepted * 100 / iNumberPersisted).setScale(2);
+            lRelativeRejected = new BigDecimal(iNumberRejected * 100 / iNumberPersisted).setScale(2);
+        }else{
+            lRelativeAccepted = new BigDecimal(0);
+            lRelativeRejected = new BigDecimal(0);
+        }
 
         // StringBuffer to build the HTML
         StringBuffer sb = new StringBuffer();
@@ -168,11 +267,15 @@ public class ValidationSaveToMsLims extends ValidationSaver {
                 "\t<TH rowspan=\"2\">Not Validated\n" +
                 "\t<TH rowspan=\"2\">Total\n" +
                 "<TR><TH>Accepted<TH>Rejected\n" +
-                "<TR><TH>Absolute<TD> " + iNumberAccepted + " <TD> " + iNumberRejected + " <TD> " + (iNumberOfSpectra - (iNumberAccepted + iNumberRejected)) + " <TD> " + (iNumberOfSpectra) + " \n" +
-                "<TR><TH>Relative<TD> " + lRelativeAccepted + " <TD> " + lRelativeRejected + " <TD> " + lRelativeNotValidated + " <TD> " + (lRelativeAccepted.doubleValue() + lRelativeRejected.doubleValue() + lRelativeNotValidated.doubleValue()) + " \n" +
+                "<TR><TH>Absolute<TD> " + iNumberAccepted + " <TD> " + iNumberRejected + " <TD> " + iNumberRejected + " \n" +
+                "<TR><TH>Relative<TD> " + lRelativeAccepted + " <TD> " + lRelativeRejected + " <TD> " + " \n" +
                 "</TABLE>");
         sb.append("</HTML>");
 
         return sb.toString();
+    }
+
+    public void setParentComponent(JComponent aParentComponent) {
+        iParentComponent = aParentComponent;
     }
 }

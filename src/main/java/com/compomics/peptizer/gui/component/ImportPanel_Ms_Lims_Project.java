@@ -1,15 +1,16 @@
 package com.compomics.peptizer.gui.component;
 
 import com.compomics.mslims.db.accessors.Project;
-import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.interfaces.ImportPanel;
 import com.compomics.peptizer.gui.progressbars.DefaultProgressBar;
 import com.compomics.peptizer.gui.renderer.ProjectListRenderer;
 import com.compomics.peptizer.util.datatools.IdentificationFactory;
 import com.compomics.peptizer.util.fileio.ConnectionManager;
 import com.compomics.peptizer.util.fileio.MatLogger;
+import com.compomics.util.enumeration.CompomicsTools;
 import com.compomics.util.gui.dialogs.ConnectionDialog;
 import com.compomics.util.interfaces.Connectable;
+import com.compomics.util.io.PropertiesManager;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -18,6 +19,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  * Created by IntelliJ IDEA. User: Kenny Date: 14-mrt-2008 Time: 13:45:55 To change this template use File | Settings |
@@ -79,12 +81,12 @@ public class ImportPanel_Ms_Lims_Project extends JPanel implements ImportPanel, 
         btnConnection.setText("Create Connection");
         btnConnection.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
-                JDialog lConnectionDialog =
-                        new ConnectionDialog((JFrame) SwingUtilities.getRoot(lblConnection).getParent(),
-                                ImportPanel_Ms_Lims_Project.this,
-                                "Establish DB connnection for Peptizer",
-                                MatConfig.getInstance().getGeneralProperties().getProperty("CONNECTION_PROPERTIES")
-                        );
+                Properties lProperties = PropertiesManager.getInstance().getProperties(CompomicsTools.MSLIMS, "ms-lims.properties");
+                JDialog lConnectionDialog = new ConnectionDialog((JFrame) SwingUtilities.getRoot(lblConnection).getParent(),
+                        ImportPanel_Ms_Lims_Project.this,
+                        "Establish DB connnection for Peptizer",
+                        lProperties
+                );
                 lConnectionDialog.setVisible(true);
             }
         });

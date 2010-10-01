@@ -343,7 +343,7 @@
         <dependency>
             <groupId>com.compomics</groupId>
             <artifactId>ms-lims</artifactId>
-            <version>7.3.4</version>
+            <version>7.5</version>
             <type>jar</type>
         </dependency>
         <!-- This project depends on the JAR file "xpp-1.1.3.4.jar" (XmlPullParser)
