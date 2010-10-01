@@ -1,6 +1,5 @@
 package com.compomics.peptizer.util;
 
-import com.compomics.peptizer.util.fileio.MatLogger;
 import org.apache.log4j.Logger;
 
 import java.io.Serializable;
@@ -34,7 +33,7 @@ public class ValidationReport implements Serializable {
      * <b>True</b> indicates that the identification was judged correct and therefor accepted.
      * <b>False</b> indicates that the identification was judged incorrect and therefor not rejected.<br>
      */
-    private boolean iResult;
+    private boolean iResult = false;
 
     /**
      * The PeptideHitNumber that is judged as correct. Needs to be set!
@@ -83,9 +82,6 @@ public class ValidationReport implements Serializable {
      * @return boolean whether identification was accepted or rejected.
      */
     public boolean getResult() {
-        if (!isValidated()) {
-            MatLogger.logExceptionalEvent("The results were requested from non-validated identifications!");
-        }
         return iResult;
     }
 

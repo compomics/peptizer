@@ -23,7 +23,7 @@
         <property name="MODIFEDSEQUENCE_FRAGMENTATION_PANEL">true</property>
         <!-- Default file for db connection defaults. This file can include the DRIVER and URL fields from the connection dialog
           if Peptizer is used to connect to the ms_lims database system. -->
-        <property name="CONNECTION_PROPERTIES">conf/connection.properties</property>
+        <property name="CONNECTION_PROPERTIES">ms-lims.properties</property>
         <!-- Default percentage for matching fragmentions in the fused . -->
         <property name="FUSED_INTENSITY_PERCENTAGE">0.01</property>
         <!-- Set Peptizer to stream confident peptide hypothesises that were not selected into a temporary file.

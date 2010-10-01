@@ -1,6 +1,5 @@
 package com.compomics.peptizer.gui.component;
 
-import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.Mediator;
 import com.compomics.peptizer.gui.dialog.SaveValidationDialog;
 import com.compomics.peptizer.gui.interfaces.SaveValidationPanel;
@@ -8,8 +7,10 @@ import com.compomics.peptizer.gui.progressbars.DefaultProgressBar;
 import com.compomics.peptizer.interfaces.ValidationSaver;
 import com.compomics.peptizer.util.fileio.ConnectionManager;
 import com.compomics.peptizer.util.fileio.ValidationSaveToMsLims;
+import com.compomics.util.enumeration.CompomicsTools;
 import com.compomics.util.gui.dialogs.ConnectionDialog;
 import com.compomics.util.interfaces.Connectable;
+import com.compomics.util.io.PropertiesManager;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -19,6 +20,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Properties;
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -129,10 +131,11 @@ public class SaveValidationPanel_Ms_Lims extends JPanel implements SaveValidatio
         btnConnection.setText("Create Connection");
         btnConnection.addActionListener(new ActionListener() {
             public void actionPerformed(final ActionEvent e) {
+                Properties lProperties = PropertiesManager.getInstance().getProperties(CompomicsTools.MSLIMS, "ms-lims.properties");
                 JDialog lConnectionDialog = new ConnectionDialog((JFrame) SwingUtilities.getRoot(lblConnection).getParent(),
                         SaveValidationPanel_Ms_Lims.this,
                         "Establish DB connnection for Peptizer",
-                        MatConfig.getInstance().getGeneralProperties().getProperty("CONNECTION_PROPERTIES")
+                        lProperties
                 );
                 lConnectionDialog.setVisible(true);
             }
@@ -170,6 +173,7 @@ public class SaveValidationPanel_Ms_Lims extends JPanel implements SaveValidatio
                 DefaultProgressBar lProgress = new DefaultProgressBar((JFrame) SwingUtilities.getRoot(iMediator), "Updating validation results to " + ConnectionManager.getInstance().getConnection().getMetaData().getURL() + " .", 0, 1);
                 lValidationSaver = new ValidationSaveToMsLims();
                 lValidationSaver.setData(iDialog.getSelectedMediator().getSelectedPeptideIdentifications());
+                lValidationSaver.setParentComponent(this);
 
             } catch (SQLException e) {
                 logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
