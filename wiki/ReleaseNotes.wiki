@@ -1,5 +1,10 @@
 # Short summary of changes for each version of Peptizer. (as from version 1.6)
 
+
+----
+
+*Changes in Peptizer 1.7.1 (Octobre 8. 2010):*
+ * FEATURE CHANGE: Storage of Validation into ms-lims has been changed. All peptide identifications which were selected by an Agent profile can be rejected or accepted by right-clicking the Task tab. These validations can then be persisted into ms-lims via the save menu. Note that all peptide identifications which passed the Agent profile are accepted by default, and that this Validation is also persisted in ms-lims as true.  
 ----
 
 *Changes in Peptizer 1.7 (September 22. 2010):*
