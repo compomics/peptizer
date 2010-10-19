@@ -206,6 +206,7 @@ public class CreateTaskDialog extends JDialog {
         DefaultProgressBar lProgress = new DefaultProgressBar(iPeptizerGUI, "Data loading", 0, 2);
         MatLogger.logNormalEvent("New task started.");
 
+        IdentificationFactory.getInstance().reset();
         ImportPanel importPanel = jpanSource.getSelectedImport();
         importPanel.loadIdentifications(lProgress);
         PeptideIdentificationIterator iter = IdentificationFactory.getInstance().getIterator();
@@ -214,7 +215,7 @@ public class CreateTaskDialog extends JDialog {
             AgentAggregator lAggregator = null;
             lAggregator = jpanAggregator.getAgentAggregator();
 
-            final SelectedPeptideIdentifications lSelectedPeptideIdentifications = new SelectedPeptideIdentifications();
+            SelectedPeptideIdentifications lSelectedPeptideIdentifications = new SelectedPeptideIdentifications();
 
             lProgress = new DefaultProgressBar(iPeptizerGUI, "Task progress", 0, 2);
 

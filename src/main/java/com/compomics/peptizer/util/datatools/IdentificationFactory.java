@@ -117,6 +117,10 @@ public class IdentificationFactory {
         this.iIdentificationIDs = iIdentificationIDs;
     }
 
+    public void reset() {
+        singleton = new IdentificationFactory();
+    }
+
 
     private class PreprocessedIdentificationIterator implements PeptideIdentificationIterator {
 
