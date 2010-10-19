@@ -1,6 +1,9 @@
 # Short summary of changes for each version of Peptizer. (as from version 1.6)
 
+----
 
+*Changes in Peptizer 1.7.2 (Octobre 19. 2010):*
+ * BUGFIX: Sequential tasks recalled peptide identifications from former tasks and analyzed these in duplicate. The IdentificationFactory now has a reset function which is called each time a new PeptizerTask is started.
 ----
 
 *Changes in Peptizer 1.7.1 (Octobre 8. 2010):*
