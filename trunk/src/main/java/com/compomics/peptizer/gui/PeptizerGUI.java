@@ -42,8 +42,8 @@ import java.util.Properties;
  * SelectedPeptideIdentifications class to test the GUI.
  */
 public class PeptizerGUI extends JFrame implements StatusView {
-	// Class specific log4j logger for PeptizerGUI instances.
-	 private static Logger logger = Logger.getLogger(PeptizerGUI.class);
+    // Class specific log4j logger for PeptizerGUI instances.
+    private static Logger logger = Logger.getLogger(PeptizerGUI.class);
 
     // MAT variables
     public static String PEPTIZER_VERSION;
@@ -104,21 +104,6 @@ public class PeptizerGUI extends JFrame implements StatusView {
 
             }
         });
-
-/*
-        try {
-            UIManager.setLookAndFeel("org.jvnet.substance.SubstanceLookAndFeel");
-            SubstanceLookAndFeel.setSkin(new OfficeSilver2007Skin());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (UnsupportedLookAndFeelException e) {
-            e.printStackTrace();
-        }
-*/
 
         // Set size.
         Dimension lScreenResolutionToolkit = Toolkit.getDefaultToolkit().getScreenSize();
@@ -687,7 +672,7 @@ public class PeptizerGUI extends JFrame implements StatusView {
      */
     public void passTask(SelectedPeptideIdentifications aSelectedPeptideIdentifications) {
         Mediator lMediator = new Mediator(aSelectedPeptideIdentifications);
-        if(iTabPanel.getTabCount() == 1 && iTabPanel.getTitleAt(0) == START_TAB_TITLE){
+        if (iTabPanel.getTabCount() == 1 && iTabPanel.getTitleAt(0) == START_TAB_TITLE) {
             iTabPanel.remove(0);
         }
 
