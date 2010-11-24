@@ -209,5 +209,16 @@
             <property name="active">true</property>
             <property name="veto">false</property>
         </agent>
+        <agent>
+            <!-- Inspects for the mass error (Da). Scores +1 if a peptide could be correlated to a single protein, Scores 0 if more.-->
+            <uniqueid>com.compomics.peptizer.util.agents.ReporterIonAgent</uniqueid>
+            <property name="name">ReporterIons</property>
+            <property name="active">true</property>
+            <property name="veto">false</property>
+            <property name="reporter_mz_1">117</property>
+            <property name="reporter_mz_2">118</property>
+            <property name="ratio">1.5</property>
+            <property name="error">0.4</property>
+        </agent>
     </agents>
 </config>
