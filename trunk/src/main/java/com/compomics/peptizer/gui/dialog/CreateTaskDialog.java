@@ -2,19 +2,15 @@ package com.compomics.peptizer.gui.dialog;
 
 import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.PeptizerGUI;
-import com.compomics.peptizer.gui.SelectedPeptideIdentifications;
+import com.compomics.peptizer.gui.listener.StartTaskActionListener;
 import com.compomics.peptizer.gui.component.*;
 import com.compomics.peptizer.gui.interfaces.ImportPanel;
-import com.compomics.peptizer.gui.progressbars.DefaultProgressBar;
 import com.compomics.peptizer.interfaces.AgentAggregator;
-import com.compomics.peptizer.interfaces.PeptideIdentificationIterator;
 import com.compomics.peptizer.util.AgentFactory;
-import com.compomics.peptizer.util.datatools.IdentificationFactory;
 import com.compomics.peptizer.util.fileio.ConfigurationWriter;
 import com.compomics.peptizer.util.fileio.FileManager;
-import com.compomics.peptizer.util.fileio.MatLogger;
-import com.compomics.peptizer.util.worker.MatWorker;
 import org.apache.log4j.Logger;
+import org.divxdede.swing.busy.JBusyComponent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,8 +29,8 @@ import java.util.ArrayList;
  * Class description: ------------------ This class was developed to
  */
 public class CreateTaskDialog extends JDialog {
-	// Class specific log4j logger for CreateTaskDialog instances.
-	 private static Logger logger = Logger.getLogger(CreateTaskDialog.class);
+    // Class specific log4j logger for CreateTaskDialog instances.
+    private static Logger logger = Logger.getLogger(CreateTaskDialog.class);
 
     /**
      * The main frame.
@@ -52,6 +48,8 @@ public class CreateTaskDialog extends JDialog {
     private JButton btnCancel;
     private JButton btnLoadConfiguration;
     private JButton btnSaveConfiguration;
+
+    private JBusyComponent<JPanel> busyPanel = null;
 
     /**
      * Create a new assessment. Through this dialog a DataSource and a Profile can be selected. If applied a MatWorker
@@ -97,61 +95,19 @@ public class CreateTaskDialog extends JDialog {
         btnStart = new JButton("Start Task");
         // Use Alt_Enter as a Start Shortcut.
         btnStart.setMnemonic(KeyEvent.VK_ENTER);
-        btnStart.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    CreateTaskDialog.this.startPressed();
-                } catch (OutOfMemoryError oom) {
-                    MatLogger.logExceptionalEvent("Out of memory error!\nPlease supply the Java Virtual Machine(JVM) with more memory.\n\nExample: Startup parameter \"-Xmx512m\" supplies the JVM with 512m memory.");
-                    System.err.println("Out Of Memory Exception!!!!");
-                }
-            }
-        });
+
+
         btnCancel = new JButton("Cancel");
-        {
-            btnCancel.setMnemonic(KeyEvent.VK_C);
-            btnCancel.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    CreateTaskDialog.this.cancelPressed();
-                }
-            });
-        }
 
         btnLoadConfiguration = new JButton("Load Task");
-        {
-            btnLoadConfiguration.setMnemonic(KeyEvent.VK_C);
-            btnLoadConfiguration.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    if (FileManager.getInstance().selectTaskInput(jpanSource)) {
-                        MatConfig.getInstance().reloadAllConfiguration(FileManager.getInstance().getTaskInput());
-                        jpanAgentProfile.loadAgentsFromAgentFactory();
-                        jpanAgentProfile.doOptimalResize();
-                        jpanAggregator.resetAgentAggregatorPanel();
-                        jpanConfidence.updateTextField();
-                        CreateTaskDialog.this.getOwner().pack();
-                        CreateTaskDialog.this.repaint();
-                    }
-                }
-            });
-        }
-
         btnSaveConfiguration = new JButton("Save Task");
-        {
-            btnSaveConfiguration.setMnemonic(KeyEvent.VK_C);
-            btnSaveConfiguration.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    if (FileManager.getInstance().selectTaskOutput(jpanSource)) {
-                        ConfigurationWriter.writeTaskConfiguration(FileManager.getInstance().getTaskOutput());
-                    }
-                }
-            });
-        }
 
 
         JPanel jpanFinalButtons = new JPanel();
         jpanFinalButtons.setLayout(new BoxLayout(jpanFinalButtons, BoxLayout.LINE_AXIS));
 
-        jpanFinalButtons.add(Box.createHorizontalStrut(5));
+
+        jpanFinalButtons.add(Box.createHorizontalStrut(20));
         jpanFinalButtons.add(btnLoadConfiguration);
         jpanFinalButtons.add(Box.createHorizontalStrut(10));
         jpanFinalButtons.add(btnSaveConfiguration);
@@ -159,10 +115,20 @@ public class CreateTaskDialog extends JDialog {
         jpanFinalButtons.add(btnStart);
         jpanFinalButtons.add(Box.createHorizontalStrut(10));
         jpanFinalButtons.add(btnCancel);
-        jpanFinalButtons.add(Box.createHorizontalStrut(5));
+        jpanFinalButtons.add(Box.createHorizontalStrut(30));
+
+        // Vertical spacing around the buttons.
+        JPanel jpanFinalButtonWrapper = new JPanel();
+        jpanFinalButtonWrapper.setLayout(new BoxLayout(jpanFinalButtonWrapper, BoxLayout.PAGE_AXIS));
+        jpanFinalButtonWrapper.add(Box.createVerticalStrut(15));
+        jpanFinalButtonWrapper.add(jpanFinalButtons);
+        jpanFinalButtonWrapper.add(Box.createVerticalStrut(15));
+
+        busyPanel = new JBusyComponent<JPanel>(jpanFinalButtonWrapper);
 
         JPanel jpanContent = new JPanel();
         jpanContent.setLayout(new BoxLayout(jpanContent, BoxLayout.PAGE_AXIS));
+
 
         jpanContent.add(jpanSource);
         jpanContent.add(Box.createVerticalStrut(10));
@@ -172,13 +138,56 @@ public class CreateTaskDialog extends JDialog {
         jpanContent.add(Box.createVerticalStrut(10));
         jpanContent.add(jpanConfidence);
         jpanContent.add(Box.createVerticalStrut(10));
-        jpanContent.add(jpanFinalButtons);
+        jpanContent.add(busyPanel);
         jpanContent.add(Box.createVerticalStrut(5));
 
+
+        // Add Listeners.
+        setListeners();
+
         this.add(jpanContent);
+
         this.pack();
 
         setSize();
+
+
+    }
+
+    private void setListeners() {
+        btnCancel.setMnemonic(KeyEvent.VK_C);
+        btnCancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                CreateTaskDialog.this.cancelPressed();
+            }
+        });
+
+        btnLoadConfiguration.setMnemonic(KeyEvent.VK_C);
+        btnLoadConfiguration.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (FileManager.getInstance().selectTaskInput(jpanSource)) {
+                    MatConfig.getInstance().reloadAllConfiguration(FileManager.getInstance().getTaskInput());
+                    jpanAgentProfile.loadAgentsFromAgentFactory();
+                    jpanAgentProfile.doOptimalResize();
+                    jpanAggregator.resetAgentAggregatorPanel();
+                    jpanConfidence.updateTextField();
+                    CreateTaskDialog.this.getOwner().pack();
+                    CreateTaskDialog.this.repaint();
+                }
+            }
+        });
+
+        btnSaveConfiguration.setMnemonic(KeyEvent.VK_C);
+        btnSaveConfiguration.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (FileManager.getInstance().selectTaskOutput(jpanSource)) {
+                    ConfigurationWriter.writeTaskConfiguration(FileManager.getInstance().getTaskOutput());
+                }
+            }
+        });
+
+
+        btnStart.addActionListener(new StartTaskActionListener(this, busyPanel));
     }
 
     private void setSize() {
@@ -198,44 +207,6 @@ public class CreateTaskDialog extends JDialog {
         this.dispose();
     }
 
-    /**
-     * Start the task.
-     */
-    private void startPressed() {
-
-        DefaultProgressBar lProgress = new DefaultProgressBar(iPeptizerGUI, "Data loading", 0, 2);
-        MatLogger.logNormalEvent("New task started.");
-
-        IdentificationFactory.getInstance().reset();
-        ImportPanel importPanel = jpanSource.getSelectedImport();
-        importPanel.loadIdentifications(lProgress);
-        PeptideIdentificationIterator iter = IdentificationFactory.getInstance().getIterator();
-
-        if (iter != null) {
-            AgentAggregator lAggregator = null;
-            lAggregator = jpanAggregator.getAgentAggregator();
-
-            SelectedPeptideIdentifications lSelectedPeptideIdentifications = new SelectedPeptideIdentifications();
-
-            lProgress = new DefaultProgressBar(iPeptizerGUI, "Task progress", 0, 2);
-
-            MatWorker worker = new MatWorker(iter, lAggregator, lSelectedPeptideIdentifications, lProgress);
-            worker.start();
-            lProgress.setVisible(true);
-
-            // The worker now does his thingy
-
-            if (lProgress.isEnabled()) {
-                String root = iter.toString() + " results.";
-                lSelectedPeptideIdentifications.setMeta(SelectedPeptideIdentifications.MK_ITERITOR_DESCRIPTION, iter.getGeneralDescription());
-
-                MatLogger.logNormalEvent("Task on " + iter.getGeneralDescription() + " completed!");
-                iPeptizerGUI.passTask(lSelectedPeptideIdentifications);
-            }
-            this.dispose();
-        }
-
-    }
 
     public void setMs_lims_project_selected(long aProjectID) {
         ImportPanel anImport = ImportPanel_Ms_Lims_Project.getInstance();
@@ -267,5 +238,32 @@ public class CreateTaskDialog extends JDialog {
     public void setMs_lims_identification_id_selected() {
         ImportPanel anImport = ImportPanel_Ms_Lims_IdentificationIDList.getInstance();
         jpanSource.setSelectedIterator(anImport);
+    }
+
+    /**
+     * Returns the selected import panel
+     *
+     * @return
+     */
+    public ImportPanel getSelectedImport() {
+        return jpanSource.getSelectedImport();
+    }
+
+    /**
+     * Returns the PeptizerGUI parent frame.
+     *
+     * @return
+     */
+    public Frame getPeptizerGUI() {
+        return iPeptizerGUI;
+    }
+
+    /**
+     * Return the selected AgentAggregator of the Create Task Dialog.
+     *
+     * @return
+     */
+    public AgentAggregator getAgentAggregator() {
+        return jpanAggregator.getAgentAggregator();
     }
 }

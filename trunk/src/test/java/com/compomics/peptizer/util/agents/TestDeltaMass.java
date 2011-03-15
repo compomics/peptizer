@@ -169,4 +169,84 @@ public class TestDeltaMass extends TestCaseLM {
 
         Assert.assertTrue(lResult.length == 3);
     }
+
+
+    public void testDeltaMassDaC13() {
+
+
+        Agent lAgent = AgentFactory.getInstance().getAgent("com.compomics.peptizer.util.agents.DeltaMassDaAgent");
+
+        //Query300 is corrupted!!
+        // normal mass error = -0.15, changed this to -1.15Da to test the C13 Agent.
+        String datFile = getFullFilePath("F015264.dat");
+        if (File.separatorChar == '\\') {
+            datFile = datFile.replace("%20", " ");
+        }
+        MascotDatfile lMascotDatfile = new MascotDatfile(datFile);
+        int lQueryNumber = 300;
+
+        Query lQuery = (Query) lMascotDatfile.getQuery(lQueryNumber);
+        Vector lPeptideHits = lMascotDatfile.getQueryToPeptideMap().getAllPeptideHits(lQueryNumber);
+        Vector lPeptizerPeptideHits = new Vector(lPeptideHits.size());
+        for (int i = 0; i < lPeptideHits.size(); i++) {
+            lPeptizerPeptideHits.add(new MascotPeptideHit((PeptideHit) lPeptideHits.get(i), i + 1));
+        }
+        MascotSpectrum mascotSpectrum = new MascotSpectrum(lMascotDatfile.getQuery(lQueryNumber));
+        PeptideIdentification lPeptideIdentification = new PeptideIdentification(mascotSpectrum, lPeptizerPeptideHits, SearchEngineEnum.Mascot);
+
+        lAgent.setProperty(DeltaMassDaAgent.TOLERANCE, "0.5");
+        lAgent.setProperty(DeltaMassDaAgent.C13, "FALSE");
+
+        AgentVote[] lResult = lAgent.inspectIfPossible(lPeptideIdentification);
+
+        // Difference is to big! -1.15Da! Score should equal 1.
+        Assert.assertEquals(1, lResult[0].score);
+
+        // Second, set the C13 to TRUe.
+        // Now -0.15Da is also evaluated and the score should equal 0.
+        lAgent.setProperty(DeltaMassDaAgent.C13, "TRUE");
+        lResult = lAgent.inspectIfPossible(lPeptideIdentification);
+
+        Assert.assertEquals(0, lResult[0].score);
+
+    }
+    public void testDeltaMassPpmC13() {
+
+
+        Agent lAgent = AgentFactory.getInstance().getAgent("com.compomics.peptizer.util.agents.DeltaMassPPMAgent");
+
+        //Query300 is corrupted!!
+        // normal mass error = -0.15, changed this to -1.15Da to test the C13 Agent.
+        String datFile = getFullFilePath("F015264.dat");
+        if (File.separatorChar == '\\') {
+            datFile = datFile.replace("%20", " ");
+        }
+        MascotDatfile lMascotDatfile = new MascotDatfile(datFile);
+        int lQueryNumber = 300;
+
+        Query lQuery = (Query) lMascotDatfile.getQuery(lQueryNumber);
+        Vector lPeptideHits = lMascotDatfile.getQueryToPeptideMap().getAllPeptideHits(lQueryNumber);
+        Vector lPeptizerPeptideHits = new Vector(lPeptideHits.size());
+        for (int i = 0; i < lPeptideHits.size(); i++) {
+            lPeptizerPeptideHits.add(new MascotPeptideHit((PeptideHit) lPeptideHits.get(i), i + 1));
+        }
+        MascotSpectrum mascotSpectrum = new MascotSpectrum(lMascotDatfile.getQuery(lQueryNumber));
+        PeptideIdentification lPeptideIdentification = new PeptideIdentification(mascotSpectrum, lPeptizerPeptideHits, SearchEngineEnum.Mascot);
+
+        lAgent.setProperty(DeltaMassDaAgent.TOLERANCE, "200");
+        lAgent.setProperty(DeltaMassDaAgent.C13, "FALSE");
+
+        AgentVote[] lResult = lAgent.inspectIfPossible(lPeptideIdentification);
+
+        // Difference is to big! -1.15Da! Score should equal 1.
+        Assert.assertEquals(1, lResult[0].score);
+
+        // Second, set the C13 to TRUe.
+        // Now -0.15Da is also evaluated and the score should equal 0.
+        lAgent.setProperty(DeltaMassDaAgent.C13, "TRUE");
+        lResult = lAgent.inspectIfPossible(lPeptideIdentification);
+
+        Assert.assertEquals(0, lResult[0].score);
+
+    }
 }

@@ -11,7 +11,7 @@
 
     <!-- Set the version number for the whole project -->
     <properties>
-        <version.number>1.7.2</version.number>
+        <version.number>1.7.5</version.number>
         <logging.level.default>DEBUG</logging.level.default>
         <logging.file.path.name>peptizer-log4j.log</logging.file.path.name>
         <logging.file.max.size>6000KB</logging.file.max.size>
@@ -296,6 +296,12 @@
     <dependencies>
 
         <dependency>
+            <groupId>org.divxdede</groupId>
+            <artifactId>jbusycomponent</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+
+        <dependency>
             <groupId>uk.ac.ebi.uniprot.kraken</groupId>
             <artifactId>uniprotjapi</artifactId>
             <version>2010.07</version>
@@ -357,6 +363,13 @@
         </dependency>
 
 
+        <!--Apache commons Command line interpreter for the apps.-->
+        <dependency>
+            <groupId>org.java.net.substance</groupId>
+            <artifactId>substance</artifactId>
+            <version>6.0</version>
+        </dependency>
+
         <!-- This project depends on the JFreeChart visualistations.
           -->
         <dependency>
@@ -412,6 +425,13 @@
             <groupId>uk.ac.ebi.pride.jaxb</groupId>
             <artifactId>pride-jaxb</artifactId>
             <version>1.0.1</version>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jgoodies</groupId>
+            <artifactId>forms</artifactId>
+            <version>1.2.1</version>
             <type>jar</type>
         </dependency>
 

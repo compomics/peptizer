@@ -21,18 +21,24 @@ import java.math.BigDecimal;
  * This class was developed to inspect for mass tolerance error (Da) (experimental vs theory).
  */
 public class DeltaMassPPMAgent extends Agent {
-	// Class specific log4j logger for DeltaMassPPMAgent instances.
-	 private static Logger logger = Logger.getLogger(DeltaMassPPMAgent.class);
+    // Class specific log4j logger for DeltaMassPPMAgent instances.
+    private static Logger logger = Logger.getLogger(DeltaMassPPMAgent.class);
 
     /**
      * Identifies the allowed mass tolerance.
      */
     public static final String TOLERANCE = "tolerance";
 
+    /**
+     * Identifies the allowed mass tolerance.
+     */
+    public static final String C13 = "c13";
+
 
     public DeltaMassPPMAgent() {
         // Init the general Agent settings.
         initialize(new String[]{TOLERANCE});
+        initialize(new String[]{C13});
         SearchEngineEnum[] searchEngines = {};
         compatibleSearchEngine = searchEngines;
     }
@@ -58,6 +64,10 @@ public class DeltaMassPPMAgent extends Agent {
         // Localize the Dummy property.
         double lTolerance = Double.parseDouble((String) (this.iProperties.get(TOLERANCE)));
 
+        // Localize the C13 Da tolerance property.
+        boolean lC13Tolerance = Boolean.parseBoolean((String) (this.iProperties.get(C13)));
+
+
         AgentVote[] lAgentVotes = new AgentVote[aPeptideIdentification.getNumberOfConfidentPeptideHits()];
         for (int i = 0; i < lAgentVotes.length; i++) {
 
@@ -67,18 +77,36 @@ public class DeltaMassPPMAgent extends Agent {
             // 1. Get the nth confident PeptideHit.
             PeptizerPeptideHit lPeptideHit = aPeptideIdentification.getPeptideHit(i);
 
-            // The resulting Inspection score.
+
+            AgentVote lVote = null;
 
             double lDeltaMass = lPeptideHit.getDeltaMass();
             double lPeptideMassByMillion = lPeptideHit.getTheoMass() / 1000000.0;
-
             double lPpmError = lDeltaMass / lPeptideMassByMillion;
 
+            // The resulting Inspection score.
             if (Math.abs(lPpmError) >= lTolerance) {
-                lAgentVotes[i] = AgentVote.POSITIVE_FOR_SELECTION;
+                if (lC13Tolerance) {
+
+                    lPeptideMassByMillion = (lPeptideHit.getTheoMass() - 1) / 1000000.0; // Assuming this is a C13 peak, minus -1 to simulate the C12 precursor mass.
+                    lPpmError = (Math.abs(lDeltaMass)-1) / lPeptideMassByMillion;
+
+                    // Ok, can this be a identified C13 precursor?
+                    if (lPpmError >= lTolerance) {
+                        lVote = AgentVote.POSITIVE_FOR_SELECTION;
+                    } else {
+                        // If error is 1.01Da, then 1.01-1=0.01Da is within tolerance boundaries.
+                        lVote = AgentVote.NEUTRAL_FOR_SELECTION;
+                    }
+                }else{
+                    // Error is larger then Agent tolerance, and c13 fix is not specified.
+                    lVote = AgentVote.POSITIVE_FOR_SELECTION;
+                }
             } else {
-                lAgentVotes[i] = AgentVote.NEUTRAL_FOR_SELECTION;
+                lVote = AgentVote.NEUTRAL_FOR_SELECTION;
             }
+
+            lAgentVotes[i] = lVote;
 
             // Build the report!
             // Agent Result.

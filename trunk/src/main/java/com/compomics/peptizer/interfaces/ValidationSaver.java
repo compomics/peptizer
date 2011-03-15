@@ -1,8 +1,8 @@
 package com.compomics.peptizer.interfaces;
 
-import com.compomics.peptizer.gui.progressbars.DefaultProgressBar;
-import com.compomics.util.sun.SwingWorker;
 import org.apache.log4j.Logger;
+
+import java.util.Observer;
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
  * ------------------
  * This Interface was developed to be implemented by IO objects that can save a group of PeptideIdentifications.
  */
-public abstract class ValidationSaver extends SwingWorker {
+public abstract class ValidationSaver implements Runnable {
 	// Class specific log4j logger for ValidationSaver instances.
 	 private static Logger logger = Logger.getLogger(ValidationSaver.class);
 
@@ -26,9 +26,10 @@ public abstract class ValidationSaver extends SwingWorker {
     protected Object iData = null;
 
     /**
-     * Optional progressbar of the ValidationSaver.
+     * allow one object to observe the saver.
      */
-    protected DefaultProgressBar iProgress = null;
+    public Observer iObserver = null;
+
 
     /**
      * Set the Data that must be written to the csv.
@@ -46,14 +47,10 @@ public abstract class ValidationSaver extends SwingWorker {
     public abstract void finish();
 
     /**
-     * Set the visible status of the Progressbar.
-     *
-     * @param aVisible
+     * Set one observer to the Saver instance.
+     * @param aObserver
      */
-    public void setProgressVisible(boolean aVisible) {
-        if (iProgress != null) {
-            iProgress.setVisible(aVisible);
-        }
+    public void setObserver(Observer aObserver) {
+        iObserver = aObserver;
     }
-
 }

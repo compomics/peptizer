@@ -21,18 +21,24 @@ import java.math.BigDecimal;
  * This class was developed to inspect for mass tolerance error (Da) (experimental vs theory).
  */
 public class DeltaMassDaAgent extends Agent {
-	// Class specific log4j logger for DeltaMassDaAgent instances.
-	 private static Logger logger = Logger.getLogger(DeltaMassDaAgent.class);
+    // Class specific log4j logger for DeltaMassDaAgent instances.
+    private static Logger logger = Logger.getLogger(DeltaMassDaAgent.class);
 
     /**
      * Identifies the allowed mass tolerance.
      */
     public static final String TOLERANCE = "tolerance";
 
+    /**
+     * Identifies the allowed mass tolerance.
+     */
+    public static final String C13 = "c13";
+
 
     public DeltaMassDaAgent() {
         // Init the general Agent settings.
         initialize(new String[]{TOLERANCE});
+        initialize(new String[]{C13});
         SearchEngineEnum[] searchEngines = {};
         compatibleSearchEngine = searchEngines;
     }
@@ -55,8 +61,12 @@ public class DeltaMassDaAgent extends Agent {
      */
     public AgentVote[] inspect(PeptideIdentification aPeptideIdentification) {
 
-        // Localize the Dummy property.
+        // Localize the Da tolerance property.
         double lTolerance = Double.parseDouble((String) (this.iProperties.get(TOLERANCE)));
+
+        // Localize the C13 Da tolerance property.
+        boolean lC13Tolerance = Boolean.parseBoolean((String) (this.iProperties.get(C13)));
+
 
         AgentVote[] lAgentVotes = new AgentVote[aPeptideIdentification.getNumberOfConfidentPeptideHits()];
         for (int i = 0; i < lAgentVotes.length; i++) {
@@ -71,12 +81,26 @@ public class DeltaMassDaAgent extends Agent {
             // The resulting Inspection score.
 
             double lDaError = lPeptideHit.getDeltaMass();
+            AgentVote lVote = null;
             if (Math.abs(lDaError) >= lTolerance) {
-                lAgentVotes[i] = AgentVote.POSITIVE_FOR_SELECTION;
+                if (lC13Tolerance) {
+                    // Ok, can this be a identified C13 precursor?
+                    if (Math.abs((Math.abs(lDaError) - 1)) >= lTolerance) {
+                        lVote = AgentVote.POSITIVE_FOR_SELECTION;
+                    } else {
+                        // If error is 1.01Da, then 1.01-1=0.01Da is within tolerance boundaries.
+                        lVote = AgentVote.NEUTRAL_FOR_SELECTION;
+                    }
+                }else{
+                    // Error is larger then Agent tolerance, and c13 fix is not specified.
+                    lVote = AgentVote.POSITIVE_FOR_SELECTION;
+                }
             } else {
-                lAgentVotes[i] = AgentVote.NEUTRAL_FOR_SELECTION;
+                // Error is smaller then Agent tolerance.
+                lVote = AgentVote.NEUTRAL_FOR_SELECTION;
             }
 
+            lAgentVotes[i] = lVote;
             // Build the report!
             // Agent Result.
 
@@ -101,6 +125,6 @@ public class DeltaMassDaAgent extends Agent {
      * @return String description of the DummyAgent.
      */
     public String getDescription() {
-        return "<html>Inspects for the mass error (Da) of the peptide. <b>Votes 'Positive_for_selection' if the mass error is greater then the allowed tolerance ( " + this.iProperties.get(TOLERANCE) + ")</b>. Votes 'Neutral_for_selection' if less.</html>";
+        return "<html>Inspects for the mass error (Da) of the peptide. <b>Votes 'Positive_for_selection' if the mass error is greater then the allowed tolerance ( " + this.iProperties.get(TOLERANCE) + ")</b>. If the C13 option is set to TRUE, then the mass error -1Da will also be evaluated. Votes 'Neutral_for_selection' if less.</html>";
     }
 }

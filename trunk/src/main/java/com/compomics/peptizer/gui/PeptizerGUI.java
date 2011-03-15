@@ -647,9 +647,14 @@ public class PeptizerGUI extends JFrame implements StatusView {
 
         if (!iEnclosedByLims) {
             if (ConnectionManager.getInstance().hasConnection()) {
-                try {
-                    logger.info("Closing connection to '" + ConnectionManager.getInstance().getConnection().getMetaData().getURL() + "'.");
-                    ConnectionManager.getInstance().closeConnection();
+                try{
+                    int lResult = JOptionPane.showConfirmDialog(this, "Do you want to close the active connection to ms-lims?");
+
+                    if(lResult == JOptionPane.OK_OPTION){
+                        logger.info("Closing connection to '" + ConnectionManager.getInstance().getConnection().getMetaData().getURL() + "'.");
+                        ConnectionManager.getInstance().closeConnection();
+                    }
+
                 } catch (SQLException e1) {
                     logger.error(e1.getMessage(), e1);  //To change body of catch statement use File | Settings | File Templates.
                 }

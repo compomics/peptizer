@@ -1,6 +1,6 @@
 package com.compomics.peptizer.gui.dialog;
 
-import com.compomics.peptizer.gui.component.JLabelAndTextFieldPanel;
+import com.compomics.peptizer.gui.component.JLabelAndComponentPanel;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -24,7 +24,7 @@ public class ParameterDialog extends JDialog {
 	// Class specific log4j logger for ParameterDialog instances.
 	 private static Logger logger = Logger.getLogger(ParameterDialog.class);
 
-    private JTextField[] txtFields = null;
+    private JComponent[] compFields = null;
     private JLabel[] lblFields = null;
 
     private JButton btnOK = null;
@@ -108,14 +108,14 @@ public class ParameterDialog extends JDialog {
                 lLabelWidth = lblFields[i].getSize().width;
             }
 
-            if (lTextFieldWidth < txtFields[i].getSize().width) {
-                lTextFieldWidth = txtFields[i].getSize().width;
+            if (lTextFieldWidth < compFields[i].getSize().width) {
+                lTextFieldWidth = compFields[i].getSize().width;
             }
         }
 
         for (int i = 0; i < iPropertiesArray.length; i++) {
             lblFields[i].setPreferredSize(new Dimension(lLabelWidth, lblFields[i].getSize().height));
-            txtFields[i].setPreferredSize(new Dimension(lTextFieldWidth, txtFields[i].getSize().height));
+            compFields[i].setPreferredSize(new Dimension(lTextFieldWidth, compFields[i].getSize().height));
         }
     }
 
@@ -125,18 +125,25 @@ public class ParameterDialog extends JDialog {
     private void constructScreen() {
         // 1. set String[][]
 
-        txtFields = new JTextField[iProperties.size()];
+        compFields = new JComponent[iProperties.size()];
         lblFields = new JLabel[iProperties.size()];
 
         for (int i = 0; i < iPropertiesArray.length; i++) {
             String[] lStrings = iPropertiesArray[i];
             String aKey = lStrings[0];
-            String aValue = lStrings[1];
+            String aValue = lStrings[1].toUpperCase();
 
             JLabel lblField = new JLabel(aKey);
-            JTextField txtField = new JTextField(aValue);
+            JComponent lComponent;
+            if(aValue.equals("TRUE") || aValue.equals("FALSE")){
+                lComponent = new JCheckBox();
+                ((JCheckBox)lComponent).setSelected(Boolean.parseBoolean(aValue));
+            }else{
+                lComponent = new JTextField();
+                ((JTextField)lComponent).setText(aValue);
+            }
 
-            txtField.addKeyListener(new KeyAdapter() {
+            lComponent.addKeyListener(new KeyAdapter() {
                 /**
                  * Invoked when a key has been typed.
                  * This event occurs when a key press is followed by a key release.
@@ -148,14 +155,14 @@ public class ParameterDialog extends JDialog {
                 }
             });
 
-            txtField.setPreferredSize(new Dimension((txtField.getFontMetrics(txtField.getFont()).stringWidth(aValue) + 50), 25));
+            lComponent.setPreferredSize(new Dimension((lComponent.getFontMetrics(lComponent.getFont()).stringWidth(aValue) + 50), 25));
 
-            txtFields[i] = txtField;
+            compFields[i] = lComponent;
 
             lblFields[i] = lblField;
         }
 
-        JLabelAndTextFieldPanel jpanTop = new JLabelAndTextFieldPanel(lblFields, txtFields);
+        JLabelAndComponentPanel jpanTop = new JLabelAndComponentPanel(lblFields, compFields);
         jpanTop.setBorder(BorderFactory.createTitledBorder(""));
 
         btnOK = new JButton("Ok");
@@ -219,11 +226,18 @@ public class ParameterDialog extends JDialog {
     private void okTriggered() {
         for (int i = 0; i < lblFields.length; i++) {
             String aKey = lblFields[i].getText();
-            String aValue = txtFields[i].getText();
+            String aValue;
+
+            if(compFields[i] instanceof JCheckBox){
+                aValue = String.valueOf(((JCheckBox)compFields[i]).isSelected());
+            }else{
+                aValue = String.valueOf(((JTextField)compFields[i]).getText());
+
+            }
 
             if (aValue.equals("")) {
                 JOptionPane.showMessageDialog(this, aKey + " needs to be specified!", "Unspecified parameter!", JOptionPane.ERROR_MESSAGE);
-                txtFields[i].requestFocus();
+                compFields[i].requestFocus();
                 return;
             }
 
