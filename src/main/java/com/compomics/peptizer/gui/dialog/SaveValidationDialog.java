@@ -7,9 +7,11 @@ import com.compomics.peptizer.gui.component.SaveValidationPanel_CSV;
 import com.compomics.peptizer.gui.component.SaveValidationPanel_Ms_Lims;
 import com.compomics.peptizer.gui.component.SaveValidationPanel_PDF;
 import com.compomics.peptizer.gui.interfaces.SaveValidationPanel;
+import com.compomics.peptizer.gui.listener.SaveActionListener;
 import com.compomics.peptizer.gui.model.MediatorListCellRendererImpl;
 import com.compomics.peptizer.interfaces.ValidationSaver;
 import org.apache.log4j.Logger;
+import org.divxdede.swing.busy.JBusyComponent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,8 +32,8 @@ import java.util.Vector;
  * This class was developed to
  */
 public class SaveValidationDialog extends JDialog {
-	// Class specific log4j logger for SaveValidationDialog instances.
-	 private static Logger logger = Logger.getLogger(SaveValidationDialog.class);
+    // Class specific log4j logger for SaveValidationDialog instances.
+    private static Logger logger = Logger.getLogger(SaveValidationDialog.class);
     /**
      * The main frame.
      */
@@ -43,6 +45,8 @@ public class SaveValidationDialog extends JDialog {
     private JComboBox cmbMediators;
     private JButton btnSave;
     private JButton btnCancel;
+
+    private JBusyComponent<JPanel> busyComponent = null;
 
     private JPanel jpanTargetProperties;
     private JPanel jpanTarget;
@@ -91,14 +95,7 @@ public class SaveValidationDialog extends JDialog {
         lSavers.add(SaveValidationPanel_Ms_Lims.getInstance(this));
         cmbSavers = new JComboBox(lSavers);
 
-        cmbSavers.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                jpanTargetProperties.remove(0);
-                jpanTargetProperties.add((JPanel) cmbSavers.getSelectedItem(), 0);
-                jpanTargetProperties.validate();
-                jpanTarget.repaint();
-            }
-        });
+
         cmbSavers.setMaximumSize(new Dimension(500, cmbSavers.getPreferredSize().height));
 
         jpanTargetProperties = new JPanel(new BorderLayout());
@@ -122,20 +119,9 @@ public class SaveValidationDialog extends JDialog {
         // 4. Go!
         btnSave = new JButton("Save");
         btnSave.setMnemonic(KeyEvent.VK_S);
-        btnSave.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                SaveValidationDialog.this.savePressed();
-            }
-        });
+
         btnCancel = new JButton("Cancel");
-        {
-            btnCancel.setMnemonic(KeyEvent.VK_C);
-            btnCancel.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    SaveValidationDialog.this.cancelPressed();
-                }
-            });
-        }
+
 
         JPanel jpanButtons = new JPanel();
         jpanButtons.setLayout(new BoxLayout(jpanButtons, BoxLayout.LINE_AXIS));
@@ -161,12 +147,40 @@ public class SaveValidationDialog extends JDialog {
         jpanHorizontalSpace.add(jpanContent);
         jpanHorizontalSpace.add(Box.createHorizontalStrut(5));
 
-        this.add(jpanHorizontalSpace);
+        busyComponent = new JBusyComponent<JPanel>(jpanHorizontalSpace);
+
+        this.add(busyComponent);
         this.pack();
 
         this.jpanTarget.setMaximumSize(new Dimension(3000, jpanTarget.getSize().height));
         int lNewWidth = iPeptizerGUI.getSize().width - (new Double(iPeptizerGUI.getSize().width * 0.60)).intValue();
         setSize(new Dimension(lNewWidth, this.getSize().height));
+
+        // Finally, add the listeners to the components.
+        setListeners();
+    }
+
+    /**
+     * Set listeners to the components of the save dialog.
+     */
+    private void setListeners() {
+        btnSave.addActionListener(new SaveActionListener(this, busyComponent));
+
+        btnCancel.setMnemonic(KeyEvent.VK_C);
+        btnCancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SaveValidationDialog.this.cancelPressed();
+            }
+        });
+
+        cmbSavers.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                jpanTargetProperties.remove(0);
+                jpanTargetProperties.add((JPanel) cmbSavers.getSelectedItem(), 0);
+                jpanTargetProperties.validate();
+                jpanTarget.repaint();
+            }
+        });
     }
 
     /**
@@ -176,23 +190,6 @@ public class SaveValidationDialog extends JDialog {
         this.dispose();
     }
 
-    /**
-     * Save the SelectedPeptideIdentifications to the ValidationSaver.
-     */
-    private void savePressed() {
-        // long long line, first gets the ValidationSaver from by gui input, then get the SelectedPeptideIdentifications from the gui and combine them.
-        ValidationSaver lSaver = ((SaveValidationPanel) cmbSavers.getSelectedItem()).getValidationSaver();
-        SelectedPeptideIdentifications lSelectedPeptideIdentifications = ((Mediator) cmbMediators.getSelectedItem()).getSelectedPeptideIdentifications();
-        // Save.
-        lSaver.setData(lSelectedPeptideIdentifications);
-        lSaver.construct();
-        // Reset last save.
-        ((Mediator) cmbMediators.getSelectedItem()).setChangedSinceLastSave(false);
-        // Finish the saver.
-
-        lSaver.finish();
-        this.dispose();
-    }
 
     /**
      * Returns the currently selected Mediator.
@@ -219,5 +216,32 @@ public class SaveValidationDialog extends JDialog {
      */
     public ActionListener[] getComboBoxListeners() {
         return cmbMediators.getListeners(ActionListener.class);
+    }
+
+    /**
+     * Returns the active ValidationSaver of the Dialog.
+     *
+     * @return
+     */
+    public ValidationSaver getValidationSaver() {
+        return ((SaveValidationPanel) cmbSavers.getSelectedItem()).getValidationSaver();
+    }
+
+    /**
+     * Returns the active Collection of selected PeptideIdentifications from the Mediator.
+     *
+     * @return
+     */
+    public SelectedPeptideIdentifications getSelectedPeptideIdentifications() {
+        return ((Mediator) cmbMediators.getSelectedItem()).getSelectedPeptideIdentifications();
+    }
+
+    /**
+     * Set the last save status of the SaveDialog for this Mediator.
+     *
+     * @param b
+     */
+    public void setChangedSinceLastSave(boolean b) {
+        ((Mediator) cmbMediators.getSelectedItem()).setChangedSinceLastSave(b);
     }
 }

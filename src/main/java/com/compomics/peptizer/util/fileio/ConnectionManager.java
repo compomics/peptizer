@@ -89,8 +89,10 @@ public class ConnectionManager {
      */
     public void setConnection(Connection aConnection) {
         // If there was allready a connection set, close that one first!!
-        closeConnection();
-        iConnection = aConnection;
+        if(!aConnection.equals(iConnection)){
+            closeConnection();
+            iConnection = aConnection;
+        }
     }
 
     /**

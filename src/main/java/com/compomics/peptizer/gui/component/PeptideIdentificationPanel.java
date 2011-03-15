@@ -28,8 +28,8 @@ import java.util.Vector;
  * This class
  */
 public class PeptideIdentificationPanel {
-	// Class specific log4j logger for PeptideIdentificationPanel instances.
-	 private static Logger logger = Logger.getLogger(PeptideIdentificationPanel.class);
+    // Class specific log4j logger for PeptideIdentificationPanel instances.
+    private static Logger logger = Logger.getLogger(PeptideIdentificationPanel.class);
     private JLabel lblSequence;
     private JLabel lblScore;
     private JLabel lblThreshold;
@@ -62,10 +62,12 @@ public class PeptideIdentificationPanel {
         PeptizerSpectrum lSpectrum = iPeptideIdentification.getSpectrum();
         PeptizerPeak[] lPeaks = lSpectrum.getPeakList();
         // annotationsFromLastType will contain the annotations of the last type found, ie Fuse for Mascot.
-        HashMap lAnnotationMap = iPeptideHit.getAllAnnotation(iPeptideIdentification, 1);
-        AnnotationType lAnnotationType = iPeptideHit.getAnnotationType().get(1);
+        int lId = 1;
+        HashMap lAnnotationMap = iPeptideHit.getAllAnnotation(iPeptideIdentification, lId);
 
-        Vector annotationsFromLastType = (Vector) lAnnotationMap.get(lAnnotationType.getIndex() + "" + lAnnotationType.getSearchEngine().getId() + "" + 1);
+//        AnnotationType lAnnotationType = iPeptideHit.getAnnotationType().get(1);
+//        Vector annotationsFromLastType = (Vector) lAnnotationMap.get(lAnnotationType.getIndex() + "" + lAnnotationType.getSearchEngine().getId() + "" + 1);
+        Vector annotationsFromLastType = (Vector) lAnnotationMap.get("10" + (lId + 1));
 
 
         double[] lMasses = new double[lSpectrum.getPeakList().length];

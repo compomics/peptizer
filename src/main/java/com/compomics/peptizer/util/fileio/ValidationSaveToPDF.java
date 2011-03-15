@@ -6,6 +6,7 @@ import com.compomics.peptizer.gui.progressbars.DefaultProgressBar;
 import com.compomics.peptizer.interfaces.ValidationSaver;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.enumerator.TempFileEnum;
+import com.compomics.peptizer.util.worker.WorkerResult;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
 import com.lowagie.text.FontFactory;
@@ -119,7 +120,6 @@ public class ValidationSaveToPDF extends ValidationSaver {
      */
     public ValidationSaveToPDF(File aFile, ArrayList aTableRows, DefaultProgressBar aProgress) {
         this(aFile);
-        iProgress = aProgress;
     }
 
 
@@ -312,7 +312,7 @@ public class ValidationSaveToPDF extends ValidationSaver {
     /**
      * Compute the value to be returned by the <code>get</code> method.
      */
-    public Object construct() {
+    public void run() {
         if (iData == null) {
             MatLogger.logExceptionalEvent("Data not set!" +
                     "\nPlace an data object containing PeptideIdentifications by the setData() method before launching the worker!!");
@@ -333,7 +333,11 @@ public class ValidationSaveToPDF extends ValidationSaver {
         sb.append("\nResults written:\n\t" + (iNumberAccepted + iNumberNotValidated + iNumberRejected) + " selected by profile\n")
                 .append(isIncludeConfidentNotSelected() ? "\t" + iNumberConfidentNotSelected + " not selected by profile but confident\n" : "")
                 .append(isIncludeNonConfident() ? "\t" + iNumberNonConfident + " not confident" : "");
-        return sb.toString();
+        MatLogger.logNormalEvent(sb.toString());
+
+        if(iObserver != null){
+            iObserver.update(null, WorkerResult.SUCCES);
+        }
     }
 
     public boolean saveComponent(Component aComponent) {

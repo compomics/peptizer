@@ -135,6 +135,7 @@
             <property name="active">true</property>
             <property name="veto">false</property>
             <property name="tolerance">10</property>
+            <property name="c13">FALSE</property>
         </agent>
 
         <agent>
@@ -144,6 +145,7 @@
             <property name="active">true</property>
             <property name="veto">false</property>
             <property name="tolerance">0.1</property>
+            <property name="c13">FALSE</property>
         </agent>
 
         <agent>

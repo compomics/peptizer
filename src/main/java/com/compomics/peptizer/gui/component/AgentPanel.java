@@ -2,6 +2,7 @@ package com.compomics.peptizer.gui.component;
 
 import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.dialog.AddAgentDialog;
+import com.compomics.peptizer.gui.dialog.AgentInfoDialog;
 import com.compomics.peptizer.gui.dialog.ParameterDialog;
 import com.compomics.peptizer.gui.interfaces.Updateable;
 import com.compomics.peptizer.interfaces.Agent;
@@ -576,20 +577,13 @@ public class AgentPanel extends JPanel implements Updateable {
         @Override
         public void mouseClicked(MouseEvent e) {
             super.mouseClicked(e);    //To change body of overridden methods use File | Settings | File Templates.
-            if (e.getButton() == MouseEvent.BUTTON3) {
+            if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount()>1) {
                 int lSelectedColumn = iAgentTable.getSelectedColumn();
                 String lSelectedColumnName = iAgentTable.getModel().getColumnName(lSelectedColumn);
                 if(lSelectedColumnName.equals(NAME)){
                     int lSelectedRow = iAgentTable.getSelectedRow();
-                    JDialog lDialog = new JDialog();
-                    lDialog.setTitle("Agent Info Dialog: '" + iAgents[lSelectedRow].getName() + "'");
-                    JTextArea lArea = new JTextArea(iAgents[lSelectedRow].getTagFreeDescription());
-                    lArea.setEditable(false);
-                    lArea.setLineWrap(true);
-                    lArea.setText(lArea.getText());
-                    lDialog.add(new JScrollPane(lArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER));
-                    lDialog.setLocation(new Point(100,100));
-                    lDialog.setSize(new Dimension(320,240));
+                    Agent lAgent = iAgents[lSelectedRow];
+                    JDialog lDialog = new AgentInfoDialog(lAgent);
                     lDialog.setVisible(true);
                 }
             }

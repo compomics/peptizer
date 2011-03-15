@@ -146,7 +146,7 @@ public class FileToolsFactory {
             // Mascot type pannel
         }
         Ms_Lims_ProjectIterator iter = new Ms_Lims_ProjectIterator(aConnection, aProjectID);
-        MascotParsingType mascotParsingType = null;
+        MascotParsingType mascotParsingType = new MascotParsingType(MascotDatfileType.INDEX);
         for (int i = 0; i < iParsingType.size(); i++) {
             if (iParsingType.get(i).getSearchEngineEnum() == SearchEngineEnum.Mascot) {
                 mascotParsingType = (MascotParsingType) iParsingType.get(i);

@@ -7,6 +7,7 @@ import com.compomics.peptizer.util.CommentGenerator;
 import com.compomics.peptizer.util.MetaKey;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.enumerator.TempFileEnum;
+import com.compomics.peptizer.util.worker.WorkerResult;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -49,9 +50,7 @@ public class ValidationSaveToMsLims extends ValidationSaver {
         }
     }
 
-    public Object construct() {
-
-        String lReport = "";
+    public void run() {
 
         // First fetch the database connection!
         if (!ConnectionManager.getInstance().hasConnection()) {
@@ -117,7 +116,10 @@ public class ValidationSaveToMsLims extends ValidationSaver {
         } else {
             MatLogger.logExceptionalEvent("ValidationSaveToCSV does not yet implements \'" + iData.getClass() + "\' instances!!");
         }
-        return lReport;
+
+        if(iObserver != null){
+            iObserver.update(null, WorkerResult.SUCCES);
+        }
     }
 
     /**

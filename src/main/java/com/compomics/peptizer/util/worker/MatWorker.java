@@ -1,8 +1,8 @@
 package com.compomics.peptizer.util.worker;
 
 import com.compomics.peptizer.MatConfig;
+import com.compomics.peptizer.gui.PeptizerGUI;
 import com.compomics.peptizer.gui.SelectedPeptideIdentifications;
-import com.compomics.peptizer.gui.progressbars.DefaultProgressBar;
 import com.compomics.peptizer.interfaces.AgentAggregator;
 import com.compomics.peptizer.interfaces.PeptideIdentificationIterator;
 import com.compomics.peptizer.util.PeptideIdentification;
@@ -10,10 +10,12 @@ import com.compomics.peptizer.util.enumerator.AgentAggregationResult;
 import com.compomics.peptizer.util.enumerator.TempFileEnum;
 import com.compomics.peptizer.util.fileio.MatLogger;
 import com.compomics.peptizer.util.fileio.TempManager;
-import com.compomics.util.sun.SwingWorker;
 import org.apache.log4j.Logger;
+import org.divxdede.swing.busy.FutureBusyModel;
 
+import java.awt.*;
 import java.io.*;
+import java.util.Observer;
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -25,7 +27,10 @@ import java.io.*;
  * Class description: ------------------ This class was developed to dirert the interaction between the AgentAggregator
  * and the PeptideIdentificationIterator.
  */
-public class MatWorker extends SwingWorker {
+public class MatWorker implements Runnable {
+
+    ;
+
 	// Class specific log4j logger for MatWorker instances.
 	 private static Logger logger = Logger.getLogger(MatWorker.class);
 
@@ -45,11 +50,6 @@ public class MatWorker extends SwingWorker {
     private SelectedPeptideIdentifications iResults = null;
 
     /**
-     * The progress bar.
-     */
-    private DefaultProgressBar iProgress = new DefaultProgressBar(null, null);
-
-    /**
      * Integer counters for the AgentAggregator results.
      */
     private Integer iConfidentNotSelected;
@@ -64,6 +64,10 @@ public class MatWorker extends SwingWorker {
     private boolean hasOjectStream_good;
     private boolean hasObjectStream_bad;
     private boolean serializationError = false;
+    private Frame iPeptizerGUI = null;
+    private Observer iObserver;
+
+    private FutureBusyModel iFutureBusyModel = null;
 
     /**
      * This constructor takes a PeptideIdentificationIterator and an AgentAggregator as parameters.
@@ -71,21 +75,18 @@ public class MatWorker extends SwingWorker {
      * @param aIter       PeptideIdentificationIterator of the MatWorker.
      * @param aAggregator Agregator that will judge the PeptideIdentifications of the Iterator.
      * @param aResults    Reference object wherein the results of the aggregator are stored.
-     * @param aProgress   Progressbar gui component.
      */
-    public MatWorker(PeptideIdentificationIterator aIter, AgentAggregator aAggregator, SelectedPeptideIdentifications aResults, DefaultProgressBar aProgress) {
+    public MatWorker(PeptideIdentificationIterator aIter, AgentAggregator aAggregator, SelectedPeptideIdentifications aResults) {
         iIter = aIter;
         iAgentAggregator = aAggregator;
         iResults = aResults;
-        iProgress = aProgress;
-
         // If the given progressbar is null, this means this matworker is opertating in command line mode. Disable gui operations!
-        if (iProgress != null) {
-            guiMode = true;
-        } else {
-            guiMode = false;
-        }
+    }
 
+    public MatWorker(PeptideIdentificationIterator aIter, AgentAggregator aAggregator, SelectedPeptideIdentifications aSelectedPeptideIdentifications, Frame aPeptizerGUI, Observer aObserver) {
+        this(aIter, aAggregator, aSelectedPeptideIdentifications);
+        iPeptizerGUI = aPeptizerGUI;
+        iObserver = aObserver;
     }
 
     /**
@@ -93,21 +94,13 @@ public class MatWorker extends SwingWorker {
      * PeptideIdentifications that suit the AgentAggregator's values are stored in the reference Vector
      * iResultsReference.
      */
-    public Object construct() {
+    public void run() {
 
         // 1. Initiate a PeptideIdentificationIterator, read the source.
 
         if (iIter == null) {
             // Iterator is null, we cannot continue!
         } else {
-
-            if (guiMode) {
-                iProgress.setIndeterminate(true);
-                iProgress.setValue(1);
-                iProgress.setMessage("Starting ..");
-
-                //iProgress.setVisible(true);
-            }
 
             // If ENABLE_TEMP_OBJECT.OUTPUTSTREAM is set to true, the non confident and confident but not selected peptide identifications will be written by an objectstream to a temp file.
 
@@ -139,19 +132,16 @@ public class MatWorker extends SwingWorker {
                     advanceObjectOutputStreams();
                 }
 
-                if (guiMode) {
-                    iProgress.setMessage("Analyzing \'" + iIter.getCurrentFileDescription() + "\' ..");
+                if(iFutureBusyModel != null){
+                    iFutureBusyModel.setDescription("Processing file " + iIter.getCurrentFileDescription());
                 }
 
-                PeptideIdentification lPeptideIdentification = (PeptideIdentification) iIter.next();
+                PeptideIdentification lPeptideIdentification = iIter.next();
                 // If the PeptideIdentification matches the AgentAggregator.
                 AgentAggregationResult lAggregationResult = iAgentAggregator.match(lPeptideIdentification);
 
                 storeAggregation(lAggregationResult, lPeptideIdentification);
-
-                //updateProgressBar();
             }
-
 
             // Flush & close the object outputstreams
             finishObjectOutputStreams();
@@ -165,15 +155,18 @@ public class MatWorker extends SwingWorker {
             logger.info("NotConfident:" + iNonConfident);
             logger.info("NoIdentification:" + iNoIdentification);
 
+
+            // Send around that the Runner was successfull!
             System.gc();
 
-            if (guiMode) {
-                iProgress.setVisible(false);
-                iProgress.dispose();
+            iObserver.update(null, WorkerResult.SUCCES);
+
+            if(iPeptizerGUI != null){
+                ((PeptizerGUI) iPeptizerGUI).passTask(iResults);
             }
         }
-        return "";
     }
+
 
     /**
      * Makes the objectoutputstreams advance to the next temporary file - if they are active!
@@ -273,5 +266,13 @@ public class MatWorker extends SwingWorker {
                 serializationError = true;
             }
         }
+    }
+
+    /**
+     * This BusyModel serves to keep track of the status of this Task.
+     * @param aFutureBusyModel
+     */
+    public void setFutureBusyModel(FutureBusyModel aFutureBusyModel) {
+        iFutureBusyModel = aFutureBusyModel;
     }
 }

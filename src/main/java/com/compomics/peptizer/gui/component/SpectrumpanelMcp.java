@@ -1163,8 +1163,8 @@ public class SpectrumpanelMcp extends JPanel {
             Font smallFont = oldFont.deriveFont(9.0f);
             g.setFont(smallFont);
             g.drawString(aComment, x - g.getFontMetrics().stringWidth(aComment) / 2, y - arrowSpacer);
-            g.drawString("(" + mass + ")", x - g.getFontMetrics().stringWidth("(" + mass + ")"
-            ) / 2, y - 20);
+//            g.drawString("(" + mass + ")", x - g.getFontMetrics().stringWidth("(" + mass + ")"
+//            ) / 2, y - 20);
             g.setFont(oldFont);
         } else {
             // No comment, so print the mass.
