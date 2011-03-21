@@ -1,5 +1,12 @@
 # Short summary of changes for each version of Peptizer. (as from version 1.6)
 
+
+----
+
+*Changes in Peptizer 1.7.5 (March 21. 2011):*
+ * FEATURE CHANGE. Added boolean option to the Modification Agent for exact or partial matching.
+ * FEATURE CHANGE. Added C13 option to the DeltaMass Agents for matching secondary isotopes precursors.
+ * FEATURE. Added "busy components" when running Peptizer and Save tasks.
 ----
 
 *Changes in Peptizer 1.7.2 (Octobre 19. 2010):*
