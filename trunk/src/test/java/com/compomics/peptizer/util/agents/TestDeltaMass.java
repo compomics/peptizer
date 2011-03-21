@@ -32,8 +32,8 @@ import java.util.Vector;
  * TestClass description: ------------------ This TestClass was developed to test the Deamidation Agent.
  */
 public class TestDeltaMass extends TestCaseLM {
-	// Class specific log4j logger for TestDeltaMass instances.
-	 private static Logger logger = Logger.getLogger(TestDeltaMass.class);
+    // Class specific log4j logger for TestDeltaMass instances.
+    private static Logger logger = Logger.getLogger(TestDeltaMass.class);
 
     public TestDeltaMass() {
         super("Testscenario TestDeltaMass. ");
@@ -177,7 +177,7 @@ public class TestDeltaMass extends TestCaseLM {
         Agent lAgent = AgentFactory.getInstance().getAgent("com.compomics.peptizer.util.agents.DeltaMassDaAgent");
 
         //Query300 is corrupted!!
-        // normal mass error = -0.15, changed this to -1.15Da to test the C13 Agent.
+        // normal mass error = -0.15, changed this to -1.15Da to test the SUBSTRING Agent.
         String datFile = getFullFilePath("F015264.dat");
         if (File.separatorChar == '\\') {
             datFile = datFile.replace("%20", " ");
@@ -202,7 +202,7 @@ public class TestDeltaMass extends TestCaseLM {
         // Difference is to big! -1.15Da! Score should equal 1.
         Assert.assertEquals(1, lResult[0].score);
 
-        // Second, set the C13 to TRUe.
+        // Second, set the SUBSTRING to TRUe.
         // Now -0.15Da is also evaluated and the score should equal 0.
         lAgent.setProperty(DeltaMassDaAgent.C13, "TRUE");
         lResult = lAgent.inspectIfPossible(lPeptideIdentification);
@@ -210,13 +210,14 @@ public class TestDeltaMass extends TestCaseLM {
         Assert.assertEquals(0, lResult[0].score);
 
     }
+
     public void testDeltaMassPpmC13() {
 
 
         Agent lAgent = AgentFactory.getInstance().getAgent("com.compomics.peptizer.util.agents.DeltaMassPPMAgent");
 
         //Query300 is corrupted!!
-        // normal mass error = -0.15, changed this to -1.15Da to test the C13 Agent.
+        // normal mass error = -0.15, changed this to -1.15Da to test the SUBSTRING Agent.
         String datFile = getFullFilePath("F015264.dat");
         if (File.separatorChar == '\\') {
             datFile = datFile.replace("%20", " ");
@@ -241,7 +242,7 @@ public class TestDeltaMass extends TestCaseLM {
         // Difference is to big! -1.15Da! Score should equal 1.
         Assert.assertEquals(1, lResult[0].score);
 
-        // Second, set the C13 to TRUe.
+        // Second, set the SUBSTRING to TRUe.
         // Now -0.15Da is also evaluated and the score should equal 0.
         lAgent.setProperty(DeltaMassDaAgent.C13, "TRUE");
         lResult = lAgent.inspectIfPossible(lPeptideIdentification);

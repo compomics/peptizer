@@ -91,7 +91,7 @@ public class DeltaMassDaAgent extends Agent {
                         // If error is 1.01Da, then 1.01-1=0.01Da is within tolerance boundaries.
                         lVote = AgentVote.NEUTRAL_FOR_SELECTION;
                     }
-                }else{
+                } else {
                     // Error is larger then Agent tolerance, and c13 fix is not specified.
                     lVote = AgentVote.POSITIVE_FOR_SELECTION;
                 }
@@ -125,6 +125,6 @@ public class DeltaMassDaAgent extends Agent {
      * @return String description of the DummyAgent.
      */
     public String getDescription() {
-        return "<html>Inspects for the mass error (Da) of the peptide. <b>Votes 'Positive_for_selection' if the mass error is greater then the allowed tolerance ( " + this.iProperties.get(TOLERANCE) + ")</b>. If the C13 option is set to TRUE, then the mass error -1Da will also be evaluated. Votes 'Neutral_for_selection' if less.</html>";
+        return "<html>Inspects for the mass error (Da) of the peptide. <b>Votes 'Positive_for_selection' if the mass error is greater then the allowed tolerance ( " + this.iProperties.get(TOLERANCE) + ")</b>. If the SUBSTRING option is set to TRUE, then the mass error -1Da will also be evaluated. Votes 'Neutral_for_selection' if less.</html>";
     }
 }

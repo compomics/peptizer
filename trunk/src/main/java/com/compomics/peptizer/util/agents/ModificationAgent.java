@@ -19,8 +19,8 @@ import org.apache.log4j.Logger;
  * Class description: ------------------ This class was developed to
  */
 public class ModificationAgent extends Agent {
-	// Class specific log4j logger for ModificationAgent instances.
-	 private static Logger logger = Logger.getLogger(ModificationAgent.class);
+    // Class specific log4j logger for ModificationAgent instances.
+    private static Logger logger = Logger.getLogger(ModificationAgent.class);
 
     /**
      * The name of the modification that has to be traced.
@@ -28,9 +28,15 @@ public class ModificationAgent extends Agent {
     public static final String MODIFICATION_NAME = "modification";
 
 
+    /**
+     * Parameter name if the specified modification name should be an substring match or exact match.
+     */
+    public static final String SUBSTRING = "substring";
+
+
     public ModificationAgent() {
         // Init the general Agent settings.
-        initialize(MODIFICATION_NAME);
+        initialize(new String[]{MODIFICATION_NAME, SUBSTRING});
         SearchEngineEnum[] searchEngines = {};
         compatibleSearchEngine = searchEngines;
     }
@@ -50,8 +56,18 @@ public class ModificationAgent extends Agent {
      */
     public AgentVote[] inspect(PeptideIdentification aPeptideIdentification) {
 
-        // Localize the Dummy property.
+        // Localize the modification name property.
         String lModificationName = ((String) this.iProperties.get(MODIFICATION_NAME)).toLowerCase();
+
+        // Localize the substring boolean propery.
+        Object lSubstringParameter = this.iProperties.get(SUBSTRING);
+
+        // Default to TRUE.
+        boolean lSubString = true;
+
+        if (lSubstringParameter != null) {
+            lSubString = Boolean.parseBoolean(lSubstringParameter.toString().toLowerCase());
+        }
 
         AgentVote[] lScore = new AgentVote[aPeptideIdentification.getNumberOfConfidentPeptideHits()];
 
@@ -68,9 +84,18 @@ public class ModificationAgent extends Agent {
 
             boolean found = false;
             for (PeptizerModification mod : lPeptideHit.getModifications()) {
-                if (mod.getName().toLowerCase().contains(lModificationName.toLowerCase())) {
-                    found = true;
-                    break;
+                if (lSubString == true) {
+                    // Substring match via the contains method.
+                    if (mod.getName().toLowerCase().contains(lModificationName.toLowerCase())) {
+                        found = true;
+                        break;
+                    }
+                } else {
+                    // Exact match via the equals method.
+                    if (mod.getName().toLowerCase().equals(lModificationName.toLowerCase())) {
+                        found = true;
+                        break;
+                    }
                 }
             }
 
@@ -112,7 +137,7 @@ public class ModificationAgent extends Agent {
      * @return String description of the Agent.
      */
     public String getDescription() {
-        return "<html>Inspects for a Modification property of the peptide. <b>Votes 'Positive_for_selection' if the PeptideHit is modified ( " + this.iProperties.get(MODIFICATION_NAME) + ")</b>. Votes 'Neutral_for_selection' if else.</html>";
+        return "<html>Inspects for a Modification property of the peptide. <b>Votes 'Positive_for_selection' if the PeptideHit is modified ( " + this.iProperties.get(MODIFICATION_NAME) + ")</b>. Set substring to TRUE for partial matching. Votes 'Neutral_for_selection' if else. </html>";
     }
 
 }

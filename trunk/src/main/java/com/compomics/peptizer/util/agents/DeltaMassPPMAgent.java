@@ -89,7 +89,7 @@ public class DeltaMassPPMAgent extends Agent {
                 if (lC13Tolerance) {
 
                     lPeptideMassByMillion = (lPeptideHit.getTheoMass() - 1) / 1000000.0; // Assuming this is a C13 peak, minus -1 to simulate the C12 precursor mass.
-                    lPpmError = (Math.abs(lDeltaMass)-1) / lPeptideMassByMillion;
+                    lPpmError = (Math.abs(lDeltaMass) - 1) / lPeptideMassByMillion;
 
                     // Ok, can this be a identified C13 precursor?
                     if (lPpmError >= lTolerance) {
@@ -98,7 +98,7 @@ public class DeltaMassPPMAgent extends Agent {
                         // If error is 1.01Da, then 1.01-1=0.01Da is within tolerance boundaries.
                         lVote = AgentVote.NEUTRAL_FOR_SELECTION;
                     }
-                }else{
+                } else {
                     // Error is larger then Agent tolerance, and c13 fix is not specified.
                     lVote = AgentVote.POSITIVE_FOR_SELECTION;
                 }
