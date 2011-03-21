@@ -70,6 +70,7 @@
             <property name="active">false</property>
             <property name="veto">false</property>
             <property name="modification">mox</property>
+            <property name="substring">TRUE</property>
         </agent>
         <agent>
             <!-- Inspects for if there are more confident identifications from one spectrum. Scores +1 if the identification is followed by a lower ranked but confident identification.property is fullfilled. Scores 0 if else. -->
