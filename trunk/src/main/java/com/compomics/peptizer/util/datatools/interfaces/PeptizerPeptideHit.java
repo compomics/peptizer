@@ -7,6 +7,7 @@ import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Vector;
@@ -19,9 +20,9 @@ import java.util.Vector;
  * Time: 13:02:46
  * This object will represent a peptide hit, independantly on the search engine used.
  */
-public abstract class PeptizerPeptideHit {
-	// Class specific log4j logger for PeptizerPeptideHit instances.
-	 private static Logger logger = Logger.getLogger(PeptizerPeptideHit.class);
+public abstract class PeptizerPeptideHit implements Serializable {
+    // Class specific log4j logger for PeptizerPeptideHit instances.
+    private static Logger logger = Logger.getLogger(PeptizerPeptideHit.class);
 
     protected Advocate advocate;
     protected HashMap<SearchEngineEnum, Object> originalPeptideHits = new HashMap<SearchEngineEnum, Object>();

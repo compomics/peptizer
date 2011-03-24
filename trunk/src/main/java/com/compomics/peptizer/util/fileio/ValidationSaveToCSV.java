@@ -25,8 +25,8 @@ import java.util.StringTokenizer;
  * separated file.
  */
 public class ValidationSaveToCSV extends ValidationSaver {
-	// Class specific log4j logger for ValidationSaveToCSV instances.
-	 private static Logger logger = Logger.getLogger(ValidationSaveToCSV.class);
+    // Class specific log4j logger for ValidationSaveToCSV instances.
+    private static Logger logger = Logger.getLogger(ValidationSaveToCSV.class);
     /**
      * This object holds the data that must be written into the csv file.
      * Can be a SelectedPeptideIdentifications or an ArrayList with PeptideIdentifications.
@@ -116,11 +116,16 @@ public class ValidationSaveToCSV extends ValidationSaver {
      */
     public ValidationSaveToCSV(File aFile, ArrayList aTableRows) {
         iFile = aFile;
-        iTableRows = aTableRows;
         try {
+            if (iFile.exists() == false) {
+                iFile.createNewFile();
+            }
+            iTableRows = aTableRows;
             iBufferedWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(iFile)));
         } catch (FileNotFoundException e) {
             MatLogger.logExceptionalEvent("Error while opening CSV output!!\n" + e.getMessage());
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -443,7 +448,7 @@ public class ValidationSaveToCSV extends ValidationSaver {
     /**
      * {@inheritDoc} Finish the ValidationToCSV by closing the stream and present a report to the user.
      */
-    public void finish() {
+    public synchronized void finish() {
         // 1. Close the stream.
         closeWriter();
 
@@ -453,10 +458,10 @@ public class ValidationSaveToCSV extends ValidationSaver {
         }
 
         // 3. GUI message to user.
-        MatLogger.logExceptionalGUIMessage("Save task report", getHTMLMessage());
+//        MatLogger.logExceptionalGUIMessage("Save task report", getHTMLMessage());
 
         // 4. Simple log to statuspanel.
-        MatLogger.logNormalEvent("Saved task to " + iFile.getPath());
+//        MatLogger.logNormalEvent("Saved task to " + iFile.getPath());
     }
 
 
@@ -581,7 +586,7 @@ public class ValidationSaveToCSV extends ValidationSaver {
                 .append(isIncludeNonConfident() ? "\t" + iNumberNonConfident + " not confident" : "");
         MatLogger.logNormalEvent(sb.toString());
 
-        if(iObserver != null){
+        if (iObserver != null) {
             iObserver.update(null, WorkerResult.SUCCES);
         }
     }

@@ -15,9 +15,16 @@ import com.compomics.peptizer.interfaces.ValidationSaver;
  */
 public interface SaveValidationPanel {
     /**
-     * Returns an instance to save selected identifications and validation.
+     * Returns a new instance to save selected identifications and validation.
      *
      * @return ValidationSaver to save validation of selected identifications.
      */
-    public ValidationSaver getValidationSaver();
+    public ValidationSaver getNewValidationSaver();
+
+    /**
+     * Returns an active instance to save selected identifications and validation.
+     *
+     * @return ValidationSaver to save validation of selected identifications.
+     */
+    public ValidationSaver getActiveValidationSaver();
 }

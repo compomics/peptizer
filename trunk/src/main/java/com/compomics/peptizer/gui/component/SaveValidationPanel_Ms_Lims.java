@@ -34,8 +34,8 @@ import java.util.Properties;
  * This class was developed to
  */
 public class SaveValidationPanel_Ms_Lims extends JPanel implements SaveValidationPanel, Connectable {
-	// Class specific log4j logger for SaveValidationPanel_Ms_Lims instances.
-	 private static Logger logger = Logger.getLogger(SaveValidationPanel_Ms_Lims.class);
+    // Class specific log4j logger for SaveValidationPanel_Ms_Lims instances.
+    private static Logger logger = Logger.getLogger(SaveValidationPanel_Ms_Lims.class);
 
     // gui components.
     private JButton btnConnection = null;
@@ -166,7 +166,7 @@ public class SaveValidationPanel_Ms_Lims extends JPanel implements SaveValidatio
      *
      * @return ValidationSaver to save validation of selected identifications.
      */
-    public ValidationSaver getValidationSaver() {
+    public ValidationSaver getNewValidationSaver() {
         if (ConnectionManager.getInstance().hasConnection()) {
             ValidationSaveToMsLims lValidationSaver = null;
             try {
@@ -183,6 +183,16 @@ public class SaveValidationPanel_Ms_Lims extends JPanel implements SaveValidatio
             JOptionPane.showMessageDialog(this.getParent(), "Unable to find a database connection.!!", "Please create a new database connection by the main menu first!", JOptionPane.INFORMATION_MESSAGE);
             return null;
         }
+    }
+
+
+    /**
+     * Get the validationSaver of the Current panel. Use the getNewValidationSaver() for a new Build.
+     *
+     * @return
+     */
+    public ValidationSaver getActiveValidationSaver() {
+        return getNewValidationSaver();
     }
 
 

@@ -52,7 +52,9 @@ public class SaveActionListener implements ActionListener, Observer {
 
             // Fix the future to the model, and apply the model to the busy component.
             lFutureBusyModel.setFuture(lFuture);
+            lFutureBusyModel.setCancellable(false);
             iBusyComponent.setBusyModel(lFutureBusyModel);
+
 
             // Ok, the action is done. Let the game continue!
 
@@ -73,9 +75,9 @@ public class SaveActionListener implements ActionListener, Observer {
             // Reset last save.
             iSaveTaskDialog.setChangedSinceLastSave(false);
             // Dispose the dialog.
-            iSaveTaskDialog.dispose();
-            // Finally, clean up the saver.
             iSaveTaskDialog.getValidationSaver().finish();
+            // Finally, clean up the saver.
+            iSaveTaskDialog.dispose();
         }
     }
 }

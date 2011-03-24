@@ -32,8 +32,8 @@ import java.util.HashMap;
  * This class was developed to
  */
 public class SaveValidationPanel_PDF extends JPanel implements SaveValidationPanel {
-	// Class specific log4j logger for SaveValidationPanel_PDF instances.
-	 private static Logger logger = Logger.getLogger(SaveValidationPanel_PDF.class);
+    // Class specific log4j logger for SaveValidationPanel_PDF instances.
+    private static Logger logger = Logger.getLogger(SaveValidationPanel_PDF.class);
 
     /**
      * The Singleton instance of this Panel.
@@ -197,7 +197,7 @@ public class SaveValidationPanel_PDF extends JPanel implements SaveValidationPan
      *
      * @return ValidationSaver to save validation of selected identifications.
      */
-    public ValidationSaver getValidationSaver() {
+    public ValidationSaver getNewValidationSaver() {
         if (iOutput != null) {
             DefaultProgressBar lProgress = new DefaultProgressBar((JFrame) SwingUtilities.getRoot(iMediator), "Writing pdf results file into " + iOutput + " .", 0, 1);
             ValidationSaveToPDF lValidationSaver = new ValidationSaveToPDF(iOutput);
@@ -211,6 +211,16 @@ public class SaveValidationPanel_PDF extends JPanel implements SaveValidationPan
             JOptionPane.showMessageDialog(this.getParent(), "A pdf file must be selected first!!", "Validation saver to PDF failed..", JOptionPane.ERROR_MESSAGE);
             return null;
         }
+    }
+
+
+    /**
+     * Get the CSV validationSaver of the Current panel. Use the getNewValidationSaver() for a new Build.
+     *
+     * @return
+     */
+    public ValidationSaver getActiveValidationSaver() {
+        return getNewValidationSaver();
     }
 
     /**

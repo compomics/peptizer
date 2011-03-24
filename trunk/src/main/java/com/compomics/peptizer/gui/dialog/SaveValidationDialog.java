@@ -131,6 +131,9 @@ public class SaveValidationDialog extends JDialog {
         jpanButtons.add(btnCancel);
         jpanButtons.add(Box.createHorizontalStrut(5));
 
+        busyComponent = new JBusyComponent<JPanel>(jpanButtons);
+
+
         JPanel jpanContent = new JPanel();
         jpanContent.setLayout(new BoxLayout(jpanContent, BoxLayout.PAGE_AXIS));
         jpanContent.add(Box.createVerticalStrut(5));
@@ -138,7 +141,7 @@ public class SaveValidationDialog extends JDialog {
         jpanContent.add(Box.createVerticalStrut(10));
         jpanContent.add(jpanTarget);
         jpanContent.add(Box.createVerticalStrut(10));
-        jpanContent.add(jpanButtons);
+        jpanContent.add(busyComponent);
         jpanContent.add(Box.createVerticalStrut(5));
 
         JPanel jpanHorizontalSpace = new JPanel();
@@ -147,9 +150,8 @@ public class SaveValidationDialog extends JDialog {
         jpanHorizontalSpace.add(jpanContent);
         jpanHorizontalSpace.add(Box.createHorizontalStrut(5));
 
-        busyComponent = new JBusyComponent<JPanel>(jpanHorizontalSpace);
 
-        this.add(busyComponent);
+        this.add(jpanHorizontalSpace);
         this.pack();
 
         this.jpanTarget.setMaximumSize(new Dimension(3000, jpanTarget.getSize().height));
@@ -224,7 +226,7 @@ public class SaveValidationDialog extends JDialog {
      * @return
      */
     public ValidationSaver getValidationSaver() {
-        return ((SaveValidationPanel) cmbSavers.getSelectedItem()).getValidationSaver();
+        return ((SaveValidationPanel) cmbSavers.getSelectedItem()).getActiveValidationSaver();
     }
 
     /**
