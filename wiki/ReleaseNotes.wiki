@@ -1,6 +1,10 @@
 # Short summary of changes for each version of Peptizer. (as from version 1.6)
 
+----
 
+*Changes in Peptizer 1.7.6 (March 24. 2011):*
+ * FEATURE CHANGE. Changed the logic of the substring match modification name into exact match of the modification name.
+ * DEPENDENCY CHANGE. Added dependency to MascotDatfile-2.3.3 which annotates fragmentions of neutral losses.
 ----
 
 *Changes in Peptizer 1.7.5 (March 21. 2011):*
