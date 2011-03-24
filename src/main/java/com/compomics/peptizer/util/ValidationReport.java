@@ -19,8 +19,8 @@ import java.io.Serializable;
  * The AgentReport has defines static final ReportKeys ("RK_*") that serve as keys in this map.
  */
 public class ValidationReport implements Serializable {
-	// Class specific log4j logger for ValidationReport instances.
-	 private static Logger logger = Logger.getLogger(ValidationReport.class);
+    // Class specific log4j logger for ValidationReport instances.
+    private static Logger logger = Logger.getLogger(ValidationReport.class);
 
     /**
      * Report on the validation status.<br>
@@ -44,7 +44,7 @@ public class ValidationReport implements Serializable {
     /**
      * Comment on the validation.
      */
-    private String iComment = null;
+    private String iComment = "NA";
 
     /**
      * Constructs an empty <tt>ValidationReport</tt> with the default initial capacity

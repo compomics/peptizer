@@ -40,8 +40,8 @@ import java.util.HashMap;
  * This class was developed to
  */
 public class SaveValidationPanel_CSV extends JPanel implements SaveValidationPanel {
-	// Class specific log4j logger for SaveValidationPanel_CSV instances.
-	 private static Logger logger = Logger.getLogger(SaveValidationPanel_CSV.class);
+    // Class specific log4j logger for SaveValidationPanel_CSV instances.
+    private static Logger logger = Logger.getLogger(SaveValidationPanel_CSV.class);
 
     /**
      * The Singleton instance of this Panel.
@@ -74,6 +74,7 @@ public class SaveValidationPanel_CSV extends JPanel implements SaveValidationPan
 
     private static JTable iTable = null;
     private File iCSV = null;
+    private ValidationSaveToCSV iValidationSaver;
 
 
     /**
@@ -249,7 +250,7 @@ public class SaveValidationPanel_CSV extends JPanel implements SaveValidationPan
      *
      * @return ValidationSaver to save validation of selected identifications.
      */
-    public ValidationSaver getValidationSaver() {
+    public ValidationSaver getNewValidationSaver() {
         if (iCSV != null) {
             ArrayList lOutputRows = new ArrayList();
             for (Object o : iTableRows.keySet()) {
@@ -259,20 +260,32 @@ public class SaveValidationPanel_CSV extends JPanel implements SaveValidationPan
                 }
             }
             DefaultProgressBar lProgress = new DefaultProgressBar((JFrame) SwingUtilities.getRoot(iMediator), "Writing csv results file into " + iCSV + " .", 0, 1);
-            ValidationSaveToCSV lValidationSaver = new ValidationSaveToCSV(iCSV, lOutputRows, lProgress);
-            if (lValidationSaver instanceof ValidationSaveToCSV) {
-                ((ValidationSaveToCSV) lValidationSaver).setComments(chkComment.isSelected());
+            iValidationSaver = new ValidationSaveToCSV(iCSV, lOutputRows, lProgress);
+            if (iValidationSaver instanceof ValidationSaveToCSV) {
+                ((ValidationSaveToCSV) iValidationSaver).setComments(chkComment.isSelected());
             }
-            lValidationSaver.setIncludeConfidentNotSelected(chkConfident.isSelected());
-            lValidationSaver.setIncludeNonConfident(chkNonConfident.isSelected());
-            lValidationSaver.setIncludeNonPrimary(chkNonPrimary.isSelected());
+            iValidationSaver.setIncludeConfidentNotSelected(chkConfident.isSelected());
+            iValidationSaver.setIncludeNonConfident(chkNonConfident.isSelected());
+            iValidationSaver.setIncludeNonPrimary(chkNonPrimary.isSelected());
 
 
-            return lValidationSaver;
+            return getActiveValidationSaver();
         } else {
             JOptionPane.showMessageDialog(this.getParent(), "A csv file must be selected first!!", "Validation saver to CSV failed..", JOptionPane.ERROR_MESSAGE);
             return null;
         }
+    }
+
+    /**
+     * Get the CSV validationSaver of the Current panel. Use the getNewValidationSaver() for a new Build.
+     *
+     * @return
+     */
+    public ValidationSaver getActiveValidationSaver() {
+        if (iValidationSaver == null) {
+            iValidationSaver = (ValidationSaveToCSV) getNewValidationSaver();
+        }
+        return iValidationSaver;
     }
 
     /**
@@ -549,6 +562,7 @@ public class SaveValidationPanel_CSV extends JPanel implements SaveValidationPan
 
 
         // implements javax.swing.table.TableCellRenderer
+
         /**
          * Returns the default table cell renderer.
          *
