@@ -31,12 +31,12 @@ public class ModificationAgent extends Agent {
     /**
      * Parameter name if the specified modification name should be an substring match or exact match.
      */
-    public static final String SUBSTRING = "substring";
+    public static final String EXACT = "exact";
 
 
     public ModificationAgent() {
         // Init the general Agent settings.
-        initialize(new String[]{MODIFICATION_NAME, SUBSTRING});
+        initialize(new String[]{MODIFICATION_NAME, EXACT});
         SearchEngineEnum[] searchEngines = {};
         compatibleSearchEngine = searchEngines;
     }
@@ -60,13 +60,13 @@ public class ModificationAgent extends Agent {
         String lModificationName = ((String) this.iProperties.get(MODIFICATION_NAME)).toLowerCase();
 
         // Localize the substring boolean propery.
-        Object lSubstringParameter = this.iProperties.get(SUBSTRING);
+        Object lExactMatchParameter = this.iProperties.get(EXACT);
 
         // Default to TRUE.
-        boolean lSubString = true;
+        boolean lExactMatch = true;
 
-        if (lSubstringParameter != null) {
-            lSubString = Boolean.parseBoolean(lSubstringParameter.toString().toLowerCase());
+        if (lExactMatchParameter != null) {
+            lExactMatch = Boolean.parseBoolean(lExactMatchParameter.toString().toLowerCase());
         }
 
         AgentVote[] lScore = new AgentVote[aPeptideIdentification.getNumberOfConfidentPeptideHits()];
@@ -84,7 +84,7 @@ public class ModificationAgent extends Agent {
 
             boolean found = false;
             for (PeptizerModification mod : lPeptideHit.getModifications()) {
-                if (lSubString == true) {
+                if (lExactMatch == false) {
                     // Substring match via the contains method.
                     if (mod.getName().toLowerCase().contains(lModificationName.toLowerCase())) {
                         found = true;
@@ -137,7 +137,7 @@ public class ModificationAgent extends Agent {
      * @return String description of the Agent.
      */
     public String getDescription() {
-        return "<html>Inspects for a Modification property of the peptide. <b>Votes 'Positive_for_selection' if the PeptideHit is modified ( " + this.iProperties.get(MODIFICATION_NAME) + ")</b>. Set substring to TRUE for partial matching. Votes 'Neutral_for_selection' if else. </html>";
+        return "<html>Inspects for a Modification property of the peptide. <b>Votes 'Positive_for_selection' if the PeptideHit is modified ( " + this.iProperties.get(MODIFICATION_NAME) + ")</b>. Set substring to TRUE for exact matching. Votes 'Neutral_for_selection' if else. </html>";
     }
 
 }

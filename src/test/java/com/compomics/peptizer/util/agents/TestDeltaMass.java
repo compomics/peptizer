@@ -177,7 +177,7 @@ public class TestDeltaMass extends TestCaseLM {
         Agent lAgent = AgentFactory.getInstance().getAgent("com.compomics.peptizer.util.agents.DeltaMassDaAgent");
 
         //Query300 is corrupted!!
-        // normal mass error = -0.15, changed this to -1.15Da to test the SUBSTRING Agent.
+        // normal mass error = -0.15, changed this to -1.15Da to test the EXACT Agent.
         String datFile = getFullFilePath("F015264.dat");
         if (File.separatorChar == '\\') {
             datFile = datFile.replace("%20", " ");
@@ -202,7 +202,7 @@ public class TestDeltaMass extends TestCaseLM {
         // Difference is to big! -1.15Da! Score should equal 1.
         Assert.assertEquals(1, lResult[0].score);
 
-        // Second, set the SUBSTRING to TRUe.
+        // Second, set the EXACT to TRUe.
         // Now -0.15Da is also evaluated and the score should equal 0.
         lAgent.setProperty(DeltaMassDaAgent.C13, "TRUE");
         lResult = lAgent.inspectIfPossible(lPeptideIdentification);
@@ -217,7 +217,7 @@ public class TestDeltaMass extends TestCaseLM {
         Agent lAgent = AgentFactory.getInstance().getAgent("com.compomics.peptizer.util.agents.DeltaMassPPMAgent");
 
         //Query300 is corrupted!!
-        // normal mass error = -0.15, changed this to -1.15Da to test the SUBSTRING Agent.
+        // normal mass error = -0.15, changed this to -1.15Da to test the EXACT Agent.
         String datFile = getFullFilePath("F015264.dat");
         if (File.separatorChar == '\\') {
             datFile = datFile.replace("%20", " ");
@@ -242,7 +242,7 @@ public class TestDeltaMass extends TestCaseLM {
         // Difference is to big! -1.15Da! Score should equal 1.
         Assert.assertEquals(1, lResult[0].score);
 
-        // Second, set the SUBSTRING to TRUe.
+        // Second, set the EXACT to TRUe.
         // Now -0.15Da is also evaluated and the score should equal 0.
         lAgent.setProperty(DeltaMassDaAgent.C13, "TRUE");
         lResult = lAgent.inspectIfPossible(lPeptideIdentification);

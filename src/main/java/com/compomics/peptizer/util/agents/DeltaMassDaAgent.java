@@ -125,6 +125,6 @@ public class DeltaMassDaAgent extends Agent {
      * @return String description of the DummyAgent.
      */
     public String getDescription() {
-        return "<html>Inspects for the mass error (Da) of the peptide. <b>Votes 'Positive_for_selection' if the mass error is greater then the allowed tolerance ( " + this.iProperties.get(TOLERANCE) + ")</b>. If the SUBSTRING option is set to TRUE, then the mass error -1Da will also be evaluated. Votes 'Neutral_for_selection' if less.</html>";
+        return "<html>Inspects for the mass error (Da) of the peptide. <b>Votes 'Positive_for_selection' if the mass error is greater then the allowed tolerance ( " + this.iProperties.get(TOLERANCE) + ")</b>. If the C13 option is set to TRUE, then the mass error -1Da will also be evaluated. Votes 'Neutral_for_selection' if less.</html>";
     }
 }
