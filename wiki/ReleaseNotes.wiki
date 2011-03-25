@@ -2,6 +2,10 @@
 
 ----
 
+*Changes in Peptizer 1.7.7 (March 25. 2011):*
+ * FEATURE CHANGE. Added a new filter by peptide sequence.
+ ----
+
 *Changes in Peptizer 1.7.6 (March 24. 2011):*
  * FEATURE CHANGE. Changed the logic of the substring match modification name into exact match of the modification name.
  * DEPENDENCY CHANGE. Added dependency to MascotDatfile-2.3.3 which annotates fragmentions of neutral losses.
