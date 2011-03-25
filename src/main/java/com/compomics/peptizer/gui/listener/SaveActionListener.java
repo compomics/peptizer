@@ -21,7 +21,7 @@ import java.util.concurrent.Future;
  */
 public class SaveActionListener implements ActionListener, Observer {
     /**
-     * Refrence to the parent dialog.
+     * Refrence to the iPeptizerGUI dialog.
      */
     private SaveValidationDialog iSaveTaskDialog;
 

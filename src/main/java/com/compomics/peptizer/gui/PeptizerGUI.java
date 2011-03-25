@@ -5,9 +5,9 @@ import com.compomics.peptizer.gui.component.HyperLinkLabel;
 import com.compomics.peptizer.gui.component.StatusPanel;
 import com.compomics.peptizer.gui.dialog.*;
 import com.compomics.peptizer.gui.interfaces.StatusView;
-import com.compomics.peptizer.gui.model.AgentTreeFilter;
+import com.compomics.peptizer.gui.listener.AddAgentFilterActionListener;
+import com.compomics.peptizer.gui.listener.AddSequenceFilterActionListener;
 import com.compomics.peptizer.gui.model.ValidationTreeFilter;
-import com.compomics.peptizer.util.AgentFactory;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.fileio.ConnectionManager;
 import com.compomics.peptizer.util.fileio.FileManager;
@@ -258,16 +258,13 @@ public class PeptizerGUI extends JFrame implements StatusView {
         // Agent filter dialog.
         menuItem = new JMenuItem("Apply AgentFilter");
         menuItem.setMnemonic(KeyEvent.VK_A);
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                ArrayList lAgents = new ArrayList();
-                new AgentFilterDialog(PeptizerGUI.this, "Select Agent's to filter the Tree.", AgentFactory.getInstance().getAllAgents(), lAgents);
-                if (lAgents.size() > 0) {
-                    AgentTreeFilter lFilter = new AgentTreeFilter(lAgents);
-                    ((Mediator) PeptizerGUI.this.getTabs()[PeptizerGUI.this.getSelectedTabIndex()]).setFilter(lFilter);
-                }
-            }
-        });
+        menuItem.addActionListener(new AddAgentFilterActionListener(this));
+        subMenu.add(menuItem);
+
+        // Peptide sequence filter dialog.
+        menuItem = new JMenuItem("Apply Peptide Sequence Filter");
+        menuItem.setMnemonic(KeyEvent.VK_P);
+        menuItem.addActionListener(new AddSequenceFilterActionListener(this));
         subMenu.add(menuItem);
 
         menuItem = new JMenuItem("Apply ValidationFilter");
@@ -567,16 +564,13 @@ public class PeptizerGUI extends JFrame implements StatusView {
                     // Sixth item allows to call an Agent filter dialog.
                     item = new JMenuItem("Apply AgentFilter");
                     item.setMnemonic(KeyEvent.VK_A);
-                    item.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            ArrayList lAgents = new ArrayList();
-                            new AgentFilterDialog(PeptizerGUI.this, "Select Agent's to filter the Tree.", AgentFactory.getInstance().getAllAgents(), lAgents);
-                            if (lAgents.size() > 0) {
-                                AgentTreeFilter lFilter = new AgentTreeFilter(lAgents);
-                                ((Mediator) PeptizerGUI.this.getTabs()[PeptizerGUI.this.getSelectedTabIndex()]).setFilter(lFilter);
-                            }
-                        }
-                    });
+                    item.addActionListener(new AddAgentFilterActionListener(PeptizerGUI.this));
+                    jpop.add(item);
+
+                    // Sixth item allows to call an Agent filter dialog.
+                    item = new JMenuItem("Apply Peptide Sequence Filter");
+                    item.setMnemonic(KeyEvent.VK_P);
+                    item.addActionListener(new AddSequenceFilterActionListener(PeptizerGUI.this));
                     jpop.add(item);
 
                     // seventh item allows to disable the current applied filter.
@@ -647,10 +641,10 @@ public class PeptizerGUI extends JFrame implements StatusView {
 
         if (!iEnclosedByLims) {
             if (ConnectionManager.getInstance().hasConnection()) {
-                try{
+                try {
                     int lResult = JOptionPane.showConfirmDialog(this, "Do you want to close the active connection to ms-lims?");
 
-                    if(lResult == JOptionPane.OK_OPTION){
+                    if (lResult == JOptionPane.OK_OPTION) {
                         logger.info("Closing connection to '" + ConnectionManager.getInstance().getConnection().getMetaData().getURL() + "'.");
                         ConnectionManager.getInstance().closeConnection();
                     }

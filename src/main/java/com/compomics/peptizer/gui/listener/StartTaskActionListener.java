@@ -26,7 +26,7 @@ import java.util.concurrent.Future;
  */
 public class StartTaskActionListener implements ActionListener, Observer {
     /**
-     * Refrence to the parent dialog.
+     * Refrence to the iPeptizerGUI dialog.
      */
     private CreateTaskDialog iCreateTaskDialog;
 
@@ -80,11 +80,12 @@ public class StartTaskActionListener implements ActionListener, Observer {
 
     /**
      * This can be updated by a MatWorker when the Task is finished.
+     *
      * @param aObservable null
-     * @param o Materworker.result enum item.
+     * @param o           Materworker.result enum item.
      */
     public void update(Observable aObservable, Object o) {
-        if(o.equals(WorkerResult.SUCCES)){
+        if (o.equals(WorkerResult.SUCCES)) {
             iCreateTaskDialog.dispose();
         }
     }
