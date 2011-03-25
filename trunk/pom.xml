@@ -136,6 +136,26 @@
                         </configuration>
                     </execution>
 
+                    <execution>
+                        <id>copy-package-license</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${project.basedir}</directory>
+                                    <includes>
+                                        <include>LICENSE-2.0.txt</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+
                     <!-- Copies the properties files during compilation.-->
                     <execution>
                         <id>copy-compile-properties-resources</id>

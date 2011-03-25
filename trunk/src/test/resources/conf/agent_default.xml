@@ -54,7 +54,7 @@
             <property name="active">false</property>
             <property name="veto">false</property>
             <property name="modification">mox</property>
-            <property name="substring">TRUE</property>
+            <property name="exact">TRUE</property>
 
         </agent>
         <agent>

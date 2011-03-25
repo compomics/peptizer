@@ -37,7 +37,7 @@ public class TestModification extends TestCaseLM {
         iModification =
                 (ModificationAgent) AgentFactory.getInstance().getAgent("com.compomics.peptizer.util.agents.ModificationAgent");
         iModification.setProperty(ModificationAgent.MODIFICATION_NAME, "ox");
-        iModification.setProperty(ModificationAgent.SUBSTRING, "true");
+        iModification.setProperty(ModificationAgent.EXACT, "false");
 
     }
 
@@ -100,7 +100,7 @@ public class TestModification extends TestCaseLM {
         PeptideIdentification lPeptideIdentification = new PeptideIdentification(mascotSpectrum, lPeptizerPeptideHits, SearchEngineEnum.Mascot);
 
         // Set to substring matching.
-        iModification.setProperty(ModificationAgent.SUBSTRING, "true");
+        iModification.setProperty(ModificationAgent.EXACT, "false");
         iModification.setProperty(ModificationAgent.MODIFICATION_NAME, "ox");
         AgentVote[] lResult;
 
@@ -110,7 +110,7 @@ public class TestModification extends TestCaseLM {
         Assert.assertEquals(1, lResult[1].score);
 
         // Set to exact matching.
-        iModification.setProperty(ModificationAgent.SUBSTRING, "false");
+        iModification.setProperty(ModificationAgent.EXACT, "true");
 
         lResult = iModification.inspect(lPeptideIdentification);
         // Second hit , Mox Modification - no exact match to 'ox'.
