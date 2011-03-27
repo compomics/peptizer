@@ -1,5 +1,12 @@
+#labels Featured,Phase-Implementation
 # Short summary of changes for each version of Peptizer. (as from version 1.6)
+----
 
+*Changes in Peptizer 1.7.7 (March 25. 2011):*
+ * FEATURE CHANGE improved operation with ms-lims
+ * FEATURE: re-loading previously validated identifications from ms-lims also shows the current database validation status
+ * FEATURE: added new option to store confident (non-selected) identifications in ms-lims
+ * FEATURE: added popup to auto accept/reject/ignore non-validated selected peptide identifications upon saving to ms-lims
 ----
 
 *Changes in Peptizer 1.7.7 (March 25. 2011):*
