@@ -6,13 +6,13 @@ import com.compomics.peptizer.interfaces.ValidationSaver;
 import com.compomics.peptizer.util.CommentGenerator;
 import com.compomics.peptizer.util.MetaKey;
 import com.compomics.peptizer.util.PeptideIdentification;
+import com.compomics.peptizer.util.ValidationReport;
 import com.compomics.peptizer.util.enumerator.TempFileEnum;
 import com.compomics.peptizer.util.worker.WorkerResult;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.io.*;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,9 +31,15 @@ public class ValidationSaveToMsLims extends ValidationSaver {
     private int iNumberPersisted = 0;
     private int iNumberRejected = 0;
     private int iNumberAccepted = 0;
+    private int iNumberUpdated = 0;
     private boolean iOverWriteExistingValidation = false;
     private boolean iApplyToall = false;
     private JComponent iParentComponent = null;
+    private Boolean boolUserApproved = false;
+    private int iUserApproveOption = -1;
+    private String[] iUserOptions = new String[]{"Ignore", "Accept and Save", "Reject and Save"};
+    private int iNumberNotValidated;
+    private boolean saveConfidentNotSelected;
 
 
     /**
@@ -45,12 +51,23 @@ public class ValidationSaveToMsLims extends ValidationSaver {
             MatLogger.logExceptionalGUIMessage("Save task report", getHTMLMessage());
             // 2. Simple log to statuspanel.
             MatLogger.logNormalEvent("Saved task to " + ConnectionManager.getInstance().getConnection().getMetaData().getURL());
+
+            // reset the counters.
+            iNumberAccepted = 0;
+            iNumberPersisted = 0;
+            iNumberRejected = 0;
+            iNumberUpdated = 0;
+            iNumberNotValidated = 0;
+
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
         }
     }
 
     public void run() {
+
+        // reset former user choices.
+        boolUserApproved = false;
 
         // First fetch the database connection!
         if (!ConnectionManager.getInstance().hasConnection()) {
@@ -80,34 +97,70 @@ public class ValidationSaveToMsLims extends ValidationSaver {
                 PeptideIdentification lPeptideIdentification =
                         ((SelectedPeptideIdentifications) iData).getPeptideIdentification(i);
                 String lComment = CommentGenerator.getCommentForSelectiveAgents(lPeptideIdentification, 1);
-                lPeptideIdentification.getValidationReport().setComment(lComment);
-                this.persistValidation(lConnection, lL_userid, lPeptideIdentification);
+                ValidationReport lValidationReport = lPeptideIdentification.getValidationReport();
+                if (lValidationReport.isValidated()) {
+                    lValidationReport.setComment(lComment);
+                    this.persistValidation(lConnection, lL_userid, lPeptideIdentification);
+                } else {
+                    while (boolUserApproved == false) {
+
+                        iUserApproveOption = JOptionPane.showOptionDialog(
+                                iParentComponent,
+                                "Do you want to store the selected identifications that you did not validate?",
+                                "Unvalidated peptide identifications",
+                                JOptionPane.OK_CANCEL_OPTION,
+                                JOptionPane.QUESTION_MESSAGE,
+                                UIManager.getIcon("OptionPane.questionIcon"),
+                                iUserOptions,
+                                iUserOptions[0]);
+                        boolUserApproved = true;
+                    }
+
+                    if (iUserApproveOption == 0) {
+                        // do nothing with tis non-validated identification.
+                        iNumberNotValidated++;
+
+                    } else if (iUserApproveOption == 1) {
+                        lValidationReport.setComment(lComment);
+                        lValidationReport.setResult(true);
+                        this.persistValidation(lConnection, lL_userid, lPeptideIdentification);
+
+                    } else if (iUserApproveOption == 2) {
+                        lValidationReport.setComment(lComment);
+                        lValidationReport.setResult(false);
+                        this.persistValidation(lConnection, lL_userid, lPeptideIdentification);
+                    }
+                }
+
             }
 
-            // Second, persist all the confident but not selected ids.
-            File[] lFiles = TempManager.getInstance().getFiles((SelectedPeptideIdentifications) iData, TempFileEnum.CONFIDENT_NOT_SELECTED);
-            if (lFiles != null) {
-                for (int i = 0; i < lFiles.length; i++) {
-                    try {
-                        File lFile = lFiles[i];
-                        ObjectInputStream ois1 = new ObjectInputStream(new FileInputStream(lFile));
-                        Object o = null;
-                        // Loop through object input stream.
-                        // I know this is messy, though I do not see any method to check EOF on the ObjectInputStream.o
-                        while ((o = ois1.readObject()) != null) {
-                            if (o instanceof PeptideIdentification && o != null) {
-                                PeptideIdentification lPeptideIdentification = (PeptideIdentification) o;
-                                lPeptideIdentification.getValidationReport().setComment("AUTO_ACCEPT");
-                                lPeptideIdentification.getValidationReport().setResult(true);
-                                this.persistValidation(lConnection, lL_userid, lPeptideIdentification);
+            // Second, persist all the confident but not selected ids if needed.
+
+            if (saveConfidentNotSelected) {
+                File[] lFiles = TempManager.getInstance().getFiles((SelectedPeptideIdentifications) iData, TempFileEnum.CONFIDENT_NOT_SELECTED);
+                if (lFiles != null) {
+                    for (int i = 0; i < lFiles.length; i++) {
+                        try {
+                            File lFile = lFiles[i];
+                            ObjectInputStream ois1 = new ObjectInputStream(new FileInputStream(lFile));
+                            Object o = null;
+                            // Loop through object input stream.
+                            // I know this is messy, though I do not see any method to check EOF on the ObjectInputStream.o
+                            while ((o = ois1.readObject()) != null) {
+                                if (o instanceof PeptideIdentification && o != null) {
+                                    PeptideIdentification lPeptideIdentification = (PeptideIdentification) o;
+                                    lPeptideIdentification.getValidationReport().setComment("AUTO_ACCEPT");
+                                    lPeptideIdentification.getValidationReport().setResult(true);
+                                    this.persistValidation(lConnection, lL_userid, lPeptideIdentification);
+                                }
                             }
+                        } catch (EOFException eof) {
+                            // The end of the file is reached, go to the next file ..
+                        } catch (IOException e) {
+                            logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
+                        } catch (ClassNotFoundException e) {
+                            logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
                         }
-                    } catch (EOFException eof) {
-                        // The end of the file is reached, go to the next file ..
-                    } catch (IOException e) {
-                        logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
-                    } catch (ClassNotFoundException e) {
-                        logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
                     }
                 }
             }
@@ -117,7 +170,7 @@ public class ValidationSaveToMsLims extends ValidationSaver {
             MatLogger.logExceptionalEvent("ValidationSaveToCSV does not yet implements \'" + iData.getClass() + "\' instances!!");
         }
 
-        if(iObserver != null){
+        if (iObserver != null) {
             iObserver.update(null, WorkerResult.SUCCES);
         }
     }
@@ -131,7 +184,6 @@ public class ValidationSaveToMsLims extends ValidationSaver {
      */
     private void persistValidation(Connection aConnection, Integer aL_userid, PeptideIdentification aPeptideIdentification) {
         boolean lResult = aPeptideIdentification.getValidationReport().getResult();
-
 
         Long lIdentificationid = (Long) aPeptideIdentification.getMetaData(MetaKey.Identification_id);
         try {
@@ -148,6 +200,13 @@ public class ValidationSaveToMsLims extends ValidationSaver {
                 // store!
                 lValidation.persist(aConnection);
 
+                iNumberPersisted++;
+                if (lValidation.getStatus()) {
+                    iNumberAccepted++;
+                } else {
+                    iNumberRejected++;
+                }
+
             } else {
 
                 // Validation already exists for this identificationid. Update? is it overwrite
@@ -158,6 +217,14 @@ public class ValidationSaveToMsLims extends ValidationSaver {
                         lValidation.setComment(aPeptideIdentification.getValidationReport().getComment());
 
                         lValidation.update(aConnection);
+
+                        iNumberUpdated++;
+                        if (lValidation.getStatus()) {
+                            iNumberAccepted++;
+                        } else {
+                            iNumberRejected++;
+                        }
+
                     } else {
                         // Keep the old validation.
                     }
@@ -207,6 +274,14 @@ public class ValidationSaveToMsLims extends ValidationSaver {
                         lValidation.setComment(aPeptideIdentification.getValidationReport().getComment());
                         lValidation.setStatus(lResult);
                         lValidation.update(aConnection);
+
+                        iNumberUpdated++;
+                        if (lValidation.getStatus()) {
+                            iNumberAccepted++;
+                        } else {
+                            iNumberRejected++;
+                        }
+
                     } else {
                         // Keep the old validation.
                     }
@@ -215,69 +290,66 @@ public class ValidationSaveToMsLims extends ValidationSaver {
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
         }
-        doCounts(lResult);
-    }
-
-    /**
-     * This method counts the number of accepted and rejected peptide identifications.
-     *
-     * @param aResult
-     */
-    private void doCounts(boolean aResult) {
-        if (iOverWriteExistingValidation) {
-            iNumberPersisted++;
-            if (aResult) {
-                iNumberAccepted++;
-            } else {
-                iNumberRejected++;
-            }
-        }
     }
 
 
     public String getHTMLMessage() throws SQLException {
 
-        // Prepare statistics,
-
-        BigDecimal lRelativeAccepted;
-        BigDecimal lRelativeRejected;
-        if(iNumberPersisted != 0){
-            lRelativeAccepted = new BigDecimal(iNumberAccepted * 100 / iNumberPersisted).setScale(2);
-            lRelativeRejected = new BigDecimal(iNumberRejected * 100 / iNumberPersisted).setScale(2);
-        }else{
-            lRelativeAccepted = new BigDecimal(0);
-            lRelativeRejected = new BigDecimal(0);
-        }
 
         // StringBuffer to build the HTML
         StringBuffer sb = new StringBuffer();
-        // Header
-        sb.append(
-                "<HTML>" +
-                        "<STRONG>" +
-                        " Saved " + (iNumberAccepted + iNumberRejected) + " id's to " + ConnectionManager.getInstance().getConnection().getMetaData().getURL() +
-                        " </STRONG>");
 
-        // Statistics table
-        sb.append("<TABLE  border=\"1\"\n" +
-                "          summary=\"This table gives some statistics on the validation.\"\n " +
-                "          CELLSPACING=2\n" +
-                "          CELLPADDING=2>\n" +
-                "<CAPTION><EM>Statistics on validation</EM></CAPTION>\n" +
-                "<TR>\t<TH rowspan=\"2\">\n" +
-                "\t<TH colspan=\"2\">Validated\n" +
-                "\t<TH rowspan=\"2\">Not Validated\n" +
-                "\t<TH rowspan=\"2\">Total\n" +
-                "<TR><TH>Accepted<TH>Rejected\n" +
-                "<TR><TH>Absolute<TD> " + iNumberAccepted + " <TD> " + iNumberRejected + " <TD> " + iNumberRejected + " \n" +
-                "<TR><TH>Relative<TD> " + lRelativeAccepted + " <TD> " + lRelativeRejected + " <TD> " + " \n" +
+        int lTotal = iNumberPersisted + iNumberUpdated;
+        int lAccepted = iNumberAccepted;
+        int lRejected = iNumberRejected;
+        int lNotValidated = iNumberNotValidated;
+        int TotalInsert = iNumberPersisted;
+        int lTotalUpdate = iNumberUpdated;
+
+        sb.append("<html>\n" +
+                "<head>\n" +
+                "    <title></title>\n" +
+                "</head>\n" +
+                "<body>" +
+                "<STRONG>Saved " + lTotal + " id's to ms-lims</STRONG>\n" +
+                "<TABLE\n" +
+                "       CELLSPACING=10\n" +
+                "       CELLPADDING=10\n" +
+                "       >\n" +
+                "    <CAPTION><EM>Validation counts</EM></CAPTION>\n" +
+                "    <TR>\n" +
+                "        <TH>\n" +
+                "        <TH>Accepted\n" +
+                "        <TH>Rejected\n" +
+                "        <TH>Not Validated\n" +
+                "        <TH>Total insert\n" +
+                "        <TH>Total update\n" +
+                "    <TR>\n" +
+                "    <TH>Counter\n" +
+                "        <TD>" + lAccepted + "\n" +
+                "        <TD>" + lRejected + "\n" +
+                "        <TD>" + lNotValidated + "\n" +
+                "        <TD>" + TotalInsert + "\n" +
+                "        <TD>" + lTotalUpdate + "\n" +
                 "</TABLE>");
+
         sb.append("</HTML>");
+
+        // debug the table html code.
+        logger.debug(sb.toString());
 
         return sb.toString();
     }
 
     public void setParentComponent(JComponent aParentComponent) {
         iParentComponent = aParentComponent;
+    }
+
+    public boolean isSaveConfidentNotSelected() {
+        return saveConfidentNotSelected;
+    }
+
+    public void setSaveConfidentNotSelected(boolean aSaveConfidentNotSelected) {
+        saveConfidentNotSelected = aSaveConfidentNotSelected;
     }
 }

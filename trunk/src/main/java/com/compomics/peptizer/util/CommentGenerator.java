@@ -17,8 +17,8 @@ import java.util.List;
  * This class was developped to generate comments for peptide identifications.
  */
 public class CommentGenerator {
-	// Class specific log4j logger for CommentGenerator instances.
-	 private static Logger logger = Logger.getLogger(CommentGenerator.class);
+    // Class specific log4j logger for CommentGenerator instances.
+    private static Logger logger = Logger.getLogger(CommentGenerator.class);
 
     /**
      * empty constructor.
@@ -37,8 +37,14 @@ public class CommentGenerator {
         List aAgentReports = aPeptideIdentification.getAgentReports(aPeptideHit);
         StringBuffer sb = new StringBuffer();
 
-        for (int i = 0; i < aAgentReports.size(); i++) {
-            AgentReport lAgentReport = (AgentReport) aAgentReports.get(i);
+        if (aPeptideIdentification.getValidationReport().getComment().equals(ValidationReport.DEFAULT_COMMENT) == false) {
+            // add user specified comment!
+            sb.append(aPeptideIdentification.getValidationReport().getComment());
+            sb.append("/n");
+        }
+
+        for (Object aAgentReport : aAgentReports) {
+            AgentReport lAgentReport = (AgentReport) aAgentReport;
             if (lAgentReport.getReport(AgentReport.RK_RESULT) == AgentVote.POSITIVE_FOR_SELECTION) {
                 sb.append(AgentFactory.getInstance().getAgent(lAgentReport.getAgentID()) + " - " + lAgentReport.getReport(AgentReport.RK_TABLEDATA));
                 sb.append("\n");
