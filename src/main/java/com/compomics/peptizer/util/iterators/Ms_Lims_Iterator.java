@@ -6,9 +6,12 @@ import com.compomics.mascotdatfile.util.mascot.PeptideHit;
 import com.compomics.mascotdatfile.util.mascot.enumeration.MascotDatfileType;
 import com.compomics.mascotdatfile.util.mascot.factory.MascotDatfileFactory;
 import com.compomics.mslims.db.accessors.Datfile;
+import com.compomics.peptizer.gui.PeptizerGUI;
 import com.compomics.peptizer.interfaces.PeptideIdentificationIterator;
 import com.compomics.peptizer.util.MetaKey;
 import com.compomics.peptizer.util.PeptideIdentification;
+import com.compomics.peptizer.util.ValidationReport;
+import com.compomics.peptizer.util.beans.ValidationBeanForLims;
 import com.compomics.peptizer.util.datatools.implementations.mascot.MascotPeptideHit;
 import com.compomics.peptizer.util.datatools.implementations.mascot.MascotSpectrum;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
@@ -16,11 +19,14 @@ import com.compomics.peptizer.util.fileio.ConnectionManager;
 import com.compomics.peptizer.util.fileio.MatLogger;
 import org.apache.log4j.Logger;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Vector;
+
+import static com.compomics.peptizer.gui.PeptizerGUI.isRunningGUI;
 
 /**
  * This abstract class shares common code for Iterators that fetch peptide identifications from an ms_lims database.
@@ -28,8 +34,8 @@ import java.util.Vector;
  * classes such as the toString method.
  */
 public abstract class Ms_Lims_Iterator implements PeptideIdentificationIterator {
-	// Class specific log4j logger for Ms_Lims_Iterator instances.
-	 private static Logger logger = Logger.getLogger(Ms_Lims_Iterator.class);
+    // Class specific log4j logger for Ms_Lims_Iterator instances.
+    private static Logger logger = Logger.getLogger(Ms_Lims_Iterator.class);
 
     public final static String MK_IDENTIFICATION_ID = "IDENTIFICATIONID";
 
@@ -47,6 +53,11 @@ public abstract class Ms_Lims_Iterator implements PeptideIdentificationIterator 
      * The index of the currect iterationunit.
      */
     private int iIterationUnitIndex = 0;
+
+    /**
+     * Missing Query counter
+     */
+    int iNumberQueryNotFound = 0;
 
     /**
      * The current MascotDatfileInf implementation.
@@ -68,7 +79,7 @@ public abstract class Ms_Lims_Iterator implements PeptideIdentificationIterator 
             int lQueryNumber = iCurrentIterationUnit.next();
 
             if (lQueryNumber <= 0) {
-                MatLogger.logExceptionalEvent("Could not find the Spectrum for query '" + lQueryNumber + "' in '" + iMascotDatfile.getFileName() + "'");
+                iNumberQueryNotFound++;
                 if (this.hasMoreIterationUnits()) {
                     moveToNextIterationUnit();
                     return this.next();
@@ -92,10 +103,21 @@ public abstract class Ms_Lims_Iterator implements PeptideIdentificationIterator 
                 PeptideIdentification lPeptideIdentification = new PeptideIdentification(lSpectrum, lPeptideHits, SearchEngineEnum.Mascot);
 
                 // Add meta info.
+                Long lIdentificationId = iCurrentIterationUnit.getIdentificationId(lQueryNumber);
+
                 lPeptideIdentification.addMetaData(MetaKey.Masses_section, iMascotDatfile.getMasses());
                 lPeptideIdentification.addMetaData(MetaKey.Parameter_section, iMascotDatfile.getParametersSection());
-                lPeptideIdentification.addMetaData(MetaKey.Identification_id, iCurrentIterationUnit.getIdentificationId(lQueryNumber));
+                lPeptideIdentification.addMetaData(MetaKey.Identification_id, lIdentificationId);
                 lPeptideIdentification.addMetaData(MetaKey.Datfile_id, iCurrentIterationUnit.getDatfileID());
+
+                ValidationBeanForLims lValidationBean = iCurrentIterationUnit.getValidationBean(lIdentificationId);
+
+                if (lValidationBean != null) {
+                    ValidationReport lValidationReport = lPeptideIdentification.getValidationReport();
+                    lValidationReport.setComment(lValidationBean.getComment());
+                    lValidationReport.setResult(lValidationBean.isValid());
+                    lValidationReport.setCorrectPeptideHitNumber(1);
+                }
 
                 return lPeptideIdentification;
             }
@@ -104,6 +126,7 @@ public abstract class Ms_Lims_Iterator implements PeptideIdentificationIterator 
             moveToNextIterationUnit();
             return this.next();
         } else {
+
             return null;
         }
     }
@@ -115,7 +138,16 @@ public abstract class Ms_Lims_Iterator implements PeptideIdentificationIterator 
         if (iCurrentIterationUnit == null) {
             return moveToNextIterationUnit();
         } else {
-            return iCurrentIterationUnit.hasNext() || this.hasMoreIterationUnits();
+            boolean lHasNext = iCurrentIterationUnit.hasNext() || this.hasMoreIterationUnits();
+            if (lHasNext == false) {
+                // nothing left, display missing queries!!
+                if (iNumberQueryNotFound > 0) {
+                    if (isRunningGUI()) {
+                        JOptionPane.showMessageDialog(PeptizerGUI.getRunningComponent(), "Failed to load " + iNumberQueryNotFound + " peptide identifications because no querynumber could be assigned.", "Warning", JOptionPane.WARNING_MESSAGE);
+                    }
+                }
+            }
+            return lHasNext;
         }
     }
 

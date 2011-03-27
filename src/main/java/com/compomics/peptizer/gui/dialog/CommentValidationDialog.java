@@ -4,6 +4,7 @@ import com.compomics.peptizer.gui.Mediator;
 import com.compomics.peptizer.gui.PeptizerGUI;
 import com.compomics.peptizer.util.CommentGenerator;
 import com.compomics.peptizer.util.PeptideIdentification;
+import com.compomics.peptizer.util.ValidationReport;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -24,8 +25,8 @@ import java.awt.event.KeyEvent;
  * This class was developed to offer a more complex Input dialog for commenting on validation.
  */
 public class CommentValidationDialog extends JDialog {
-	// Class specific log4j logger for CommentValidationDialog instances.
-	 private static Logger logger = Logger.getLogger(CommentValidationDialog.class);
+    // Class specific log4j logger for CommentValidationDialog instances.
+    private static Logger logger = Logger.getLogger(CommentValidationDialog.class);
 
     /**
      * The JLabel that will display information on the input.
@@ -218,7 +219,7 @@ public class CommentValidationDialog extends JDialog {
             txaInput.setForeground(new Color(175, 0, 0));
         }
 
-        if (iPeptideIdentification.getValidationReport().getComment() != null) {
+        if (iPeptideIdentification.getValidationReport().getComment() != ValidationReport.DEFAULT_COMMENT) {
             txaInput.setText(iPeptideIdentification.getValidationReport().getComment());
         } else {
             txaInput.setText(CommentGenerator.getCommentForSelectiveAgents(iPeptideIdentification, iMediator.getSelectedTableColumn()));

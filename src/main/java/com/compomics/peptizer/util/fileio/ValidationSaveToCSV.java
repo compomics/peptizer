@@ -10,9 +10,7 @@ import com.compomics.peptizer.util.worker.WorkerResult;
 import org.apache.log4j.Logger;
 
 import java.io.*;
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -483,45 +481,40 @@ public class ValidationSaveToCSV extends ValidationSaver {
      */
     private String getHTMLMessage() {
 
-        // Prepare statistics,
-        BigDecimal lRelativeAccepted =
-                new BigDecimal(iNumberAccepted * 100 / iPeptideIdentifications.size()).setScale(2);
-        BigDecimal lRelativeRejected =
-                new BigDecimal(iNumberRejected * 100 / iPeptideIdentifications.size()).setScale(2);
-        BigDecimal lRelativeNotValidated =
-                new BigDecimal(iNumberNotValidated * 100 / iPeptideIdentifications.size()).setScale(2);
-
         // StringBuffer to build the HTML
         StringBuffer sb = new StringBuffer();
         // Header
-        sb.append(
-                "<HTML>" +
-                        "<STRONG>" +
-                        " Saved " + iPeptideIdentifications.size() + " id's to " + iFile.getPath() +
-                        " </STRONG>" +
-                        // List CSV columns
-                        "<OL>");
-        StringTokenizer st = new StringTokenizer(iHeaderList, "\t");
-        while (st.hasMoreTokens()) {
-            sb.append("<LI>" + st.nextToken() + "</LI>");
-        }
-        sb.append("</OL>");
 
-        // Statistics table
-        sb.append("<TABLE  border=\"1\"\n" +
-                "          summary=\"This table gives some statistics on the validation.\"\n " +
-                "          CELLSPACING=2\n" +
-                "          CELLPADDING=2>\n" +
-                "<CAPTION><EM>Statistics on validation</EM></CAPTION>\n" +
-                "<TR>\t<TH rowspan=\"2\">\n" +
-                "\t<TH colspan=\"2\">Validated\n" +
-                "\t<TH rowspan=\"2\">Not Validated\n" +
-                "\t<TH rowspan=\"2\">Total\n" +
-                "<TR><TH>Accepted<TH>Rejected\n" +
-                "<TR><TH>Absolute<TD> " + iNumberAccepted + " <TD> " + iNumberRejected + " <TD> " + iNumberNotValidated + " <TD> " + (iNumberAccepted + iNumberRejected + iNumberNotValidated) + " \n" +
-                "<TR><TH>Relative<TD> " + lRelativeAccepted + " <TD> " + lRelativeRejected + " <TD> " + lRelativeNotValidated + " <TD> " + (lRelativeAccepted.doubleValue() + lRelativeRejected.doubleValue() + lRelativeNotValidated.doubleValue()) + " \n" +
+        int lTotal = iNumberAccepted + iNumberRejected + iNumberNotValidated + iNumberNonConfident + iNumberConfidentNotSelected;
+        sb.append("<html>\n" +
+                "<head>\n" +
+                "    <title></title>\n" +
+                "</head>\n" +
+                "<body>" +
+                "<STRONG>Saved " + lTotal + " id's to CSV file</STRONG>\n" +
+                "<TABLE\n" +
+                "       CELLSPACING=10\n" +
+                "       CELLPADDING=10\n" +
+                "       >\n" +
+                "    <CAPTION><EM>Validation counts</EM></CAPTION>\n" +
+                "    <TR>\n" +
+                "        <TH>\n" +
+                "        <TH>Accepted\n" +
+                "        <TH>Rejected\n" +
+                "        <TH>Not Validated\n" +
+                "        <TH>Confident (not shown)\n" +
+                "        <TH>Non-Confident (not shown)\n" +
+                "    <TR>\n" +
+                "    <TH>Counter\n" +
+                "        <TD>" + iNumberAccepted + "\n" +
+                "        <TD>" + iNumberRejected + "\n" +
+                "        <TD>" + iNumberNotValidated + "\n" +
+                "        <TD>" + iNumberConfidentNotSelected + "\n" +
+                "        <TD>" + iNumberNonConfident + "\n" +
                 "</TABLE>");
+
         sb.append("</HTML>");
+
 
         return sb.toString();
     }

@@ -55,6 +55,8 @@ public class SaveValidationPanel_Ms_Lims extends JPanel implements SaveValidatio
      * The Mediator used by the Model.
      */
     private static Mediator iMediator = null;
+    private ValidationSaveToMsLims iValidationSaver;
+    private JCheckBox chkSaveConfidentNotSelected;
 
     /**
      * Returns the Singleton instance of SaveValidationPanel_Ms_Lims.
@@ -113,18 +115,6 @@ public class SaveValidationPanel_Ms_Lims extends JPanel implements SaveValidatio
         this.setLayout(lBoxLayout);
         this.setToolTipText("Select a target to save the validation.");
 
-        // JLabel for the project id
-        lblConnection = new JLabel();
-        if (ConnectionManager.getInstance().hasConnection()) {
-            try {
-                lblConnection.setText(ConnectionManager.getInstance().getConnection().getMetaData().getURL());
-                lblConnection.setForeground(new Color(0, 200, 0));
-            } catch (SQLException e) {
-                logger.error(e.getMessage(), e);
-            }
-        } else {
-            lblConnection.setText("No ms_lims connection.");
-        }
 
         // Button to construct the connection!
         btnConnection = new JButton();
@@ -142,17 +132,45 @@ public class SaveValidationPanel_Ms_Lims extends JPanel implements SaveValidatio
         });
         btnConnection.setMnemonic(KeyEvent.VK_N);
 
+
+        // JLabel for the project id
+        lblConnection = new JLabel();
+
+        if (ConnectionManager.getInstance().hasConnection()) {
+            try {
+                lblConnection.setText(ConnectionManager.getInstance().getConnection().getMetaData().getURL());
+                lblConnection.setForeground(new Color(0, 200, 0));
+                btnConnection.setVisible(false);
+            } catch (SQLException e) {
+                logger.error(e.getMessage(), e);
+            }
+        } else {
+            btnConnection.setVisible(true);
+            lblConnection.setText("No ms_lims connection.");
+        }
+
+        chkSaveConfidentNotSelected = new JCheckBox();
+        chkSaveConfidentNotSelected.setSelected(true);
+        chkSaveConfidentNotSelected.setText("Auto-accept confident not-selected identifications?");
+
         // Components initiation && GUI construction.
 
         // Put target on the Top panel.
+        JPanel jpanTop = new JPanel();
+        BoxLayout lBoxLayout2 = new BoxLayout(jpanTop, BoxLayout.LINE_AXIS);
+        jpanTop.setLayout(lBoxLayout2);
+        jpanTop.add(btnConnection);
+        jpanTop.add(Box.createHorizontalStrut(10));
+        jpanTop.add(lblConnection);
+        jpanTop.add(Box.createHorizontalGlue());
+        jpanTop.setBorder(BorderFactory.createTitledBorder("Connection details"));
+
+        JPanel jpanOption = new JPanel();
+        jpanOption.add(chkSaveConfidentNotSelected, BorderLayout.WEST);
+
         JPanel jpanMain = new JPanel();
-        BoxLayout lBoxLayout2 = new BoxLayout(jpanMain, BoxLayout.LINE_AXIS);
-        jpanMain.setLayout(lBoxLayout2);
-        jpanMain.add(btnConnection);
-        jpanMain.add(Box.createHorizontalStrut(10));
-        jpanMain.add(lblConnection);
-        jpanMain.add(Box.createHorizontalGlue());
-        jpanMain.setBorder(BorderFactory.createTitledBorder("Connection details"));
+        jpanMain.add(jpanTop, BorderLayout.CENTER);
+        jpanMain.add(jpanOption, BorderLayout.SOUTH);
 
         this.add(jpanMain);
         this.add(Box.createVerticalGlue());
@@ -168,17 +186,18 @@ public class SaveValidationPanel_Ms_Lims extends JPanel implements SaveValidatio
      */
     public ValidationSaver getNewValidationSaver() {
         if (ConnectionManager.getInstance().hasConnection()) {
-            ValidationSaveToMsLims lValidationSaver = null;
+            iValidationSaver = null;
             try {
                 DefaultProgressBar lProgress = new DefaultProgressBar((JFrame) SwingUtilities.getRoot(iMediator), "Updating validation results to " + ConnectionManager.getInstance().getConnection().getMetaData().getURL() + " .", 0, 1);
-                lValidationSaver = new ValidationSaveToMsLims();
-                lValidationSaver.setData(iDialog.getSelectedMediator().getSelectedPeptideIdentifications());
-                lValidationSaver.setParentComponent(this);
+                iValidationSaver = new ValidationSaveToMsLims();
+                iValidationSaver.setData(iDialog.getSelectedMediator().getSelectedPeptideIdentifications());
+                iValidationSaver.setSaveConfidentNotSelected(chkSaveConfidentNotSelected.isSelected());
+                iValidationSaver.setParentComponent(this);
 
             } catch (SQLException e) {
                 logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
             }
-            return lValidationSaver;
+            return iValidationSaver;
         } else {
             JOptionPane.showMessageDialog(this.getParent(), "Unable to find a database connection.!!", "Please create a new database connection by the main menu first!", JOptionPane.INFORMATION_MESSAGE);
             return null;
@@ -192,7 +211,11 @@ public class SaveValidationPanel_Ms_Lims extends JPanel implements SaveValidatio
      * @return
      */
     public ValidationSaver getActiveValidationSaver() {
-        return getNewValidationSaver();
+        if (iValidationSaver == null) {
+            return getNewValidationSaver();
+        } else {
+            return iValidationSaver;
+        }
     }
 
 

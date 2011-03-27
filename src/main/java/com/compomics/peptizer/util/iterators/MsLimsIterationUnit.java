@@ -1,7 +1,14 @@
 package com.compomics.peptizer.util.iterators;
 
+import com.compomics.peptizer.util.beans.ValidationBeanForLims;
+import com.compomics.peptizer.util.fileio.ConnectionManager;
 import org.apache.log4j.Logger;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -10,12 +17,15 @@ import java.util.Iterator;
  * the Iterator interface.
  */
 public class MsLimsIterationUnit implements Iterator {
-	// Class specific log4j logger for MsLimsIterationUnit instances.
-	 private static Logger logger = Logger.getLogger(MsLimsIterationUnit.class);
+    // Class specific log4j logger for MsLimsIterationUnit instances.
+    private static Logger logger = Logger.getLogger(MsLimsIterationUnit.class);
     // The Datfile identifier of this unit.
     private long iDatfileID;
     // A map of identificationids and corresponding filenames that must be found in this datfile.
     private HashMap<Integer, Long> iQueryNumberToIDMap;
+
+    // A map of identificationids and corresponding validation reports that can be found for the ids.
+    private HashMap<Long, ValidationBeanForLims> iIdentificationToStatusMap;
 
     private Iterator iter = null;
 
@@ -83,5 +93,67 @@ public class MsLimsIterationUnit implements Iterator {
         return "IterationUnit{" +
                 "iDatfileID=" + iDatfileID +
                 '}';
+    }
+
+    /**
+     * This method returns a ValidationBean instance for the specified identification id.
+     *
+     * @param aIdentificationID for the required validation. null if missing.
+     * @return
+     */
+    public ValidationBeanForLims getValidationBean(long aIdentificationID) {
+        if (iIdentificationToStatusMap == null) {
+            // lazy caching.
+            iIdentificationToStatusMap = new HashMap<Long, ValidationBeanForLims>();
+            try {
+
+                // First get the connection.
+                Connection lConnection = ConnectionManager.getInstance().getConnection();
+
+                // Get all the identification ids.
+                Collection<Long> lIdentificationIDs = iQueryNumberToIDMap.values();
+                Iterator<Long> lIterator = lIdentificationIDs.iterator();
+
+                // Build the query.
+                StringBuilder sb = new StringBuilder();
+
+
+                while (lIterator.hasNext()) {
+                    Long lLong = lIterator.next();
+                    sb.append("'");
+                    sb.append(lLong);
+                    sb.append("',");
+                }
+                String ids = sb.toString();
+                if (ids.length() > 0) {
+                    // close fence post, remove the trailing ','.
+                    ids = ids.substring(0, ids.length() - 1);
+                }
+
+                String lQuery =
+                        "Select validationid, l_identificationid, comment, status from VALIDATION where l_identificationid in (" + ids + ")";
+
+                PreparedStatement ps = null;
+                ps = ConnectionManager.getInstance().getConnection().prepareStatement(lQuery);
+                ResultSet rs = ps.executeQuery();
+
+                Long lIdentificationid = -1l;
+                long lValidationid = -1l;
+                String lComment = null;
+                boolean lStatus = false;
+                while (rs.next()) {
+                    lValidationid = rs.getLong(1);
+                    lIdentificationid = rs.getLong(2);
+                    lComment = rs.getString(3);
+                    lStatus = (Boolean) rs.getObject(4);
+                    ValidationBeanForLims lBeanForLims = new ValidationBeanForLims(lStatus, lComment, lValidationid, lIdentificationid);
+                    iIdentificationToStatusMap.put(lIdentificationid, lBeanForLims);
+                }
+                // Ok, now persist the resultset into beans.
+            } catch (SQLException e) {
+                logger.error(e.getMessage(), e);
+            }
+        }
+        return iIdentificationToStatusMap.get(aIdentificationID);
     }
 }

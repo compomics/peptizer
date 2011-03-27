@@ -45,6 +45,8 @@ public class PeptizerGUI extends JFrame implements StatusView {
     // Class specific log4j logger for PeptizerGUI instances.
     private static Logger logger = Logger.getLogger(PeptizerGUI.class);
 
+    private static boolean isRunningGUI = false;
+    private static Component iRunningComponent = null;
     // MAT variables
     public static String PEPTIZER_VERSION;
 
@@ -60,7 +62,7 @@ public class PeptizerGUI extends JFrame implements StatusView {
     // TabbedPane contains the Mediators.
     private JTabbedPane iTabPanel;
 
-    private boolean iEnclosedByLims;
+    private boolean isConnectedToMsLims;
 
     /**
      * Constant for the startup-title tab.
@@ -157,6 +159,10 @@ public class PeptizerGUI extends JFrame implements StatusView {
 
         // Tiring splitpanes, only does what i want by setting the dividerlocation after the pack call.
         split1.setDividerLocation(0.85);
+
+        // declare an active GUI session.
+        isRunningGUI = true;
+        iRunningComponent = this;
     }
 
     /**
@@ -624,12 +630,12 @@ public class PeptizerGUI extends JFrame implements StatusView {
                 if (lMediator.isChangedSinceLastSave()) {
                     // ask for confirmation to exit
                     int result =
-                            JOptionPane.showConfirmDialog(this, "The validations have changed since last save.\nAre you sure you want to exit?");
+                            JOptionPane.showConfirmDialog(this, "Your validations have not been saved.\nDo you really want to exit?\n", "", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
                     // Save confirmation and break the iteration.
-                    if (result != JOptionPane.OK_OPTION) {
+                    if (result == JOptionPane.NO_OPTION) {
                         exit = false;
                         break;
-                    } else {
+                    } else if (result == JOptionPane.YES_OPTION) {
                         exit = true;
                         break;
                     }
@@ -638,11 +644,10 @@ public class PeptizerGUI extends JFrame implements StatusView {
             }
         }
 
-
-        if (!iEnclosedByLims) {
+        if (!isConnectedToMsLims) {
             if (ConnectionManager.getInstance().hasConnection()) {
                 try {
-                    int lResult = JOptionPane.showConfirmDialog(this, "Do you want to close the active connection to ms-lims?");
+                    int lResult = JOptionPane.showConfirmDialog(this, "Do you want to close your ms-lims connection?");
 
                     if (lResult == JOptionPane.OK_OPTION) {
                         logger.info("Closing connection to '" + ConnectionManager.getInstance().getConnection().getMetaData().getURL() + "'.");
@@ -654,11 +659,12 @@ public class PeptizerGUI extends JFrame implements StatusView {
                 }
             }
 
-            if (exit) {
-                // All is fine to exit!
-                System.exit(0);
-            }
-        } else {
+
+        }
+
+        if (exit) {
+            // All is fine to exit!
+            System.exit(0);
         }
     }
 
@@ -781,12 +787,31 @@ public class PeptizerGUI extends JFrame implements StatusView {
         }
     }
 
-    public void setEnclosedByLims(final boolean aEnclosedByLims) {
-        iEnclosedByLims = aEnclosedByLims;
+    public void setsConnectedToMsLims(final boolean aSConnectedToMsLims) {
+        isConnectedToMsLims = aSConnectedToMsLims;
     }
 
-    public boolean isEnclosedByLims() {
-        return iEnclosedByLims;
+    public boolean issConnectedToMsLims() {
+        return isConnectedToMsLims;
+    }
+
+    /**
+     * This static boolean informs if a Peptizer GUI has been constructed in this JVM.
+     *
+     * @return
+     */
+    public static boolean isRunningGUI() {
+        return isRunningGUI;
+    }
+
+    /**
+     * This static getter returns a GUI Component based on the PeptizerGUI.
+     * Returns null if no PeptizerGUI has been created in this JVM.
+     *
+     * @return
+     */
+    public static Component getRunningComponent() {
+        return iRunningComponent;
     }
 
     /**
@@ -805,7 +830,7 @@ public class PeptizerGUI extends JFrame implements StatusView {
      */
     private void showLicense() {
         String s =
-                "Copyright 2006 Helsens Kenny\n\n Licensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License.\nYou may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and limitations under the License.";
+                "Copyright 2011 Helsens Kenny\n\n Licensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License.\nYou may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and limitations under the License.";
         JOptionPane.showMessageDialog(this, s, "Peptizer license", JOptionPane.INFORMATION_MESSAGE);
     }
 }

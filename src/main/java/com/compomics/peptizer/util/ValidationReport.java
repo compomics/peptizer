@@ -42,9 +42,14 @@ public class ValidationReport implements Serializable {
     private int iCorrectPeptideHitNumber = -1;
 
     /**
+     * Default the comment
+     */
+    public static final String DEFAULT_COMMENT = "NA";
+
+    /**
      * Comment on the validation.
      */
-    private String iComment = "NA";
+    private String iComment = DEFAULT_COMMENT;
 
     /**
      * Constructs an empty <tt>ValidationReport</tt> with the default initial capacity
