@@ -1,6 +1,7 @@
 package com.compomics.peptizer.util.agents;
 
 import com.compomics.peptizer.interfaces.Agent;
+import com.compomics.peptizer.interfaces.Mass;
 import com.compomics.peptizer.util.AgentReport;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
@@ -88,8 +89,8 @@ public class DeltaMassPPMAgent extends Agent {
             if (Math.abs(lPpmError) >= lTolerance) {
                 if (lC13Tolerance) {
 
-                    lPeptideMassByMillion = (lPeptideHit.getTheoMass() - 1) / 1000000.0; // Assuming this is a C13 peak, minus -1 to simulate the C12 precursor mass.
-                    lPpmError = (Math.abs(lDeltaMass) - 1) / lPeptideMassByMillion;
+                    lPeptideMassByMillion = (lPeptideHit.getTheoMass() - Mass.DELTAC13) / 1000000.0; // Assuming this is a C13 peak, minus -1 to simulate the C12 precursor mass.
+                    lPpmError = (Math.abs(lDeltaMass) - Mass.DELTAC13) / lPeptideMassByMillion;
 
                     // Ok, can this be a identified C13 precursor?
                     if (lPpmError >= lTolerance) {

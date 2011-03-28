@@ -1,6 +1,7 @@
 package com.compomics.peptizer.util.agents;
 
 import com.compomics.peptizer.interfaces.Agent;
+import com.compomics.peptizer.interfaces.Mass;
 import com.compomics.peptizer.util.AgentReport;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
@@ -85,7 +86,7 @@ public class DeltaMassDaAgent extends Agent {
             if (Math.abs(lDaError) >= lTolerance) {
                 if (lC13Tolerance) {
                     // Ok, can this be a identified C13 precursor?
-                    if (Math.abs((Math.abs(lDaError) - 1)) >= lTolerance) {
+                    if (Math.abs((Math.abs(lDaError) - Mass.DELTAC13)) >= lTolerance) {
                         lVote = AgentVote.POSITIVE_FOR_SELECTION;
                     } else {
                         // If error is 1.01Da, then 1.01-1=0.01Da is within tolerance boundaries.
