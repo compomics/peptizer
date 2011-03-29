@@ -2,7 +2,11 @@
 # Short summary of changes for each version of Peptizer. (as from version 1.6)
 ----
 
-*Changes in Peptizer 1.7.7 (March 25. 2011):*
+*Changes in Peptizer 1.7.9 (March 29. 2011):*
+ * FEATURE: added new Agent (C13Agent) that attempts to detect C13 precursor peaks by matching peptides with mass errors 1Da +- tolerance
+ ----
+
+*Changes in Peptizer 1.7.8 (March 27. 2011):*
  * FEATURE CHANGE improved operation with ms-lims
  * FEATURE: re-loading previously validated identifications from ms-lims also shows the current database validation status
  * FEATURE: added new option to store confident (non-selected) identifications in ms-lims
