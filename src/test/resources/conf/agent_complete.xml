@@ -177,6 +177,16 @@
         </agent>
 
         <agent>
+            <!-- Inspects for the mass error (Da). Scores +1 if a peptide could be correlated to a single protein, Scores 0 if more.-->
+            <uniqueid>com.compomics.peptizer.util.agents.DeltaMassDaAgent</uniqueid>
+            <property name="name">Delta Mass Da</property>
+            <property name="active">true</property>
+            <property name="veto">false</property>
+            <property name="tolerance">0.1</property>
+        </agent>
+
+
+        <agent>
             <!-- Inspects for the C13 occurence. Scores +1 if a peptide could be correlated to a single protein, Scores 0 if more.-->
             <uniqueid>com.compomics.peptizer.util.agents.C13Agent</uniqueid>
             <property name="name">C13 simulation</property>
@@ -185,14 +195,6 @@
             <property name="tolerance">0.1</property>
         </agent>
 
-        <agent>
-            <!-- Inspects for the mass error (Da). Scores +1 if a peptide could be correlated to a single protein, Scores 0 if more.-->
-            <uniqueid>com.compomics.peptizer.util.agents.DeltaMassDaAgent</uniqueid>
-            <property name="name">Delta Mass Da</property>
-            <property name="active">true</property>
-            <property name="veto">false</property>
-            <property name="tolerance">0.1</property>
-        </agent>
 
         <agent>
             <!-- Inspects for the mass error (Da). Scores +1 if a peptide could be correlated to a single protein, Scores 0 if more.-->
