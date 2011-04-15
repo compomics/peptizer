@@ -1,7 +1,7 @@
 package com.compomics.peptizer.gui;
 
-import com.compomics.peptizer.gui.component.IconPanel;
 import com.compomics.peptizer.gui.component.TabPanel;
+import com.compomics.peptizer.gui.component.TaskIconPanel;
 import com.compomics.peptizer.gui.dialog.AdvancedMessageDialog;
 import com.compomics.peptizer.gui.interfaces.TreeFilter;
 import com.compomics.peptizer.gui.model.AbstractTableRow;
@@ -37,8 +37,8 @@ import java.util.List;
  * It coordinates a custom JTree, JTable and JTabbedPane based on the resultset of the AgentAggregator.
  */
 public class Mediator extends JPanel {
-	// Class specific log4j logger for Mediator instances.
-	 private static Logger logger = Logger.getLogger(Mediator.class);
+    // Class specific log4j logger for Mediator instances.
+    private static Logger logger = Logger.getLogger(Mediator.class);
 
     /**
      * The "datasource" of the mat GUI.
@@ -185,7 +185,7 @@ public class Mediator extends JPanel {
         this.setListeners();
 
         // 3) Construct IconBar
-        IconPanel lJpanIcons = new IconPanel(this);
+        TaskIconPanel lJpanIcons = new TaskIconPanel(this);
 
         // 4) Name the PeptideIdentifcations.
         iSelectedPeptideIdentifications.setNumberedNamesToPeptideIdentifications();
@@ -696,7 +696,7 @@ public class Mediator extends JPanel {
             PeptideIdentification lIdentification = iSelectedPeptideIdentifications.getPeptideIdentification(i);
             ValidationReport lValidationReport = lIdentification.getValidationReport();
             lValidationReport.setResult(true);
-            lValidationReport.setComment("AUTO_ACCEPT");
+            lValidationReport.setAutoComment("AUTO_ACCEPT");
         }
         validationPerformed();
         repaint();
@@ -711,7 +711,7 @@ public class Mediator extends JPanel {
             PeptideIdentification lIdentification = iSelectedPeptideIdentifications.getPeptideIdentification(i);
             ValidationReport lValidationReport = lIdentification.getValidationReport();
             lValidationReport.setResult(false);
-            lValidationReport.setComment("AUTO_REJECT");
+            lValidationReport.setAutoComment("AUTO_REJECT");
         }
         validationPerformed();
         repaint();

@@ -32,8 +32,8 @@ import java.util.Date;
  * @author Lennart Martens
  */
 public class StatusPanel extends JPanel {
-	// Class specific log4j logger for StatusPanel instances.
-	 private static Logger logger = Logger.getLogger(StatusPanel.class);
+    // Class specific log4j logger for StatusPanel instances.
+    private static Logger logger = Logger.getLogger(StatusPanel.class);
 
     /**
      * The JLabel holding the state information.
@@ -112,39 +112,39 @@ public class StatusPanel extends JPanel {
      */
     public StatusPanel(String aToolTip, boolean aLog, boolean aBorder) {
         super();
-        super.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        super.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         // Set the log mode.
         this.iLog = aLog;
 
         JPanel status = new JPanel(new BorderLayout());
-        lblStatus = new JLabel(" Status : ", JLabel.LEFT);
-        lblStatus.setForeground(Color.blue);
+        lblStatus = new JLabel(" Info log : ", JLabel.LEFT);
+        lblStatus.setForeground(Color.darkGray);
         lblStatus.setFont(lblStatus.getFont().deriveFont(Font.BOLD));
         if (!iLog) {
             lblState = new JLabel("", JLabel.LEFT);
-            lblState.setForeground(Color.blue);
+            lblState.setForeground(Color.darkGray);
             status.add(lblStatus, BorderLayout.WEST);
             status.add(lblState, BorderLayout.CENTER);
         } else {
             txtState = new JTextArea(3, 15);
-            txtState.setForeground(Color.blue);
+            txtState.setForeground(Color.darkGray);
             txtState.setEditable(false);
             status.add(lblStatus, BorderLayout.NORTH);
             status.add(new JScrollPane(txtState), BorderLayout.CENTER);
         }
 
         JPanel error = new JPanel(new BorderLayout());
-        lblErrors = new JLabel(" Errors : ", JLabel.LEFT);
-        lblErrors.setForeground(Color.red);
+        lblErrors = new JLabel(" Error log : ", JLabel.LEFT);
+        lblErrors.setForeground(Color.darkGray);
         lblErrors.setFont(lblErrors.getFont().deriveFont(Font.BOLD));
         if (!iLog) {
             lblError = new JLabel("", JLabel.LEFT);
-            lblError.setForeground(Color.red);
+            lblError.setForeground(Color.darkGray);
             error.add(lblErrors, BorderLayout.WEST);
             error.add(lblError, BorderLayout.CENTER);
         } else {
             txtError = new JTextArea(3, 15);
-            txtError.setForeground(Color.red);
+            txtError.setForeground(Color.darkGray);
             txtError.setEditable(false);
             error.add(lblErrors, BorderLayout.NORTH);
             error.add(new JScrollPane(txtError), BorderLayout.CENTER);
@@ -155,7 +155,7 @@ public class StatusPanel extends JPanel {
         }
         this.setToolTipText(aToolTip);
         this.add(status);
-        this.add(Box.createRigidArea(new Dimension(status.getWidth(), 5)));
+        this.add(Box.createRigidArea(new Dimension(10, status.getHeight())));
         this.add(error);
         this.iSDF = new SimpleDateFormat("dd-MM-yyyy (HH:mm:ss) : ");
     }

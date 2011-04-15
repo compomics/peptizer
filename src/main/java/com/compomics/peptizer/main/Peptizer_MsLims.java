@@ -38,9 +38,9 @@ import java.util.Properties;
  * Class description: ------------------ This class was developed to start peptizer by command line.
  */
 public class Peptizer_MsLims {
-// Class specific log4j logger for Peptizer instances.
+    // Class specific log4j logger for Peptizer instances.
     private static Logger logger = Logger.getLogger(Peptizer_MsLims.class);
-    
+
     /**
      * Default Constructor.
      */
@@ -238,22 +238,22 @@ public class Peptizer_MsLims {
 
                         case MATCH:
                             lMatchCounter++;
-                            lPeptideIdentification.getValidationReport().setComment("MATCH");
+                            lPeptideIdentification.getValidationReport().setAutoComment("MATCH");
                             break;
 
                         case NON_CONFIDENT:
                             lNonConfidentCounter++;
-                            lPeptideIdentification.getValidationReport().setComment("NON_CONFIDENT");
+                            lPeptideIdentification.getValidationReport().setAutoComment("NON_CONFIDENT");
                             break;
 
                         case NON_MATCH:
                             lNonMatchCounter++;
-                            lPeptideIdentification.getValidationReport().setComment("NON_MATCH");
+                            lPeptideIdentification.getValidationReport().setAutoComment("NON_MATCH");
                             break;
 
                         case NO_IDENTIFICATION:
                             lNoIdentificationCounter++;
-                            lPeptideIdentification.getValidationReport().setComment("NO_IDENTIFICATION");
+                            lPeptideIdentification.getValidationReport().setAutoComment("NO_IDENTIFICATION");
                             break;
                     }
 

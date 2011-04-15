@@ -34,8 +34,8 @@ import java.util.ArrayList;
  * separated file.
  */
 public class ValidationSaveToPDF extends ValidationSaver {
-	// Class specific log4j logger for ValidationSaveToPDF instances.
-	 private static Logger logger = Logger.getLogger(ValidationSaveToPDF.class);
+    // Class specific log4j logger for ValidationSaveToPDF instances.
+    private static Logger logger = Logger.getLogger(ValidationSaveToPDF.class);
     /**
      * This object holds the data that must be written into the csv file.
      * Can be a SelectedPeptideIdentifications or an ArrayList with PeptideIdentifications.
@@ -153,7 +153,7 @@ public class ValidationSaveToPDF extends ValidationSaver {
                         while ((o = ois1.readObject()) != null) {
                             if (o instanceof PeptideIdentification) {
                                 PeptideIdentification lPeptideIdentification = (PeptideIdentification) o;
-                                lPeptideIdentification.getValidationReport().setComment("CONFIDENT_NOTSELECTED");
+                                lPeptideIdentification.getValidationReport().setAutoComment("CONFIDENT_NOTSELECTED");
                                 savePeptideIdentification(lPeptideIdentification);
                                 iNumberConfidentNotSelected++;
                             }
@@ -335,7 +335,7 @@ public class ValidationSaveToPDF extends ValidationSaver {
                 .append(isIncludeNonConfident() ? "\t" + iNumberNonConfident + " not confident" : "");
         MatLogger.logNormalEvent(sb.toString());
 
-        if(iObserver != null){
+        if (iObserver != null) {
             iObserver.update(null, WorkerResult.SUCCES);
         }
     }
@@ -378,11 +378,9 @@ public class ValidationSaveToPDF extends ValidationSaver {
             g2.dispose();
             cb.addTemplate(tp, 0, 0);
 
-        }
-        catch (DocumentException de) {
+        } catch (DocumentException de) {
             System.err.println(de.getMessage());
-        }
-        catch (IOException ioe) {
+        } catch (IOException ioe) {
             System.err.println(ioe.getMessage());
         }
 

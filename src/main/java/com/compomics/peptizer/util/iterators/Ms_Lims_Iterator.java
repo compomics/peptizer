@@ -114,7 +114,7 @@ public abstract class Ms_Lims_Iterator implements PeptideIdentificationIterator 
 
                 if (lValidationBean != null) {
                     ValidationReport lValidationReport = lPeptideIdentification.getValidationReport();
-                    lValidationReport.setComment(lValidationBean.getComment());
+                    lValidationReport.setAutoComment(lValidationBean.getComment());
                     lValidationReport.setResult(lValidationBean.isValid());
                     lValidationReport.setCorrectPeptideHitNumber(1);
                 }

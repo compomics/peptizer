@@ -19,6 +19,7 @@ import java.util.List;
 public class CommentGenerator {
     // Class specific log4j logger for CommentGenerator instances.
     private static Logger logger = Logger.getLogger(CommentGenerator.class);
+    private static String iLineFeedReplacement = "*";
 
     /**
      * empty constructor.
@@ -37,9 +38,9 @@ public class CommentGenerator {
         List aAgentReports = aPeptideIdentification.getAgentReports(aPeptideHit);
         StringBuffer sb = new StringBuffer();
 
-        if (aPeptideIdentification.getValidationReport().getComment().equals(ValidationReport.DEFAULT_COMMENT) == false) {
+        if (aPeptideIdentification.getValidationReport().getAutoComment().equals(ValidationReport.DEFAULT_COMMENT) == false) {
             // add user specified comment!
-            sb.append(aPeptideIdentification.getValidationReport().getComment());
+            sb.append(aPeptideIdentification.getValidationReport().getAutoComment());
             sb.append("/n");
         }
 
@@ -51,5 +52,21 @@ public class CommentGenerator {
             }
         }
         return sb.toString();
+    }
+
+    /**
+     * Returns a String commenting on the selective Agents of the PeptideIdentication's nth peptidehit.
+     *
+     * @param aPeptideIdentification PeptideIdentication to generate the comment.
+     * @param aPeptideHit            Peptidehitnumber to generate the commment for. '1' returns the first peptidehit.
+     * @param aLineFeeds             Keeps 'line separators' if TRUE. Replaces linefeeds with '*' if set to FALSE.
+     * @return String comment on the PeptideIdentication .
+     */
+    public static String getCommentForSelectiveAgents(PeptideIdentification aPeptideIdentification, int aPeptideHit, boolean aLineFeeds) {
+        String lComment = getCommentForSelectiveAgents(aPeptideIdentification, aPeptideHit);
+        String linesep = System.getProperty("line.separator");
+        lComment = lComment.replaceAll(linesep, iLineFeedReplacement);
+
+        return lComment;
     }
 }

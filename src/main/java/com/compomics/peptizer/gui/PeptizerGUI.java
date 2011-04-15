@@ -1,7 +1,8 @@
 package com.compomics.peptizer.gui;
 
 import com.compomics.peptizer.MatConfig;
-import com.compomics.peptizer.gui.component.HyperLinkLabel;
+import com.compomics.peptizer.gui.component.MainIconPanel;
+import com.compomics.peptizer.gui.component.StartPanel;
 import com.compomics.peptizer.gui.component.StatusPanel;
 import com.compomics.peptizer.gui.dialog.*;
 import com.compomics.peptizer.gui.interfaces.StatusView;
@@ -24,7 +25,6 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -68,6 +68,8 @@ public class PeptizerGUI extends JFrame implements StatusView {
      * Constant for the startup-title tab.
      */
     private static final String START_TAB_TITLE = "Welcome";
+    private JSplitPane iStatusSplitPane;
+    private MainIconPanel iMainIconPanel;
 
 
     /**
@@ -126,18 +128,18 @@ public class PeptizerGUI extends JFrame implements StatusView {
         iTabPanel = new JTabbedPane();
 
         // This home panel will only be shown after starting Peptizer.
-        JPanel jpanStart = new JPanel();
-        URL urlStartImage = URLClassLoader.getSystemResource("image/IMAGE_start_panel.png");
-        Image lStartImage = Toolkit.getDefaultToolkit().getImage(urlStartImage);
-        JLabel lbl = new JLabel(new ImageIcon(lStartImage));
-        HyperLinkLabel lblStartImage = new HyperLinkLabel("", new ImageIcon(lStartImage), "http://code.google.com/p/peptizer/");
+        StartPanel lStartPanel = new StartPanel(this);
+        JPanel jpanStart = (JPanel) lStartPanel.$$$getRootComponent$$$();
 
-        jpanStart.add(lblStartImage, BorderLayout.CENTER);
         iTabPanel.add(START_TAB_TITLE, jpanStart);
+        iTabPanel.setBackground(Color.white);
 
 
         jpanContent = new JPanel(new BorderLayout());
         jpanContent.add(iTabPanel, BorderLayout.CENTER);
+
+        iMainIconPanel = new MainIconPanel(this);
+        jpanContent.add(iMainIconPanel.$$$getRootComponent$$$(), BorderLayout.NORTH);
 
 
         jpanStatus = new StatusPanel(false);
@@ -147,10 +149,11 @@ public class PeptizerGUI extends JFrame implements StatusView {
 
         jpanContent.setSize(new Dimension(this.getSize().width, (new Double(this.getSize().height * 0.8)).intValue()));
 
-        JSplitPane split1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false, jpanContent, jpanStatus);
-        split1.setOneTouchExpandable(true);
+        iStatusSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false, jpanContent, jpanStatus);
 
-        cp.add(split1, BorderLayout.CENTER);
+        cp.add(iStatusSplitPane, BorderLayout.CENTER);
+
+        iStatusSplitPane.setEnabled(false);
 
         this.setListeners();
         this.setVisible(true);
@@ -158,7 +161,7 @@ public class PeptizerGUI extends JFrame implements StatusView {
         this.pack();
 
         // Tiring splitpanes, only does what i want by setting the dividerlocation after the pack call.
-        split1.setDividerLocation(0.85);
+        iStatusSplitPane.setDividerLocation(0.85);
 
         // declare an active GUI session.
         isRunningGUI = true;
@@ -401,11 +404,13 @@ public class PeptizerGUI extends JFrame implements StatusView {
     /**
      * Action when the save menu is selected.
      */
-    private void saveTask() {
+    public void saveTask() {
         if (getNumberOfTabs() > 0) {
-            new SaveValidationDialog(PeptizerGUI.this);
-        } else {
-            JOptionPane.showMessageDialog(this, "An task needs to be run before anything can be saved.\nStart a new task through the main menu or by pressing 'Ctrl + N'.", "No task to save.", JOptionPane.INFORMATION_MESSAGE);
+            if (iTabPanel.getTitleAt(0).equals(START_TAB_TITLE)) {
+                JOptionPane.showMessageDialog(this, "A task needs to be run before anything can be saved.\nStart a new task through the main menu or by pressing 'Ctrl + N'.", "No task to save.", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                new SaveValidationDialog(PeptizerGUI.this);
+            }
         }
     }
 
@@ -413,7 +418,7 @@ public class PeptizerGUI extends JFrame implements StatusView {
         JDialog dialog = new CreateArffDialog(this);
     }
 
-    private void newTask() {
+    public void newTask() {
         JDialog dialog = new CreateTaskDialog(this);
     }
 
@@ -832,5 +837,18 @@ public class PeptizerGUI extends JFrame implements StatusView {
         String s =
                 "Copyright 2011 Helsens Kenny\n\n Licensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License.\nYou may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and limitations under the License.";
         JOptionPane.showMessageDialog(this, s, "Peptizer license", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /**
+     * This method toggles the statuspanel in the bottom.
+     */
+    public void toggleInfoPanel() {
+        if (jpanStatus.isVisible()) {
+            jpanStatus.setVisible(false);
+            iStatusSplitPane.setDividerLocation(1);
+        } else {
+            jpanStatus.setVisible(true);
+            iStatusSplitPane.setDividerLocation(0.85);
+        }
     }
 }

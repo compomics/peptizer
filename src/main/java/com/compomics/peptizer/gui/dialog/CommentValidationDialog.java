@@ -8,6 +8,7 @@ import com.compomics.peptizer.util.ValidationReport;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,17 +37,17 @@ public class CommentValidationDialog extends JDialog {
     /**
      * The textArea that can receive input.
      */
-    private JTextArea txaInput = null;
+    private JTextArea txtAutoInput = null;
+
+    /**
+     * The textArea that can user receive input.
+     */
+    private JTextArea txtUserInput = null;
 
     /**
      * This button can be pressed to confirm the input and exit the dialog.
      */
     private JButton btnOK = null;
-
-    /**
-     * This button can be pressed to discard the input and exit the dialog.
-     */
-    private JButton btnOKWithoutComment = null;
 
     /**
      * This button can be pressed to discard the input and exit the dialog.
@@ -70,7 +71,17 @@ public class CommentValidationDialog extends JDialog {
      * If true, accept formatting.
      * If false, reject formatting.
      */
-    private boolean iBoolAccept;
+    private Boolean iBoolAccept = null;
+
+    /**
+     * boolean that tracks if this identification has a Accept/Reject status.
+     */
+    private boolean iValidated;
+
+    /**
+     * Boolean that tracks if these comments need to be editable.
+     */
+    private boolean iEditable;
 
     /**
      * The Mediator instance.
@@ -87,10 +98,27 @@ public class CommentValidationDialog extends JDialog {
      * @param aBoolAccept boolean whether this dialog serves for accepting a PeptideIdentification.
      *                    When true, this means we are accepting. Otherwise when false, this means we are rejecting and the dialog formatting will adapt to this boolean.
      */
-    public CommentValidationDialog(String aTitle, Mediator aMediator, boolean aBoolAccept) {
+    public CommentValidationDialog(String aTitle, Mediator aMediator, boolean aBoolAccept, boolean aValidated) {
+        this(aTitle, aMediator, aBoolAccept, aValidated, true);
+    }
+
+    /**
+     * This constructor mimics the constructor on the superclass and allows
+     * specification of the parent JFrame as well as the title for the dialog.
+     * Note that about dialog is always modal!
+     *
+     * @param aTitle      String with the title for this dialog.
+     * @param aMediator   Mediator
+     * @param aBoolAccept boolean whether this dialog serves for accepting a PeptideIdentification.
+     *                    When true, this means we are accepting. Otherwise when false, this means we are rejecting and the dialog formatting will adapt to this boolean.
+     * @param aEditable   When true, the panel will be non-editable.
+     */
+    public CommentValidationDialog(String aTitle, Mediator aMediator, boolean aBoolAccept, boolean aValidated, boolean aEditable) {
         super(((PeptizerGUI) SwingUtilities.getRoot(aMediator)), aTitle, true);
 
         iMediator = aMediator;
+        iValidated = aValidated;
+        iEditable = aEditable;
         iPeptideIdentification = iMediator.getActivePeptideIdentification();
         iBoolAccept = aBoolAccept;
 
@@ -101,7 +129,17 @@ public class CommentValidationDialog extends JDialog {
             // If rejecting, set correctNumber to -1.
             iCorrectPeptidehitNumber = -1;
         }
+
         this.constructScreen();
+
+        if (aEditable == false) {
+            // then disable the 'edit' components.
+            btnCancel.setVisible(true);
+            btnOK.setVisible(false);
+            txtUserInput.setEditable(false);
+            txtAutoInput.setEditable(false);
+        }
+
         this.pack();
         this.setVisible(true);
     }
@@ -117,9 +155,19 @@ public class CommentValidationDialog extends JDialog {
         // Set information text dynamic on the PeptideIdentification.
         setInformationText();
 
-        // Create & format JTextArea
-        txaInput = new JTextArea(5, 80);
-        setTextArea();
+        // Create & format Auto info JTextArea
+        txtAutoInput = new JTextArea(10, 60);
+        txtAutoInput.setEditable(false);
+        setAutoTextArea();
+
+
+        // Create & format User info JTextArea
+        txtUserInput = new JTextArea(10, 60);
+        setUserTextArea();
+
+
+        setTxtAreaColorCoding();
+
 
         // The OK button.
         btnOK = new JButton("OK");
@@ -130,14 +178,6 @@ public class CommentValidationDialog extends JDialog {
             }
         });
 
-        // The OKWithoutComment button.
-        btnOKWithoutComment = new JButton("OK (No Comment)");
-        btnOKWithoutComment.setMnemonic(KeyEvent.VK_K);
-        btnOKWithoutComment.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                OKWithoutCommentPressed();
-            }
-        });
 
         // The Cancel button.
         btnCancel = new JButton("Cancel");
@@ -162,21 +202,26 @@ public class CommentValidationDialog extends JDialog {
         jpanButton.setLayout(new BoxLayout(jpanButton, BoxLayout.LINE_AXIS));
 
         // Scrollpane for textarea + panel for scrollpane.
-        JScrollPane jspText = new JScrollPane(txaInput, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        JScrollPane jspAutoText = new JScrollPane(txtAutoInput, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        jspAutoText.setBorder(new TitledBorder("Auto-generated comment"));
+
+        JScrollPane jspUserText = new JScrollPane(txtUserInput, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        jspUserText.setBorder(new TitledBorder("User comment"));
+
         JPanel jpanScroll = new JPanel();
-        jpanScroll.setLayout(new BoxLayout(jpanScroll, BoxLayout.X_AXIS));
-        jpanScroll.add(Box.createRigidArea(new Dimension(20, jspText.getHeight())));
-        jpanScroll.add(jspText);
-        jpanScroll.add(Box.createRigidArea(new Dimension(20, jspText.getHeight())));
+        jpanScroll.setLayout(new BoxLayout(jpanScroll, BoxLayout.Y_AXIS));
+        jpanScroll.add(Box.createRigidArea(new Dimension(20, jspAutoText.getHeight())));
+        jpanScroll.add(jspAutoText);
+        jpanScroll.add(Box.createRigidArea(new Dimension(20, jspAutoText.getHeight())));
+        jpanScroll.add(jspUserText);
+        jpanScroll.add(Box.createRigidArea(new Dimension(20, jspAutoText.getHeight())));
 
         // Start adding.
         jpanButton.add(Box.createHorizontalGlue());
         jpanButton.add(btnCancel);
-        jpanButton.add(Box.createRigidArea(new Dimension(10, btnOKWithoutComment.getHeight())));
-        jpanButton.add(btnOKWithoutComment);
-        jpanButton.add(Box.createRigidArea(new Dimension(10, btnOKWithoutComment.getHeight())));
+        jpanButton.add(Box.createRigidArea(new Dimension(10, btnCancel.getHeight())));
         jpanButton.add(btnOK);
-        jpanButton.add(Box.createRigidArea(new Dimension(15, btnOKWithoutComment.getHeight())));
+        jpanButton.add(Box.createRigidArea(new Dimension(10, btnCancel.getHeight())));
 
 
         jpanInformation.add(Box.createRigidArea(new Dimension(10, txtInformation.getHeight())));
@@ -202,27 +247,61 @@ public class CommentValidationDialog extends JDialog {
 
     }
 
-    private void setTextArea() {
+    /**
+     * Compose the automatic text area component.
+     */
+    private void setAutoTextArea() {
         // Enable linewrapping by words.
-        txaInput.setLineWrap(true);
-        txaInput.setWrapStyleWord(true);
+        txtAutoInput.setLineWrap(true);
+        txtAutoInput.setWrapStyleWord(true);
 
         // Set neutral font.
-        txaInput.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        txtAutoInput.setFont(new Font("Monospaced", Font.PLAIN, 12));
 
-        if (iBoolAccept) {
-            // Set ForegroundColor variable to the situation (accept & reject)
-            // Accepting!
-            txaInput.setForeground(new Color(0, 200, 0));
+        if (iPeptideIdentification.getValidationReport().getAutoComment() != ValidationReport.DEFAULT_COMMENT) {
+            txtAutoInput.setText(iPeptideIdentification.getValidationReport().getAutoComment());
         } else {
-            // Rejecting!
-            txaInput.setForeground(new Color(175, 0, 0));
+            txtAutoInput.setText(CommentGenerator.getCommentForSelectiveAgents(iPeptideIdentification, iMediator.getSelectedTableColumn()));
         }
+    }
 
-        if (iPeptideIdentification.getValidationReport().getComment() != ValidationReport.DEFAULT_COMMENT) {
-            txaInput.setText(iPeptideIdentification.getValidationReport().getComment());
+    /**
+     * Convenience method to apply color coding (green, red, black) to txtArea components (accept, reject, unvalidated)
+     */
+    private void setTxtAreaColorCoding() {
+        if (iValidated) {
+            if (iBoolAccept) {
+                // Set ForegroundColor variable to the situation (accept & reject)
+                // Accepting!
+                txtAutoInput.setForeground(new Color(0, 200, 0));
+                txtUserInput.setForeground(new Color(0, 200, 0));
+            } else {
+                // Rejecting!
+                txtAutoInput.setForeground(new Color(175, 0, 0));
+                txtUserInput.setForeground(new Color(175, 0, 0));
+            }
         } else {
-            txaInput.setText(CommentGenerator.getCommentForSelectiveAgents(iPeptideIdentification, iMediator.getSelectedTableColumn()));
+            // not validated!
+            txtAutoInput.setForeground(Color.DARK_GRAY);
+            txtUserInput.setForeground(Color.DARK_GRAY);
+        }
+    }
+
+
+    /**
+     * Compose the User text area component.
+     */
+    private void setUserTextArea() {
+        // Enable linewrapping by words.
+        txtUserInput.setLineWrap(true);
+        txtUserInput.setWrapStyleWord(true);
+
+        // Set neutral font.
+        txtUserInput.setFont(new Font("Monospaced", Font.PLAIN, 12));
+
+
+        if (iPeptideIdentification.getValidationReport().getAutoComment() != ValidationReport.DEFAULT_COMMENT) {
+            txtUserInput.setText(iPeptideIdentification.getValidationReport().getUserComment());
         }
     }
 
@@ -230,9 +309,17 @@ public class CommentValidationDialog extends JDialog {
         StringBuilder sb = new StringBuilder();
         if (iBoolAccept) {
             // Accept!
-            sb.append("<HTML><BODY TEXT=\"#339900\">");
-            sb.append("<BIG>Accept?</BIG>" +
-                    "<DL>");
+            sb.append("<HTML>");
+
+            if (iValidated) {
+                sb.append("<BODY TEXT=\"#339900\">");
+                sb.append("<BIG>Accept?</BIG>");
+            } else {
+                sb.append("<BIG>Info</BIG>");
+                sb.append("<BODY TEXT=\"#000000\">");
+            }
+
+            sb.append("<DL>");
             sb.append("<DT>peptide:<DD>" + iCorrectPeptidehitNumber +
                     "<DT>sequence:<DD>" + iPeptideIdentification.getPeptideHit(iCorrectPeptidehitNumber - 1).getSequence() +
                     "<DT>spectrum:<DD>" + iPeptideIdentification.getSpectrum().getName() +
@@ -240,10 +327,17 @@ public class CommentValidationDialog extends JDialog {
                     "</DL>");
         } else {
             // Reject!
-            sb.append("<HTML><BODY TEXT=\"#cc3300\">");
+            sb.append("<HTML>");
 
-            sb.append("<BIG>Reject?</BIG>" +
-                    "<DL>");
+            if (iValidated) {
+                sb.append("<BODY TEXT=\"#cc3300\">");
+                sb.append("<BIG>Reject?</BIG>");
+            } else {
+                sb.append("<BODY TEXT=\"#000000\">");
+                sb.append("<BIG>Info</BIG>");
+            }
+
+            sb.append("<DL>");
             sb.append("<DT>spectrum:<DD>" + iPeptideIdentification.getSpectrum().getName() +
                     "<DT>peptizer name:<DD>" + iPeptideIdentification.getName() +
                     "</DL>");
@@ -267,12 +361,13 @@ public class CommentValidationDialog extends JDialog {
      * Save the validation and comment.
      */
     private void OKPressed() {
-        String s = txaInput.getText();
-        if (!s.trim().equals("")) {
-            iPeptideIdentification.getValidationReport().setComment(s.replaceAll("\\n", "*"));
-        } else {
-            iPeptideIdentification.getValidationReport().setComment("NA");
-        }
+        String lAutoComment = txtAutoInput.getText();
+        String lUserComment = txtUserInput.getText();
+
+        String linesep = System.getProperty("line.separator");
+        iPeptideIdentification.getValidationReport().setAutoComment(lAutoComment.replaceAll(linesep, "*"));
+        iPeptideIdentification.getValidationReport().setUserComment(lUserComment);
+
         iPeptideIdentification.getValidationReport().setCorrectPeptideHitNumber(iCorrectPeptidehitNumber);
         // True if we are accepting, False if we are rejecting.
         iPeptideIdentification.getValidationReport().setResult(iBoolAccept);
@@ -281,14 +376,5 @@ public class CommentValidationDialog extends JDialog {
         iMediator.validationPerformed();
 
         this.CancelPressed();
-    }
-
-
-    /**
-     * Save the validation and discard the current comment (if any, it is reset to "NA")
-     */
-    private void OKWithoutCommentPressed() {
-        txaInput.setText("");
-        OKPressed();
     }
 }
