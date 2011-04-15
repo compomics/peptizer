@@ -23,11 +23,11 @@ import java.net.URL;
 /**
  * Class description:
  * ------------------
- * IconPanel is an Iconbar JPanel with actionlisteners coupled to the Mediator.
+ * TaskIconPanel is an Iconbar JPanel with actionlisteners coupled to the Mediator.
  */
-public class IconPanel extends JPanel {
-	// Class specific log4j logger for IconPanel instances.
-	 private static Logger logger = Logger.getLogger(IconPanel.class);
+public class TaskIconPanel extends JPanel {
+    // Class specific log4j logger for TaskIconPanel instances.
+    private static Logger logger = Logger.getLogger(TaskIconPanel.class);
     /**
      * The parent Mediator.
      */
@@ -38,7 +38,7 @@ public class IconPanel extends JPanel {
      */
     private File iOutput = null;
 
-    public IconPanel(Mediator aMediator) {
+    public TaskIconPanel(Mediator aMediator) {
         // JPanel constructor.
         super();
         // Layout and Look & Feel.
@@ -162,7 +162,7 @@ public class IconPanel extends JPanel {
                 if (lPeptideHit == 0) {
                     JOptionPane.showMessageDialog(iMediator, "Please select the correct PeptideHit!");
                 } else {
-                    new CommentValidationDialog("Comment dialog for accepting the spectrum.", iMediator, true);
+                    new CommentValidationDialog("Comment dialog for accepting the spectrum.", iMediator, true, true);
                     iMediator.repaint();
                 }
             }
@@ -177,7 +177,21 @@ public class IconPanel extends JPanel {
 
         btnRejectComment.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new CommentValidationDialog("Comment dialog for accepting the spectrum.", iMediator, false);
+                new CommentValidationDialog("Comment dialog for accepting the spectrum.", iMediator, false, true);
+                iMediator.repaint();
+            }
+        });
+
+        // H. InValidate identification button with comment.
+        URL urInfoComment = ClassLoader.getSystemResource("image/ICON_info.png");
+        ImageIcon imgInfoComment = new ImageIcon(urInfoComment);
+        JButton btnInfoComment = new JButton(imgInfoComment);
+        btnInfoComment.setToolTipText("Display current comment.");
+        btnInfoComment.setPreferredSize(dmsButton);
+
+        btnInfoComment.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                new CommentValidationDialog("Comments Information dialog for the spectrum.", iMediator, false, false, false);
                 iMediator.repaint();
             }
         });
@@ -196,6 +210,8 @@ public class IconPanel extends JPanel {
         this.add(btnAcceptComment);
         this.add(Box.createVerticalStrut(3));
         this.add(btnRejectComment);
+        this.add(Box.createVerticalStrut(3));
+        this.add(btnInfoComment);
         this.add(Box.createVerticalStrut(3));
 
         /*

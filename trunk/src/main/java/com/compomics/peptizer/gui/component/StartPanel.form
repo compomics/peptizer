@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.compomics.peptizer.gui.component.StartPanel">
+  <grid id="27dc6" binding="jpanContent" layout-manager="FormLayout">
+    <rowspec value="center:d:noGrow"/>
+    <rowspec value="top:3dlu:noGrow"/>
+    <rowspec value="center:max(d;50px):noGrow"/>
+    <rowspec value="top:3dlu:noGrow"/>
+    <rowspec value="center:max(d;4px):noGrow"/>
+    <rowspec value="top:3dlu:noGrow"/>
+    <rowspec value="center:max(d;4px):noGrow"/>
+    <colspec value="fill:d:grow"/>
+    <constraints>
+      <xy x="167" y="20" width="572" height="400"/>
+    </constraints>
+    <properties>
+      <background color="-1"/>
+    </properties>
+    <border type="none"/>
+    <children>
+      <grid id="bf115" binding="jpanImage" layout-manager="FormLayout">
+        <rowspec value="center:10px:noGrow"/>
+        <rowspec value="top:3dlu:noGrow"/>
+        <rowspec value="center:d:noGrow"/>
+        <colspec value="fill:50px:noGrow"/>
+        <colspec value="left:4dlu:noGrow"/>
+        <colspec value="left:d:noGrow"/>
+        <colspec value="left:4dlu:noGrow"/>
+        <colspec value="fill:d:grow"/>
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties>
+          <background color="-1"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="1ae5e" class="javax.swing.JLabel" binding="lblPeptizerLogo" custom-create="true">
+            <constraints>
+              <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties>
+              <icon value="image/IMAGE_start_panel.png"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <hspacer id="29ef2">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+          </hspacer>
+          <hspacer id="fa57f">
+            <constraints>
+              <grid row="2" column="4" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+          </hspacer>
+        </children>
+      </grid>
+      <grid id="55756" binding="jpanStartTask" layout-manager="FormLayout">
+        <rowspec value="center:d:noGrow"/>
+        <colspec value="fill:max(d;50px):noGrow"/>
+        <colspec value="left:4dlu:noGrow"/>
+        <colspec value="fill:d:noGrow"/>
+        <colspec value="left:4dlu:noGrow"/>
+        <colspec value="fill:max(d;4px):noGrow"/>
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties>
+          <background color="-1"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="ce96d" class="javax.swing.JButton" binding="btnStartTask">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties>
+              <icon value="image/ICON_newtask_large.png"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="e8d05" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties>
+              <font style="2"/>
+              <text value="start a new peptizer task"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="26ed1" binding="jpanWebsite" layout-manager="FormLayout">
+        <rowspec value="center:d:noGrow"/>
+        <colspec value="fill:max(d;50px):noGrow"/>
+        <colspec value="left:4dlu:noGrow"/>
+        <colspec value="fill:d:noGrow"/>
+        <colspec value="left:4dlu:noGrow"/>
+        <colspec value="fill:max(d;4px):noGrow"/>
+        <constraints>
+          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties>
+          <background color="-1"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="75325" class="javax.swing.JButton" binding="btnHome">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties>
+              <icon value="image/ICON_home.png"/>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="cea8f" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties>
+              <font style="2"/>
+              <text value="go to peptizer website"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+    </children>
+  </grid>
+</form>

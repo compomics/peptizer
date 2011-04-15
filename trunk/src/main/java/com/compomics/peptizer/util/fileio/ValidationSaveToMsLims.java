@@ -1,6 +1,7 @@
 package com.compomics.peptizer.util.fileio;
 
 import com.compomics.mslims.db.accessors.Validation;
+import com.compomics.mslims.db.accessors.Validationtype;
 import com.compomics.peptizer.gui.SelectedPeptideIdentifications;
 import com.compomics.peptizer.interfaces.ValidationSaver;
 import com.compomics.peptizer.util.CommentGenerator;
@@ -14,8 +15,6 @@ import org.apache.log4j.Logger;
 import javax.swing.*;
 import java.io.*;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
@@ -40,6 +39,7 @@ public class ValidationSaveToMsLims extends ValidationSaver {
     private String[] iUserOptions = new String[]{"Ignore", "Accept and Save", "Reject and Save"};
     private int iNumberNotValidated;
     private boolean saveConfidentNotSelected;
+    private Connection iConn = null;
 
 
     /**
@@ -74,33 +74,19 @@ public class ValidationSaveToMsLims extends ValidationSaver {
             MatLogger.logExceptionalEvent("Unable to find a database connection.");
         } else if (iData instanceof SelectedPeptideIdentifications) {
 
-            Connection lConnection = ConnectionManager.getInstance().getConnection();
-            Integer lL_userid = null;
-            String lUserName = "NA";
-            try {
-                lUserName = lConnection.getMetaData().getUserName();
-                String lUserQuery = "SELECT userid from user where name regexp '.*" + lUserName.substring(0, lUserName.indexOf('@')) + ".*'";
-                PreparedStatement ps = lConnection.prepareStatement(lUserQuery);
-                ResultSet rs = ps.executeQuery();
-
-                while (rs.next()) {
-                    lL_userid = rs.getInt("userid");
-                }
-            } catch (SQLException e) {
-                MatLogger.logExceptionalEvent("Failed to find the userid for user '" + lUserName + "'.");
-                logger.error(e.getMessage(), e);
-            }
-
             // First persist all the selected ids.
             int lNumberOfSpectra = ((SelectedPeptideIdentifications) iData).getNumberOfSpectra();
             for (int i = 0; i < lNumberOfSpectra; i++) {
                 PeptideIdentification lPeptideIdentification =
                         ((SelectedPeptideIdentifications) iData).getPeptideIdentification(i);
-                String lComment = CommentGenerator.getCommentForSelectiveAgents(lPeptideIdentification, 1);
+
+                String lAutoComment = CommentGenerator.getCommentForSelectiveAgents(lPeptideIdentification, 1, false);
+
                 ValidationReport lValidationReport = lPeptideIdentification.getValidationReport();
+                lValidationReport.setAutoComment(lAutoComment);
+
                 if (lValidationReport.isValidated()) {
-                    lValidationReport.setComment(lComment);
-                    this.persistValidation(lConnection, lL_userid, lPeptideIdentification);
+                    this.persistValidation(lPeptideIdentification);
                 } else {
                     while (boolUserApproved == false) {
 
@@ -121,14 +107,14 @@ public class ValidationSaveToMsLims extends ValidationSaver {
                         iNumberNotValidated++;
 
                     } else if (iUserApproveOption == 1) {
-                        lValidationReport.setComment(lComment);
+                        lValidationReport.setAutoComment(lAutoComment);
                         lValidationReport.setResult(true);
-                        this.persistValidation(lConnection, lL_userid, lPeptideIdentification);
+                        this.persistValidation(lPeptideIdentification);
 
                     } else if (iUserApproveOption == 2) {
-                        lValidationReport.setComment(lComment);
+                        lValidationReport.setAutoComment(lAutoComment);
                         lValidationReport.setResult(false);
-                        this.persistValidation(lConnection, lL_userid, lPeptideIdentification);
+                        this.persistValidation(lPeptideIdentification);
                     }
                 }
 
@@ -149,9 +135,9 @@ public class ValidationSaveToMsLims extends ValidationSaver {
                             while ((o = ois1.readObject()) != null) {
                                 if (o instanceof PeptideIdentification && o != null) {
                                     PeptideIdentification lPeptideIdentification = (PeptideIdentification) o;
-                                    lPeptideIdentification.getValidationReport().setComment("AUTO_ACCEPT");
+                                    lPeptideIdentification.getValidationReport().setAutoComment("AUTO_ACCEPT");
                                     lPeptideIdentification.getValidationReport().setResult(true);
-                                    this.persistValidation(lConnection, lL_userid, lPeptideIdentification);
+                                    this.persistValidation(lPeptideIdentification);
                                 }
                             }
                         } catch (EOFException eof) {
@@ -178,30 +164,38 @@ public class ValidationSaveToMsLims extends ValidationSaver {
     /**
      * This method stores the Validation of an PeptideIdentification into the ms-lims connections,.
      *
-     * @param aConnection            Connection to the ms-lims databse.
-     * @param aL_userid
      * @param aPeptideIdentification
      */
-    private void persistValidation(Connection aConnection, Integer aL_userid, PeptideIdentification aPeptideIdentification) {
+    private void persistValidation(PeptideIdentification aPeptideIdentification) {
         boolean lResult = aPeptideIdentification.getValidationReport().getResult();
+
+        if (iConn == null) {
+            iConn = ConnectionManager.getInstance().getConnection();
+        }
 
         Long lIdentificationid = (Long) aPeptideIdentification.getMetaData(MetaKey.Identification_id);
         try {
-            Validation lValidation = Validation.getValidation(lIdentificationid, aConnection);
+            Validation lValidation = Validation.getValidation(lIdentificationid, iConn);
+
+            int lValidationtype = parseValidationType(aPeptideIdentification);
 
             if (lValidation == null) {
 
+
                 // Validation is non existing. create a new entry!
                 lValidation = new Validation();
+
                 lValidation.setL_identificationid(lIdentificationid);
-                lValidation.setStatus(lResult);
-                lValidation.setL_userid(aL_userid);
-                lValidation.setComment(aPeptideIdentification.getValidationReport().getComment());
+
+                lValidation.setL_validationtypeid(lValidationtype);
+                lValidation.setAuto_comment(aPeptideIdentification.getValidationReport().getAutoComment());
+                lValidation.setManual_comment(aPeptideIdentification.getValidationReport().getUserComment());
+
                 // store!
-                lValidation.persist(aConnection);
+                lValidation.persist(iConn);
 
                 iNumberPersisted++;
-                if (lValidation.getStatus()) {
+                if (lValidationtype > 0) {
                     iNumberAccepted++;
                 } else {
                     iNumberRejected++;
@@ -212,14 +206,15 @@ public class ValidationSaveToMsLims extends ValidationSaver {
                 // Validation already exists for this identificationid. Update? is it overwrite
                 if (iApplyToall) {
                     if (iOverWriteExistingValidation) {
-                        lValidation.setStatus(lResult);
-                        lValidation.setL_userid(aL_userid);
-                        lValidation.setComment(aPeptideIdentification.getValidationReport().getComment());
+                        lValidation.setL_validationtypeid(lValidationtype);
+                        lValidation.setAuto_comment(aPeptideIdentification.getValidationReport().getAutoComment());
+                        lValidation.setManual_comment(aPeptideIdentification.getValidationReport().getUserComment());
 
-                        lValidation.update(aConnection);
+
+                        lValidation.update(iConn);
 
                         iNumberUpdated++;
-                        if (lValidation.getStatus()) {
+                        if (lValidationtype > 0) {
                             iNumberAccepted++;
                         } else {
                             iNumberRejected++;
@@ -270,13 +265,14 @@ public class ValidationSaveToMsLims extends ValidationSaver {
 
                     // Ok, now do we have to do the update?
                     if (iOverWriteExistingValidation) {
-                        lValidation.setL_userid(aL_userid);
-                        lValidation.setComment(aPeptideIdentification.getValidationReport().getComment());
-                        lValidation.setStatus(lResult);
-                        lValidation.update(aConnection);
+                        lValidation.setAuto_comment(aPeptideIdentification.getValidationReport().getAutoComment());
+                        lValidation.setManual_comment(aPeptideIdentification.getValidationReport().getUserComment());
+
+                        lValidation.setL_validationtypeid(lValidationtype);
+                        lValidation.update(iConn);
 
                         iNumberUpdated++;
-                        if (lValidation.getStatus()) {
+                        if (lValidationtype > 0) {
                             iNumberAccepted++;
                         } else {
                             iNumberRejected++;
@@ -290,6 +286,38 @@ public class ValidationSaveToMsLims extends ValidationSaver {
         } catch (SQLException e) {
             logger.error(e.getMessage(), e);  //To change body of catch statement use File | Settings | File Templates.
         }
+    }
+
+    /**
+     * This private convenience method parses the validation status (accept/reject) and the validation origin (manual/auto)
+     * into an integer typed by the ms-lims database.
+     *
+     * @param aPeptideIdentification
+     * @return
+     */
+    private int parseValidationType(PeptideIdentification aPeptideIdentification) {
+        int lValidationtype;
+
+        if (aPeptideIdentification.isValidated()) {
+            // MANUAL!!
+            if (aPeptideIdentification.getValidationReport().getResult()) {
+                // manual accept!
+                lValidationtype = Validationtype.ACCEPT_MANUAL;
+            } else {
+                // manual reject!
+                lValidationtype = Validationtype.REJECT_MANUAL;
+            }
+        } else {
+            // AUTO!
+            if (aPeptideIdentification.getValidationReport().getResult()) {
+                // auto accept!
+                lValidationtype = Validationtype.ACCEPT_AUTO;
+            } else {
+                // auto reject!
+                lValidationtype = Validationtype.REJECT_AUTO;
+            }
+        }
+        return lValidationtype;
     }
 
 

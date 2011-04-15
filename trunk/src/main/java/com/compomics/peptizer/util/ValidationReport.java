@@ -47,9 +47,14 @@ public class ValidationReport implements Serializable {
     public static final String DEFAULT_COMMENT = "NA";
 
     /**
-     * Comment on the validation.
+     * Automatically generated comment on the validation.
      */
-    private String iComment = DEFAULT_COMMENT;
+    private String iAutoComment = DEFAULT_COMMENT;
+
+    /**
+     * User comment on the validation.
+     */
+    private String iUserComment = null;
 
     /**
      * Constructs an empty <tt>ValidationReport</tt> with the default initial capacity
@@ -103,21 +108,39 @@ public class ValidationReport implements Serializable {
     }
 
     /**
-     * Returns comment on validation.
+     * Returns automated comment on validation.
      *
      * @return comment on validation.
      */
-    public String getComment() {
-        return iComment;
+    public String getAutoComment() {
+        return iAutoComment;
     }
 
     /**
-     * Sets comment on validation.
+     * Sets automated comment on validation.
      *
-     * @param aComment String on validation.
+     * @param aAutoComment String on validation.
      */
-    public void setComment(String aComment) {
-        iComment = aComment;
+    public void setAutoComment(String aAutoComment) {
+        iAutoComment = aAutoComment;
+    }
+
+    /**
+     * Returns user specified comment on validation.
+     *
+     * @return comment on validation. null if unspecified.
+     */
+    public String getUserComment() {
+        return iUserComment;
+    }
+
+    /**
+     * Sets user specified comment on validation.
+     *
+     * @param aUserComment String on validation.
+     */
+    public void setUserComment(String aUserComment) {
+        iUserComment = aUserComment;
     }
 
     /**
@@ -147,6 +170,7 @@ public class ValidationReport implements Serializable {
         setResult(false);
         // Mind that when the validation is false, the result cannot be accessed!
         setValidated(false);
-        setComment("NA");
+        setAutoComment("NA");
+        setUserComment(null);
     }
 }

@@ -171,7 +171,7 @@ public class ValidationSaveToCSV extends ValidationSaver {
                         while ((o = ois1.readObject()) != null) {
                             if (o instanceof PeptideIdentification) {
                                 PeptideIdentification lPeptideIdentification = (PeptideIdentification) o;
-                                lPeptideIdentification.getValidationReport().setComment("CONFIDENT_NOTSELECTED");
+                                lPeptideIdentification.getValidationReport().setAutoComment("CONFIDENT_NOTSELECTED");
                                 savePeptideIdentification(lPeptideIdentification);
                                 iNumberConfidentNotSelected++;
                             }
@@ -360,7 +360,7 @@ public class ValidationSaveToCSV extends ValidationSaver {
 
             if (iComments) {
                 // 10. Validation Comment
-                iBufferedWriter.write(aPeptideIdentification.getValidationReport().getComment().replaceAll("\n", "*").replaceAll("=", ""));
+                iBufferedWriter.write(aPeptideIdentification.getValidationReport().getAutoComment().replaceAll("\n", "*").replaceAll("=", ""));
             }
 
             iBufferedWriter.newLine();

@@ -34,8 +34,8 @@ import java.util.List;
  * Class description: ------------------ This class was developed to start peptizer by command line.
  */
 public class Peptizer {
-	// Class specific log4j logger for Peptizer instances.
-	 private static Logger logger = Logger.getLogger(Peptizer.class);
+    // Class specific log4j logger for Peptizer instances.
+    private static Logger logger = Logger.getLogger(Peptizer.class);
 
 
     /**
@@ -53,7 +53,7 @@ public class Peptizer {
         PropertiesManager.getInstance().updateLog4jConfiguration(logger, CompomicsTools.PEPTIZER);
         logger.debug("Starting peptizer-cli");
         logger.debug("OS : " + System.getProperties().getProperty("os.name"));
-        
+
         // First see if we should output anything useful.
         if (args == null || args.length == 0) {
             flagError("Usage:\n\tPeptizer " +
@@ -185,22 +185,22 @@ public class Peptizer {
 
                         case MATCH:
                             lMatchCounter++;
-                            lPeptideIdentification.getValidationReport().setComment("MATCH");
+                            lPeptideIdentification.getValidationReport().setAutoComment("MATCH");
                             break;
 
                         case NON_CONFIDENT:
                             lNonConfidentCounter++;
-                            lPeptideIdentification.getValidationReport().setComment("NON_CONFIDENT");
+                            lPeptideIdentification.getValidationReport().setAutoComment("NON_CONFIDENT");
                             break;
 
                         case NON_MATCH:
                             lNonMatchCounter++;
-                            lPeptideIdentification.getValidationReport().setComment("NON_MATCH");
+                            lPeptideIdentification.getValidationReport().setAutoComment("NON_MATCH");
                             break;
 
                         case NO_IDENTIFICATION:
                             lNoIdentificationCounter++;
-                            lPeptideIdentification.getValidationReport().setComment("NO_IDENTIFICATION");
+                            lPeptideIdentification.getValidationReport().setAutoComment("NO_IDENTIFICATION");
                             break;
                     }
 
