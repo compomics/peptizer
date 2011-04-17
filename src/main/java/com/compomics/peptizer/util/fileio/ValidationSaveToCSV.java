@@ -4,7 +4,9 @@ import com.compomics.peptizer.gui.SelectedPeptideIdentifications;
 import com.compomics.peptizer.gui.model.AbstractTableRow;
 import com.compomics.peptizer.gui.progressbars.DefaultProgressBar;
 import com.compomics.peptizer.interfaces.ValidationSaver;
+import com.compomics.peptizer.util.CommentGenerator;
 import com.compomics.peptizer.util.PeptideIdentification;
+import com.compomics.peptizer.util.ValidationReport;
 import com.compomics.peptizer.util.enumerator.TempFileEnum;
 import com.compomics.peptizer.util.worker.WorkerResult;
 import org.apache.log4j.Logger;
@@ -304,8 +306,14 @@ public class ValidationSaveToCSV extends ValidationSaver {
      */
     public void savePeptideIdentification(PeptideIdentification aPeptideIdentification) throws IOException {
 
-        // A. Fixed print of certain values.
+        // first, set the autocomment to each PeptideIdentification.
+        String lAutoComment = CommentGenerator.getCommentForSelectiveAgents(aPeptideIdentification, 1, false);
 
+        ValidationReport lValidationReport = aPeptideIdentification.getValidationReport();
+        lValidationReport.setAutoComment(lAutoComment);
+
+
+        // A. Fixed print of certain values.
         int lLoopCount;
         if (isIncludeNonPrimary()) {
             // If include nonPrimary is set to true, confident peptidehits must be included as well, count the number of confident hits.
@@ -362,7 +370,7 @@ public class ValidationSaveToCSV extends ValidationSaver {
             if (iComments) {
                 // 10. Validation Comment
                 iBufferedWriter.write(aPeptideIdentification.getValidationReport().getAutoComment().replaceAll("\n", "*").replaceAll("=", ""));
-                iBufferedWriter.newLine();
+                iBufferedWriter.write(iSeparator);
                 iBufferedWriter.write(aPeptideIdentification.getValidationReport().getUserComment().replaceAll("\n", " ").replaceAll("=", ""));
             }
 
@@ -457,6 +465,12 @@ public class ValidationSaveToCSV extends ValidationSaver {
         if (iTableRows.size() != 0) {
             ((AbstractTableRow) iTableRows.get(0)).setHTML(true);
         }
+
+// 1. GUI message to user.
+        MatLogger.logExceptionalGUIMessage("Save task report", getHTMLMessage());
+        // 2. Simple log to statuspanel.
+        MatLogger.logNormalEvent("Saved task to " + iFile.getAbsolutePath());
+
 
         // 3. GUI message to user.
 //        MatLogger.logExceptionalGUIMessage("Save task report", getHTMLMessage());
