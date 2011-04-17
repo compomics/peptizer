@@ -2,6 +2,11 @@
 # Short summary of changes for each version of Peptizer. (as from version 1.6)
 ----
 
+*Changes in Peptizer 1.8 (April 17. 2011):*
+ * FEATURE: created a new welcome screen and a toolbar for a more intuitive user interface
+ * FEATURE: the validation comments have been split into two distinct variables for user comments and automated Agent reporting comments.
+----
+
 *Changes in Peptizer 1.7.9 (March 29. 2011):*
  * FEATURE: added new Agent (C13Agent) that attempts to detect C13 precursor peaks by matching peptides with mass errors 1Da +- tolerance
  ----
