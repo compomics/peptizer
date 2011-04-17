@@ -54,7 +54,7 @@ public class ValidationReport implements Serializable {
     /**
      * User comment on the validation.
      */
-    private String iUserComment = null;
+    private String iUserComment = "";
 
     /**
      * Constructs an empty <tt>ValidationReport</tt> with the default initial capacity
