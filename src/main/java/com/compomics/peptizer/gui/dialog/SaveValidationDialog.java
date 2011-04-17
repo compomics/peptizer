@@ -155,7 +155,7 @@ public class SaveValidationDialog extends JDialog {
         this.pack();
 
         this.jpanTarget.setMaximumSize(new Dimension(3000, jpanTarget.getSize().height));
-        int lNewWidth = iPeptizerGUI.getSize().width - (new Double(iPeptizerGUI.getSize().width * 0.60)).intValue();
+        int lNewWidth = iPeptizerGUI.getSize().width - (new Double(iPeptizerGUI.getSize().width * 0.30)).intValue();
         setSize(new Dimension(lNewWidth, this.getSize().height));
 
         // Finally, add the listeners to the components.

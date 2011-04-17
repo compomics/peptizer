@@ -1,6 +1,8 @@
 package com.compomics.peptizer.gui.component;
 
 import com.compomics.peptizer.gui.PeptizerGUI;
+import com.compomics.peptizer.gui.listener.AddAgentFilterActionListener;
+import com.compomics.peptizer.gui.listener.AddSequenceFilterActionListener;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -17,6 +19,11 @@ public class MainIconPanel {
     private JButton btnNewTask;
     private JToggleButton btnInfo;
     private JPanel jpanContent;
+    private JToggleButton btnSerSave;
+    private JToggleButton btnSerLoad;
+    private JToggleButton btnSeqFind;
+    private JToggleButton btnHelp;
+    private JToggleButton btnAgentFilter;
     private PeptizerGUI iPeptizerGUI;
 
     /**
@@ -48,17 +55,73 @@ public class MainIconPanel {
         });
         btnInfo.setToolTipText("Toggle logging information");
 
+        btnSerSave.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent aActionEvent) {
+                iPeptizerGUI.saveSerializedIdentifications();
+
+            }
+        });
+
+        btnSerLoad.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent aActionEvent) {
+                iPeptizerGUI.loadSerializedPeptideIdentifications();
+            }
+        });
+
+        btnHelp.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent aActionEvent) {
+                iPeptizerGUI.showAbout();
+            }
+        });
+
+        btnSeqFind.addActionListener(new AddSequenceFilterActionListener(iPeptizerGUI));
+
+        btnAgentFilter.addActionListener(new AddAgentFilterActionListener(iPeptizerGUI));
+
         EmptyBorder lBorder = new EmptyBorder(0, 0, 0, 0);
 
         btnInfo.setBorder(lBorder);
         btnNewTask.setBorder(lBorder);
         btnSaveTask.setBorder(lBorder);
+        btnSerSave.setBorder(lBorder);
+        btnSerLoad.setBorder(lBorder);
+        btnHelp.setBorder(lBorder);
+        btnSeqFind.setBorder(lBorder);
+        btnAgentFilter.setBorder(lBorder);
 
     }
 
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
+    }
+
+    /**
+     * If TRUE; then inactivate the buttons that are not needed at start time.
+     * if FALSE; enable all buttons.
+     */
+    public void showAll(boolean aShowAll) {
+        // Inverse the boo
+        btnAgentFilter.setEnabled(aShowAll);
+
+        btnSeqFind.setEnabled(aShowAll);
+
+        btnSerSave.setEnabled(aShowAll);
+        btnSaveTask.setEnabled(aShowAll);
+
+    }
+
+    /**
+     * Inactivate the buttons that are not needed at start time.
+     */
+    private void setStartupMode() {
+        btnAgentFilter.setEnabled(false);
+
+        btnSeqFind.setEnabled(false);
+
+        btnSerSave.setEnabled(false);
+        btnSaveTask.setEnabled(false);
+
     }
 
 
@@ -78,7 +141,7 @@ public class MainIconPanel {
      */
     private void $$$setupUI$$$() {
         jpanContent = new JPanel();
-        jpanContent.setLayout(new FormLayout("fill:50px:noGrow,left:4dlu:noGrow,fill:50px:noGrow,left:4dlu:noGrow,fill:50px:noGrow", "center:10px:noGrow,top:3dlu:noGrow,center:d:noGrow"));
+        jpanContent.setLayout(new FormLayout("fill:50px:noGrow,left:4dlu:noGrow,fill:50px:noGrow,left:4dlu:noGrow,fill:50px:noGrow,left:4dlu:noGrow,fill:50px:noGrow,left:4dlu:noGrow,fill:50px:noGrow,left:4dlu:noGrow,fill:50px:noGrow,left:4dlu:noGrow,fill:50px:noGrow,left:4dlu:noGrow,fill:50px:noGrow", "center:10px:noGrow,top:3dlu:noGrow,center:d:noGrow"));
         btnNewTask = new JButton();
         btnNewTask.setIcon(new ImageIcon(getClass().getResource("/image/ICON_newtask.png")));
         btnNewTask.setText("");
@@ -94,6 +157,31 @@ public class MainIconPanel {
         btnInfo.setIcon(new ImageIcon(getClass().getResource("/image/ICON_log.png")));
         btnInfo.setText("");
         jpanContent.add(btnInfo, cc.xy(5, 3));
+        btnSerSave = new JToggleButton();
+        btnSerSave.setHideActionText(true);
+        btnSerSave.setIcon(new ImageIcon(getClass().getResource("/image/ICON_save_ser.png")));
+        btnSerSave.setText("");
+        jpanContent.add(btnSerSave, cc.xy(7, 3));
+        btnSerLoad = new JToggleButton();
+        btnSerLoad.setHideActionText(true);
+        btnSerLoad.setIcon(new ImageIcon(getClass().getResource("/image/ICON_load_ser.png")));
+        btnSerLoad.setText("");
+        jpanContent.add(btnSerLoad, cc.xy(9, 3));
+        btnSeqFind = new JToggleButton();
+        btnSeqFind.setHideActionText(true);
+        btnSeqFind.setIcon(new ImageIcon(getClass().getResource("/image/ICON_find.png")));
+        btnSeqFind.setText("");
+        jpanContent.add(btnSeqFind, cc.xy(11, 3));
+        btnAgentFilter = new JToggleButton();
+        btnAgentFilter.setHideActionText(true);
+        btnAgentFilter.setIcon(new ImageIcon(getClass().getResource("/image/ICON_filter.png")));
+        btnAgentFilter.setText("");
+        jpanContent.add(btnAgentFilter, cc.xy(13, 3));
+        btnHelp = new JToggleButton();
+        btnHelp.setHideActionText(true);
+        btnHelp.setIcon(new ImageIcon(getClass().getResource("/image/ICON_help.png")));
+        btnHelp.setText("");
+        jpanContent.add(btnHelp, cc.xy(15, 3));
     }
 
     /**

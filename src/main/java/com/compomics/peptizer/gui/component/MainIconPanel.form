@@ -9,6 +9,16 @@
     <colspec value="fill:50px:noGrow"/>
     <colspec value="left:4dlu:noGrow"/>
     <colspec value="fill:50px:noGrow"/>
+    <colspec value="left:4dlu:noGrow"/>
+    <colspec value="fill:50px:noGrow"/>
+    <colspec value="left:4dlu:noGrow"/>
+    <colspec value="fill:50px:noGrow"/>
+    <colspec value="left:4dlu:noGrow"/>
+    <colspec value="fill:50px:noGrow"/>
+    <colspec value="left:4dlu:noGrow"/>
+    <colspec value="fill:50px:noGrow"/>
+    <colspec value="left:4dlu:noGrow"/>
+    <colspec value="fill:50px:noGrow"/>
     <constraints>
       <xy x="20" y="20" width="500" height="400"/>
     </constraints>
@@ -44,6 +54,61 @@
         <properties>
           <hideActionText value="true"/>
           <icon value="image/ICON_log.png"/>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="11097" class="javax.swing.JToggleButton" binding="btnSerSave">
+        <constraints>
+          <grid row="2" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="1" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties>
+          <hideActionText value="true"/>
+          <icon value="image/ICON_save_ser.png"/>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="7a69f" class="javax.swing.JToggleButton" binding="btnSerLoad">
+        <constraints>
+          <grid row="2" column="8" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="1" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties>
+          <hideActionText value="true"/>
+          <icon value="image/ICON_load_ser.png"/>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="38f33" class="javax.swing.JToggleButton" binding="btnSeqFind">
+        <constraints>
+          <grid row="2" column="10" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="1" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties>
+          <hideActionText value="true"/>
+          <icon value="image/ICON_find.png"/>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="d9ba6" class="javax.swing.JToggleButton" binding="btnAgentFilter">
+        <constraints>
+          <grid row="2" column="12" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="1" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties>
+          <hideActionText value="true"/>
+          <icon value="image/ICON_filter.png"/>
+          <text value=""/>
+        </properties>
+      </component>
+      <component id="8e829" class="javax.swing.JToggleButton" binding="btnHelp">
+        <constraints>
+          <grid row="2" column="14" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="1" use-parent-layout="false"/>
+          <forms/>
+        </constraints>
+        <properties>
+          <hideActionText value="true"/>
+          <icon value="image/ICON_help.png"/>
           <text value=""/>
         </properties>
       </component>

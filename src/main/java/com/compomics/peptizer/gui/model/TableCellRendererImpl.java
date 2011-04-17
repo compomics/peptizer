@@ -19,8 +19,8 @@ import java.awt.*;
  * This class was developed to
  */
 public class TableCellRendererImpl implements TableCellRenderer {
-	// Class specific log4j logger for TableCellRendererImpl instances.
-	 private static Logger logger = Logger.getLogger(TableCellRendererImpl.class);
+    // Class specific log4j logger for TableCellRendererImpl instances.
+    private static Logger logger = Logger.getLogger(TableCellRendererImpl.class);
 
     // The Table makes use of 4 colors.
     // a dark and light shade for alternating rows
@@ -83,6 +83,9 @@ public class TableCellRendererImpl implements TableCellRenderer {
             // 2. Set bold
             setBold(column);
             // 3. Set text to JLabel
+            if (value == null) {
+                value = "NA";
+            }
             lbl.setText(value.toString());
         }
 
