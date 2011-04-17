@@ -9,15 +9,16 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class HyperLinkLabel extends JLabel {
-	// Class specific log4j logger for HyperLinkLabel instances.
-	 private static Logger logger = Logger.getLogger(HyperLinkLabel.class);
+    // Class specific log4j logger for HyperLinkLabel instances.
+    private static Logger logger = Logger.getLogger(HyperLinkLabel.class);
     String url;
-    Color rc;
 
     public HyperLinkLabel(String text, Icon icon, String url) {
         super(text);
         this.setIcon(icon);
         this.url = url;
+        setForeground(Color.BLUE);
+        setBackground(Color.BLUE);
         addListeners();
     }
 
@@ -27,18 +28,6 @@ public class HyperLinkLabel extends JLabel {
             public void mouseClicked(MouseEvent e) {
                 HyperLinker.displayURL(thisUrl);
             }
-
-            public void mouseEntered(MouseEvent e) {
-                HyperLinkLabel.this.rc = HyperLinkLabel.this.getForeground();
-                HyperLinkLabel.this.setCursor(new Cursor(Cursor.HAND_CURSOR));
-                HyperLinkLabel.this.setForeground(Color.blue);
-            }
-
-            public void mouseExited(MouseEvent e) {
-                HyperLinkLabel.this.setForeground(HyperLinkLabel.this.rc);
-                HyperLinkLabel.this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-            }
-
         });
     }
 

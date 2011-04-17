@@ -44,6 +44,7 @@ public class StartTaskActionListener implements ActionListener, Observer {
         try {
 
             DefaultProgressBar lProgress = new DefaultProgressBar(iCreateTaskDialog.getPeptizerGUI(), "Data loading", 0, 2);
+            lProgress.setSize(300, 50);
             MatLogger.logNormalEvent("New task started.");
 
             IdentificationFactory.getInstance().reset();

@@ -8,6 +8,7 @@ import com.compomics.peptizer.gui.dialog.*;
 import com.compomics.peptizer.gui.interfaces.StatusView;
 import com.compomics.peptizer.gui.listener.AddAgentFilterActionListener;
 import com.compomics.peptizer.gui.listener.AddSequenceFilterActionListener;
+import com.compomics.peptizer.gui.listener.DisableAgentFilterActionListener;
 import com.compomics.peptizer.gui.model.ValidationTreeFilter;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.fileio.ConnectionManager;
@@ -139,15 +140,17 @@ public class PeptizerGUI extends JFrame implements StatusView {
         jpanContent.add(iTabPanel, BorderLayout.CENTER);
 
         iMainIconPanel = new MainIconPanel(this);
+        iMainIconPanel.showAll(false);
         jpanContent.add(iMainIconPanel.$$$getRootComponent$$$(), BorderLayout.NORTH);
 
 
         jpanStatus = new StatusPanel(false);
-        jpanStatus.setStatus("Welcome to Peptizer.\t(http://genesis.ugent.be/peptizer)");
+        jpanStatus.setStatus("Welcome to Peptizer");
         jpanStatus.setError("None.");
         jpanStatus.setBorder(BorderFactory.createTitledBorder("Peptizer status"));
+        // Set invisible from start.
 
-        jpanContent.setSize(new Dimension(this.getSize().width, (new Double(this.getSize().height * 0.8)).intValue()));
+        jpanContent.setSize(new Dimension(this.getSize().width, (new Double(this.getSize().height * 0.9)).intValue()));
 
         iStatusSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false, jpanContent, jpanStatus);
 
@@ -288,11 +291,7 @@ public class PeptizerGUI extends JFrame implements StatusView {
 
         menuItem = new JMenuItem("Disable Filters");
         menuItem.setMnemonic(KeyEvent.VK_D);
-        menuItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                ((Mediator) PeptizerGUI.this.getTabs()[PeptizerGUI.this.getSelectedTabIndex()]).disableFilter();
-            }
-        });
+        menuItem.addActionListener(new DisableAgentFilterActionListener(this));
         subMenu.add(menuItem);
         menu.add(subMenu);
 
@@ -308,16 +307,7 @@ public class PeptizerGUI extends JFrame implements StatusView {
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                if (FileManager.getInstance().selectPeptideIdentificationOutput(iTabPanel)) {
-                    File lFile = FileManager.getInstance().getPeptideIdentificationsSerializedOutput();
-                    try {
-                        SelectedPeptideIdentifications lSelectedPeptideIdentifications =
-                                ((Mediator) PeptizerGUI.this.getTabs()[PeptizerGUI.this.getSelectedTabIndex()]).getSelectedPeptideIdentifications();
-                        PeptizerSerialization.serializePeptideIdentificationsToFile(lSelectedPeptideIdentifications.getSelectedPeptideIdentificationList(), lFile);
-                    } catch (IOException e1) {
-                        logger.error(e1.getMessage(), e1);
-                    }
-                }
+                saveSerializedIdentificationsAll();
             }
         });
         subMenu.add(menuItem);
@@ -327,28 +317,7 @@ public class PeptizerGUI extends JFrame implements StatusView {
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                if (FileManager.getInstance().selectPeptideIdentificationOutput(iTabPanel)) {
-                    File lFile = FileManager.getInstance().getPeptideIdentificationsSerializedOutput();
-                    ArrayList lArrayList = new ArrayList();
-
-                    SelectedPeptideIdentifications lSelectedPeptideIdentifications =
-                            ((Mediator) PeptizerGUI.this.getTabs()[PeptizerGUI.this.getSelectedTabIndex()]).getSelectedPeptideIdentifications();
-                    int lNumber = lSelectedPeptideIdentifications.getNumberOfSpectra();
-                    for (int i = 0; i < lNumber; i++) {
-                        PeptideIdentification lPeptideIdentification =
-                                lSelectedPeptideIdentifications.getPeptideIdentification(i);
-                        if (lPeptideIdentification.isValidated()) {
-                            if (lPeptideIdentification.getValidationReport().getResult()) {
-                                lArrayList.add(lPeptideIdentification);
-                            }
-                        }
-                    }
-                    try {
-                        PeptizerSerialization.serializePeptideIdentificationsToFile(lArrayList, lFile);
-                    } catch (IOException e1) {
-                        logger.error(e1.getMessage(), e1);
-                    }
-                }
+                saveSerializedIdentifications();
             }
         });
         subMenu.add(menuItem);
@@ -400,6 +369,19 @@ public class PeptizerGUI extends JFrame implements StatusView {
         menuBar.add(menu);
     }
 
+    private void saveSerializedIdentificationsAll() {
+        if (FileManager.getInstance().selectPeptideIdentificationOutput(iTabPanel)) {
+            File lFile = FileManager.getInstance().getPeptideIdentificationsSerializedOutput();
+            try {
+                SelectedPeptideIdentifications lSelectedPeptideIdentifications =
+                        ((Mediator) this.getTabs()[this.getSelectedTabIndex()]).getSelectedPeptideIdentifications();
+                PeptizerSerialization.serializePeptideIdentificationsToFile(lSelectedPeptideIdentifications.getSelectedPeptideIdentificationList(), lFile);
+            } catch (IOException e1) {
+                logger.error(e1.getMessage(), e1);
+            }
+        }
+    }
+
 
     /**
      * Action when the save menu is selected.
@@ -422,7 +404,7 @@ public class PeptizerGUI extends JFrame implements StatusView {
         JDialog dialog = new CreateTaskDialog(this);
     }
 
-    private void loadSerializedPeptideIdentifications() {
+    public void loadSerializedPeptideIdentifications() {
         if (FileManager.getInstance().selectPeptideIdentificationSerializedInput(iTabPanel)) {
             File lFile = FileManager.getInstance().getPeptideIdentificationsSerializedInput();
             ArrayList lArrayList = null;
@@ -510,29 +492,7 @@ public class PeptizerGUI extends JFrame implements StatusView {
                     item.setMnemonic(KeyEvent.VK_T);
                     item.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
-
-                            if (FileManager.getInstance().selectPeptideIdentificationOutput(iTabPanel)) {
-                                File lFile = FileManager.getInstance().getPeptideIdentificationsSerializedOutput();
-                                ArrayList lArrayList = new ArrayList();
-
-                                SelectedPeptideIdentifications lSelectedPeptideIdentifications =
-                                        ((Mediator) PeptizerGUI.this.getTabs()[PeptizerGUI.this.getSelectedTabIndex()]).getSelectedPeptideIdentifications();
-                                int lNumber = lSelectedPeptideIdentifications.getNumberOfSpectra();
-                                for (int i = 0; i < lNumber; i++) {
-                                    PeptideIdentification lPeptideIdentification =
-                                            lSelectedPeptideIdentifications.getPeptideIdentification(i);
-                                    if (lPeptideIdentification.isValidated()) {
-                                        if (lPeptideIdentification.getValidationReport().getResult()) {
-                                            lArrayList.add(lPeptideIdentification);
-                                        }
-                                    }
-                                }
-                                try {
-                                    PeptizerSerialization.serializePeptideIdentificationsToFile(lArrayList, lFile);
-                                } catch (IOException e1) {
-                                    logger.error(e1.getMessage(), e1);
-                                }
-                            }
+                            saveSerializedIdentifications();
                         }
                     });
                     jpop.add(item);
@@ -543,17 +503,7 @@ public class PeptizerGUI extends JFrame implements StatusView {
                     item.setMnemonic(KeyEvent.VK_T);
                     item.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
-
-                            if (FileManager.getInstance().selectPeptideIdentificationOutput(iTabPanel)) {
-                                File lFile = FileManager.getInstance().getPeptideIdentificationsSerializedOutput();
-                                try {
-                                    SelectedPeptideIdentifications lSelectedPeptideIdentifications =
-                                            ((Mediator) PeptizerGUI.this.getTabs()[PeptizerGUI.this.getSelectedTabIndex()]).getSelectedPeptideIdentifications();
-                                    PeptizerSerialization.serializePeptideIdentificationsToFile(lSelectedPeptideIdentifications.getSelectedPeptideIdentificationList(), lFile);
-                                } catch (IOException e1) {
-                                    logger.error(e1.getMessage(), e1);
-                                }
-                            }
+                            saveSerializedIdentificationsAll();
                         }
                     });
                     jpop.add(item);
@@ -600,6 +550,31 @@ public class PeptizerGUI extends JFrame implements StatusView {
                 }
             }
         });
+    }
+
+    public void saveSerializedIdentifications() {
+        if (FileManager.getInstance().selectPeptideIdentificationOutput(iTabPanel)) {
+            File lFile = FileManager.getInstance().getPeptideIdentificationsSerializedOutput();
+            ArrayList lArrayList = new ArrayList();
+
+            SelectedPeptideIdentifications lSelectedPeptideIdentifications =
+                    ((Mediator) this.getTabs()[this.getSelectedTabIndex()]).getSelectedPeptideIdentifications();
+            int lNumber = lSelectedPeptideIdentifications.getNumberOfSpectra();
+            for (int i = 0; i < lNumber; i++) {
+                PeptideIdentification lPeptideIdentification =
+                        lSelectedPeptideIdentifications.getPeptideIdentification(i);
+                if (lPeptideIdentification.isValidated()) {
+                    if (lPeptideIdentification.getValidationReport().getResult()) {
+                        lArrayList.add(lPeptideIdentification);
+                    }
+                }
+            }
+            try {
+                PeptizerSerialization.serializePeptideIdentificationsToFile(lArrayList, lFile);
+            } catch (IOException e1) {
+                logger.error(e1.getMessage(), e1);
+            }
+        }
     }
 
 
@@ -684,6 +659,7 @@ public class PeptizerGUI extends JFrame implements StatusView {
         Mediator lMediator = new Mediator(aSelectedPeptideIdentifications);
         if (iTabPanel.getTabCount() == 1 && iTabPanel.getTitleAt(0) == START_TAB_TITLE) {
             iTabPanel.remove(0);
+            iMainIconPanel.showAll(true);
         }
 
         // Name the tabs by number, howerver display the Mediator toString in the Tooltip to supply the necessairy information.
@@ -850,5 +826,8 @@ public class PeptizerGUI extends JFrame implements StatusView {
             jpanStatus.setVisible(true);
             iStatusSplitPane.setDividerLocation(0.85);
         }
+        this.resize(this.getSize());
+        this.update(this.getGraphics());
     }
+
 }

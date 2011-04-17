@@ -20,8 +20,8 @@ import java.net.URL;
  * DBToolkit project (http://genesis.ugent.be/dbtoolkit/)
  */
 public class AboutDialog extends JDialog {
-	// Class specific log4j logger for AboutDialog instances.
-	 private static Logger logger = Logger.getLogger(AboutDialog.class);
+    // Class specific log4j logger for AboutDialog instances.
+    private static Logger logger = Logger.getLogger(AboutDialog.class);
 
     /**
      * The textarea that will display the help text.
@@ -41,7 +41,7 @@ public class AboutDialog extends JDialog {
     /**
      * The label with the toolkit image icon.
      */
-    private static JLabel lblImageTools = null;
+    private static JLabel lblCompomics = null;
 
     /**
      * The label with the ugent image icon.
@@ -90,7 +90,7 @@ public class AboutDialog extends JDialog {
         }
 
         // See if we should load the imagelabel and icon.
-        if ((lblImageTools == null) || (iUGENT == null) || (iIWT == null)) {
+        if ((lblCompomics == null) || (iUGENT == null) || (iIWT == null)) {
             this.loadImages();
         }
 
@@ -120,7 +120,7 @@ public class AboutDialog extends JDialog {
         });
 
         // The labels.
-        lblLabels = new JLabel[15];
+        lblLabels = new JLabel[16];
 
         lblLabels[0] =
                 new JLabel("<html><p style=\"font-size:large;\">Peptizer version " + PeptizerGUI.PEPTIZER_VERSION + "</p></html>");
@@ -140,8 +140,10 @@ public class AboutDialog extends JDialog {
                 new HyperLinkLabel("Click here to download a manual for Peptizer.", null, "http://genesis.ugent.be/peptizer/peptizer/peptizer_manual.pdf");
         lblLabels[12] = new JLabel(" ");
         lblLabels[13] =
-                new JLabel("A Google sites for Peptizer was created to facilitate interaction on custom Agents and custom AgentAggregators.");
+                new JLabel("A Google sites for Peptizer was created to facilitate");
         lblLabels[14] =
+                new JLabel("interaction on custom Agents and custom AgentAggregators.");
+        lblLabels[15] =
                 new HyperLinkLabel("Click here to proceed to the Google sites for Peptizer", null, "http://sites.google.com/site/peptizer");
 
         // The containers.
@@ -161,6 +163,16 @@ public class AboutDialog extends JDialog {
         JPanel jpanTextLabels = new JPanel();
         jpanTextLabels.setLayout(new BoxLayout(jpanTextLabels, BoxLayout.Y_AXIS));
 
+        // Load the images on a Panel.
+        JPanel jpanImages = new JPanel();
+        jpanImages.setLayout(new BoxLayout(jpanImages, BoxLayout.Y_AXIS));
+        jpanImages.add(lblCompomics);
+        jpanImages.add(Box.createRigidArea(new Dimension(10, 10)));
+        jpanImages.add(lblImageUGENT);
+        jpanImages.add(Box.createRigidArea(new Dimension(10, 10)));
+        jpanImages.add(lblImageIWT);
+
+
         // Scrollpane for textarea + panel for scrollpane.
         JScrollPane jspText =
                 new JScrollPane(txtHelp, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -179,20 +191,18 @@ public class AboutDialog extends JDialog {
         for (int i = 0; i < lblLabels.length; i++) {
             JLabel lLabel = lblLabels[i];
             logger.info(i);
-            lLabel.setForeground(Color.black);
+//            lLabel.setForeground(Color.black);
             jpanTextLabels.add(lLabel);
             jpanTextLabels.add(Box.createRigidArea(new Dimension(txtHelp.getWidth(), 5)));
         }
-        jpanLabels.add(Box.createRigidArea(new Dimension(20, jpanTextLabels.getHeight())));
-        jpanLabels.add(lblImageTools);
+
         jpanLabels.add(Box.createRigidArea(new Dimension(20, jpanTextLabels.getHeight())));
         jpanLabels.add(jpanTextLabels);
         jpanLabels.add(Box.createRigidArea(new Dimension(20, jpanTextLabels.getHeight())));
-        jpanLabels.add(lblImageUGENT);
-        jpanLabels.add(Box.createRigidArea(new Dimension(20, jpanTextLabels.getHeight())));
-        jpanLabels.add(lblImageIWT);
+        jpanLabels.add(jpanImages);
         jpanLabels.add(Box.createRigidArea(new Dimension(20, jpanTextLabels.getHeight())));
         jpanLabels.add(Box.createHorizontalGlue());
+
 
         jpanMain.add(jpanLabels);
         jpanMain.add(Box.createRigidArea(new Dimension(txtHelp.getWidth(), 20)));
@@ -200,6 +210,14 @@ public class AboutDialog extends JDialog {
         jpanMain.add(Box.createRigidArea(new Dimension(txtHelp.getWidth(), 20)));
         jpanMain.add(jpanButton);
         jpanMain.add(Box.createRigidArea(new Dimension(txtHelp.getWidth(), 15)));
+
+        // Set all background to WHITE.
+        jpanMain.setBackground(Color.WHITE);
+        jpanLabels.setBackground(Color.WHITE);
+        jpanImages.setBackground(Color.WHITE);
+        jpanTextLabels.setBackground(Color.WHITE);
+        jpanButton.setBackground(Color.WHITE);
+        jpanScroll.setBackground(Color.WHITE);
 
         // Pack and go.
         this.getContentPane().add(jpanMain, BorderLayout.CENTER);
@@ -249,12 +267,12 @@ public class AboutDialog extends JDialog {
      */
     private void loadImages() {
         // Toolkit icon for the label.
-        lblImageTools = new JLabel("No image found!");
+        lblCompomics = new JLabel("No image found!");
         try {
-            URL url = this.getClass().getClassLoader().getResource("image/peptizer.jpg");
+            URL url = this.getClass().getClassLoader().getResource("image/compomics.png");
             if (url != null) {
                 ImageIcon icon = new ImageIcon(url);
-                lblImageTools = new JLabel(icon);
+                lblCompomics = new JLabel(icon);
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

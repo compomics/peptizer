@@ -284,7 +284,8 @@ public class ValidationSaveToCSV extends ValidationSaver {
 
         if (iComments) {
             // C. Validation Comments.
-            lStringWriter.write("Validation Comment"); // No separator in the end.
+            lStringWriter.write("Automatic Comment" + iSeparator);
+            lStringWriter.write("User Comment"); // No separator in the end.
         }
 
         iHeaderList = lStringWriter.toString();
@@ -361,6 +362,8 @@ public class ValidationSaveToCSV extends ValidationSaver {
             if (iComments) {
                 // 10. Validation Comment
                 iBufferedWriter.write(aPeptideIdentification.getValidationReport().getAutoComment().replaceAll("\n", "*").replaceAll("=", ""));
+                iBufferedWriter.newLine();
+                iBufferedWriter.write(aPeptideIdentification.getValidationReport().getUserComment().replaceAll("\n", " ").replaceAll("=", ""));
             }
 
             iBufferedWriter.newLine();
