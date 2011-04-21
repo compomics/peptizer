@@ -2,9 +2,9 @@ package com.compomics.peptizer.gui.dialog;
 
 import com.compomics.peptizer.MatConfig;
 import com.compomics.peptizer.gui.PeptizerGUI;
-import com.compomics.peptizer.gui.listener.StartTaskActionListener;
 import com.compomics.peptizer.gui.component.*;
 import com.compomics.peptizer.gui.interfaces.ImportPanel;
+import com.compomics.peptizer.gui.listener.StartTaskActionListener;
 import com.compomics.peptizer.interfaces.AgentAggregator;
 import com.compomics.peptizer.util.AgentFactory;
 import com.compomics.peptizer.util.fileio.ConfigurationWriter;
@@ -197,7 +197,8 @@ public class CreateTaskDialog extends JDialog {
         int lNewHeight = new Double(lScreenResolutionToolkit.getHeight() * 0.48).intValue();
 
         this.setPreferredSize(new Dimension(lNewWidth, lNewHeight));
-        jpanSource.setPreferredSize(new Dimension(lNewWidth - 50, jpanSource.getSize().height + 50));
+//        jpanSource.setPreferredSize(new Dimension(lNewWidth - 50, jpanSource.getSize().height + 100));
+        jpanSource.setSize(jpanSource.getWidth(), 150);
     }
 
     /**

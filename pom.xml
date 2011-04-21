@@ -12,7 +12,7 @@
     <!-- Set the version number for the whole project -->
     <properties>
         <version.number>1.8</version.number>
-        <logging.level.default>DEBUG</logging.level.default>
+        <logging.level.default>ALL</logging.level.default>
         <logging.file.path.name>peptizer-log4j.log</logging.file.path.name>
         <logging.file.max.size>6000KB</logging.file.max.size>
         <logging.pattern>[%d{dd-MMM-yyyy HH:mm:ss} - %p] "%m" (%C:%L)%n</logging.pattern>
@@ -453,7 +453,7 @@
         <dependency>
             <groupId>com.compomics</groupId>
             <artifactId>utilities</artifactId>
-            <version>3.0.22</version>
+            <version>3.0.56</version>
             <type>jar</type>
         </dependency>
 

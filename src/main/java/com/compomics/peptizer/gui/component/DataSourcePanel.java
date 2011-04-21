@@ -14,8 +14,8 @@ import java.util.Vector;
  * File Templates.
  */
 public class DataSourcePanel extends JPanel {
-	// Class specific log4j logger for DataSourcePanel instances.
-	 private static Logger logger = Logger.getLogger(DataSourcePanel.class);
+    // Class specific log4j logger for DataSourcePanel instances.
+    private static Logger logger = Logger.getLogger(DataSourcePanel.class);
 
     private JPanel jpanSourceProperties;
     private JComboBox cmbIterators;
@@ -41,14 +41,23 @@ public class DataSourcePanel extends JPanel {
                 jpanSourceProperties.remove(0);
                 jpanSourceProperties.add((JPanel) cmbIterators.getSelectedItem(), 0);
                 jpanSourceProperties.validate();
-                DataSourcePanel.this.repaint();
+//                DataSourcePanel.this.validate();
+//                DataSourcePanel.this.repaint();
+                DataSourcePanel.this.getParent().validate();
+                DataSourcePanel.this.getParent().repaint();
             }
         });
 
         jpanSourceProperties = new JPanel(new BorderLayout());
         jpanSourceProperties.add((JPanel) cmbIterators.getItemAt(0), 0);
 
-        this.add(cmbIterators);
+        JPanel jpanCmbWrapperPanel = new JPanel();
+        jpanCmbWrapperPanel.setLayout(new BoxLayout(jpanCmbWrapperPanel, BoxLayout.Y_AXIS));
+        jpanCmbWrapperPanel.add(cmbIterators);
+        jpanCmbWrapperPanel.add(Box.createVerticalGlue());
+        Box lHorizontalBox = Box.createHorizontalBox();
+
+        this.add(jpanCmbWrapperPanel);
         this.add(Box.createHorizontalStrut(10));
         this.add(jpanSourceProperties);
         this.add(Box.createHorizontalGlue());

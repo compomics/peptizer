@@ -6,6 +6,7 @@ import com.compomics.peptizer.util.datatools.interfaces.PeptizerPeptideHit;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.tree.TreeCellRenderer;
 import java.awt.*;
@@ -25,13 +26,16 @@ import java.math.BigDecimal;
  * This class was developed to have full control on the rendering of the Tree.
  */
 public class TreeCellRendererImpl extends JPanel implements TreeCellRenderer {
-	// Class specific log4j logger for TreeCellRendererImpl instances.
-	 private static Logger logger = Logger.getLogger(TreeCellRendererImpl.class);
+    // Class specific log4j logger for TreeCellRendererImpl instances.
+    private static Logger logger = Logger.getLogger(TreeCellRendererImpl.class);
 
     /**
      * TreeTextArea is the actual object that is displayed.
      */
     protected TreeTextArea text;
+    public Color iRejectColor = new Color(252, 53, 0);
+    public Color iAcceptColor = new Color(0, 185, 76);
+    public Color iNeutralColor = new Color(30, 97, 171);
 
     /**
      * Empty constructor.
@@ -39,8 +43,18 @@ public class TreeCellRendererImpl extends JPanel implements TreeCellRenderer {
      */
     public TreeCellRendererImpl() {
         setLayout(new BorderLayout());
+
         text = new TreeTextArea();
         text.setAlignmentX(text.getAlignmentX() + 10);
+
+        EmptyBorder lBorder = new EmptyBorder(0, 0, 0, 0);
+
+        text.setBorder(lBorder);
+        this.setBorder(lBorder);
+
+        text.setBackground(Color.WHITE);
+        this.setBackground(Color.WHITE);
+
         add(text, BorderLayout.CENTER);
     }
 
@@ -73,13 +87,13 @@ public class TreeCellRendererImpl extends JPanel implements TreeCellRenderer {
             int aIndex = (tree.getModel().getIndexOfChild(tree.getModel().getRoot(), value) + 1);
             result = lPeptideIdentification.getName() + " (" + lPeptideIdentification.getConfidentPeptideHits().length + ")";
             if (!lPeptideIdentification.isValidated()) {
-                text.setForeground(Color.blue);
+                text.setForeground(iNeutralColor);
             } else {
                 // Accepted ID's are green, rejected are red.
                 if (lPeptideIdentification.getValidationReport().getResult()) {
-                    text.setForeground(new Color(75, 175, 0));
+                    text.setForeground(iAcceptColor);
                 } else {
-                    text.setForeground(Color.red);
+                    text.setForeground(iRejectColor);
                 }
             }
         }

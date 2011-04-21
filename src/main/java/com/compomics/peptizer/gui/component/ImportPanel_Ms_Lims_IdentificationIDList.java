@@ -12,6 +12,7 @@ import com.compomics.util.io.PropertiesManager;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
@@ -31,8 +32,8 @@ import java.util.Properties;
  * File Templates.
  */
 public class ImportPanel_Ms_Lims_IdentificationIDList extends JPanel implements ImportPanel, Connectable {
-	// Class specific log4j logger for ImportPanel_Ms_Lims_IdentificationIDList instances.
-	 private static Logger logger = Logger.getLogger(ImportPanel_Ms_Lims_IdentificationIDList.class);
+    // Class specific log4j logger for ImportPanel_Ms_Lims_IdentificationIDList instances.
+    private static Logger logger = Logger.getLogger(ImportPanel_Ms_Lims_IdentificationIDList.class);
 
     /**
      * Singleton instance of the JPanel.
@@ -91,10 +92,25 @@ public class ImportPanel_Ms_Lims_IdentificationIDList extends JPanel implements 
                 JDialog lConnectionDialog =
                         new ConnectionDialog(null,
                                 ImportPanel_Ms_Lims_IdentificationIDList.this,
-                                "Establish DB connnection for Peptizer",lProperties);
+                                "Establish DB connnection for Peptizer", lProperties);
                 lConnectionDialog.setVisible(true);
             }
         });
+
+        JPanel jpanButtonWrapperPanel = new JPanel();
+        jpanButtonWrapperPanel.setLayout(new BoxLayout(jpanButtonWrapperPanel, BoxLayout.Y_AXIS));
+
+        JPanel jpanButtonLineWrapperPanel = new JPanel();
+        jpanButtonLineWrapperPanel.setLayout(new BoxLayout(jpanButtonLineWrapperPanel, BoxLayout.X_AXIS));
+
+        jpanButtonLineWrapperPanel.add(btnConnection);
+        jpanButtonLineWrapperPanel.add(Box.createHorizontalStrut(10));
+        jpanButtonLineWrapperPanel.add(lblConnection);
+        jpanButtonLineWrapperPanel.add(Box.createHorizontalStrut(10));
+
+        jpanButtonWrapperPanel.add(jpanButtonLineWrapperPanel);
+        jpanButtonWrapperPanel.add(Box.createVerticalGlue());
+
 
         // TextArea for the Identification id's.
 
@@ -142,7 +158,9 @@ public class ImportPanel_Ms_Lims_IdentificationIDList extends JPanel implements 
 
         iScrollText =
                 new JScrollPane(txaIdentificationIDs, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        iScrollText.setBorder(BorderFactory.createTitledBorder("Identificationid list"));
+        TitledBorder lTitledBorder = BorderFactory.createTitledBorder("Identificationid list");
+        lTitledBorder.setTitlePosition(TitledBorder.BOTTOM);
+        iScrollText.setBorder(lTitledBorder);
         iScrollText.setToolTipText("Enter ms_lims identification id's corresponding to peptide identifications that must be iterated. <html><b>1 id per line</b><html>");
 
 
@@ -152,12 +170,11 @@ public class ImportPanel_Ms_Lims_IdentificationIDList extends JPanel implements 
         this.setToolTipText("Insert a ms_lims project identifier and make a connection.");
 
         // Put components on the panel.
-        this.add(btnConnection);
-        this.add(Box.createHorizontalStrut(10));
-        this.add(lblConnection);
-        this.add(Box.createHorizontalStrut(10));
+        this.add(jpanButtonWrapperPanel);
         this.add(this.iScrollText);
         this.add(Box.createHorizontalGlue());
+
+
     }
 
     private void updateScrollPaneBorder() {

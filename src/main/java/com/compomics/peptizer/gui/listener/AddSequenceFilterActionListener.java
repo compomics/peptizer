@@ -35,15 +35,21 @@ public class AddSequenceFilterActionListener implements ActionListener {
      * @param aActionEvent
      */
     public void actionPerformed(ActionEvent aActionEvent) {
-        String lResult = getInput();
-
-        // Create a sequence filter for the Tree.
-        PeptideSequenceTreeFilter lFilter = new PeptideSequenceTreeFilter();
-        lFilter.setSequence(lResult);
 
         // Set the filter.
-        ((Mediator) iPeptizerGUI.getTabs()[iPeptizerGUI.getSelectedTabIndex()]).setFilter(lFilter);
+        Mediator lMediator = (Mediator) iPeptizerGUI.getTabs()[iPeptizerGUI.getSelectedTabIndex()];
 
+        if (lMediator.isFiltered()) {
+            lMediator.disableFilter();
+        } else {
+
+            String lResult = getInput();
+            // Create a sequence filter for the Tree.
+            PeptideSequenceTreeFilter lFilter = new PeptideSequenceTreeFilter();
+            lFilter.setSequence(lResult);
+            // Set the filter.
+            lMediator.setFilter(lFilter);
+        }
     }
 
     /**

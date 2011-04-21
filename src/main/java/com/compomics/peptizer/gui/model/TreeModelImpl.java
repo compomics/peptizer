@@ -23,8 +23,8 @@ import javax.swing.tree.TreePath;
  * This class was developed to customize the TreeModel of the TreeView.
  */
 public class TreeModelImpl implements TreeModel {
-	// Class specific log4j logger for TreeModelImpl instances.
-	 private static Logger logger = Logger.getLogger(TreeModelImpl.class);
+    // Class specific log4j logger for TreeModelImpl instances.
+    private static Logger logger = Logger.getLogger(TreeModelImpl.class);
 
     /**
      * The optional filter for the tree.
@@ -169,5 +169,14 @@ public class TreeModelImpl implements TreeModel {
      */
     public void disableFilter() {
         iFilter = null;
+    }
+
+    /**
+     * Returns true if the Tree is filtered.
+     *
+     * @return
+     */
+    public boolean isFiltered() {
+        return (iFilter != null);
     }
 }

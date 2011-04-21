@@ -33,11 +33,19 @@ public class AddAgentFilterActionListener implements ActionListener {
 
 
     public void actionPerformed(ActionEvent e) {
-        ArrayList lAgents = new ArrayList();
-        new AgentFilterDialog(iPeptizerGUI, "Select Agent's to filter the Tree.", AgentFactory.getInstance().getAllAgents(), lAgents);
-        if (lAgents.size() > 0) {
-            AgentTreeFilter lFilter = new AgentTreeFilter(lAgents);
-            ((Mediator) iPeptizerGUI.getTabs()[iPeptizerGUI.getSelectedTabIndex()]).setFilter(lFilter);
+
+        // Set the filter.
+        Mediator lMediator = (Mediator) iPeptizerGUI.getTabs()[iPeptizerGUI.getSelectedTabIndex()];
+
+        if (lMediator.isFiltered()) {
+            lMediator.disableFilter();
+        } else {
+            ArrayList lAgents = new ArrayList();
+            new AgentFilterDialog(iPeptizerGUI, "Select Agent's to filter the Tree.", AgentFactory.getInstance().getAllAgents(), lAgents);
+            if (lAgents.size() > 0) {
+                AgentTreeFilter lFilter = new AgentTreeFilter(lAgents);
+                ((Mediator) iPeptizerGUI.getTabs()[iPeptizerGUI.getSelectedTabIndex()]).setFilter(lFilter);
+            }
         }
     }
 }
