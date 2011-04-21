@@ -30,8 +30,8 @@ import java.util.Vector;
  * Class description: ------------------ TabPanel is a Panel that is added on a Pane in TabbedView.
  */
 public class TabPanel extends JPanel {
-	// Class specific log4j logger for TabPanel instances.
-	 private static Logger logger = Logger.getLogger(TabPanel.class);
+    // Class specific log4j logger for TabPanel instances.
+    private static Logger logger = Logger.getLogger(TabPanel.class);
     /**
      * The index of the selectod radiobutton. Static variable so changes in one TabPanel are valid to all TabPanels.
      */
@@ -54,16 +54,12 @@ public class TabPanel extends JPanel {
      * The spectrum of the identification.
      */
     private SpectrumPanel jpanSpectrum = null;
-    JPanel jpanBottom;
+    JPanel jpanAnnotation;
     /**
      * The inner spectrum of the sequence annotation.
      */
     private PeptizerSequenceFragmentationPanel jpanFragmentsInner = null;
 
-    /**
-     * The outer pannel of the sequence annotation.
-     */
-    private JPanel jpanFragments = null;
 
     /**
      * Boolean whether the SequenceFragmentationPanel must display the flat sequence (set to false) or the modified
@@ -119,23 +115,12 @@ public class TabPanel extends JPanel {
                 new PeptizerSequenceFragmentationPanel(lSequence, (Vector) iAnnotations.get(iAnnotationType.get(0).getIndex() + "" + iAnnotationType.get(0).getSearchEngine().getId() + "" + 1), boolModifedSequenceFragmentation);
         jpanFragmentsInner.setBackground(Color.white);
 
-        /**
-         * The "x" close button. Add to TopPanel.
-         */
-        JButton btnClose = new TabCloseButton();
-        btnClose.setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
+        jpanSpectrum.setMinimumSize(new Dimension(0, 300));
+        jpanFragmentsInner.setMinimumSize(new Dimension(0, 150));
 
-        JPanel jpanClose = new JPanel(new FlowLayout(FlowLayout.TRAILING));
-        jpanClose.add(btnClose);
-        jpanClose.setBackground(Color.white);
-
-        // Combine the close 'X' button and the sequence fragmentation in a Panel.
-        jpanFragments = new JPanel(new BorderLayout());
-        jpanFragments.add(jpanClose, BorderLayout.EAST);
-        jpanFragments.add(jpanFragmentsInner, BorderLayout.CENTER);
 
         // If necessary build the radiobuttongroup to switch the annotations on the spectrumpanel.
-        jpanBottom = new JPanel();
+        jpanAnnotation = new JPanel();
         updateAnnotationTypeButtons(0);
 
         // Update the annotations on the spectrum.
@@ -153,29 +138,36 @@ public class TabPanel extends JPanel {
             }
         });
 
-        jpanBottom.setLayout(new BoxLayout(jpanBottom, BoxLayout.LINE_AXIS));
-        jpanBottom.add(Box.createHorizontalGlue());
+        jpanAnnotation.setLayout(new BoxLayout(jpanAnnotation, BoxLayout.PAGE_AXIS));
+        jpanAnnotation.add(Box.createVerticalGlue());
         for (int i = 0; i < rbtAnnotation.size(); i++) {
-            jpanBottom.add(rbtAnnotation.get(i));
-            jpanBottom.add(Box.createRigidArea(new Dimension(15 - 5 * i, rbtAnnotation.get(i).getSize().height)));
+            jpanAnnotation.add(rbtAnnotation.get(i));
+            jpanAnnotation.add(Box.createRigidArea(new Dimension(rbtAnnotation.get(i).getSize().width, 10)));
         }
-        jpanBottom.setBackground(Color.white);
+        jpanAnnotation.setBackground(Color.white);
 
         /**
          * The SequenceFragmentationPanel.
          */
-
         // Remove JPanel default Border.
         jpanSpectrum.setBorder(BorderFactory.createEmptyBorder());
 
         // Add TopPanel and SpectrumPanel into a Main JPanel.
         jpanSpectrum.setLayout(new BoxLayout(jpanSpectrum, BoxLayout.Y_AXIS));
 
-        jpanSpectrum.add(jpanBottom);
+        //jpanSpectrum.add(jpanAnnotation);
 
         jpanSpectrum.setBackground(Color.white);
 
-        JSplitPane split1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false, jpanFragments, jpanSpectrum);
+        JPanel jpanTop = new JPanel();
+        jpanTop.setLayout(new BoxLayout(jpanTop, BoxLayout.X_AXIS));
+        jpanTop.add(jpanFragmentsInner);
+        jpanTop.add(Box.createHorizontalGlue());
+        jpanTop.add(jpanAnnotation);
+        jpanTop.add(Box.createHorizontalStrut(10));
+        jpanTop.setBackground(Color.white);
+
+        JSplitPane split1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false, jpanTop, jpanSpectrum);
         split1.setOneTouchExpandable(true);
 
         this.setBackground(Color.white);
@@ -226,7 +218,6 @@ public class TabPanel extends JPanel {
             jpanFragmentsInner = new PeptizerSequenceFragmentationPanel(lSequence, annotations, boolModifedSequenceFragmentation);
             jpanFragmentsInner.setBackground(Color.white);
             jpanFragmentsInner.repaint();
-            jpanFragments.add(jpanFragmentsInner, BorderLayout.CENTER);
             this.validate();
             this.repaint();
         }
@@ -245,7 +236,7 @@ public class TabPanel extends JPanel {
             bgSelectedIndex = -1;
         }
         for (int i = 0; i < rbtAnnotation.size(); i++) {
-            jpanBottom.remove(rbtAnnotation.get(i));
+            jpanAnnotation.remove(rbtAnnotation.get(i));
         }
         iAnnotationType = iPeptideIdentification.getPeptideHit(peptideNumber).getAnnotationType();
         rbtAnnotation = new ArrayList<JRadioButton>();
@@ -286,7 +277,7 @@ public class TabPanel extends JPanel {
         }
 
         for (int i = 0; i < rbtAnnotation.size(); i++) {
-            jpanBottom.add(rbtAnnotation.get(i));
+            jpanAnnotation.add(rbtAnnotation.get(i));
         }
         // Select the correct radiobutton.
         selectCorrectRadioButton(selected, searchEngineSelectedIndex);
@@ -339,6 +330,7 @@ public class TabPanel extends JPanel {
         }
         // Return a new SpectrumPanel constructed with the local variables.
         return new SpectrumPanel(lMZ, lIntensity, lPrecursor, lCharge, lSpectrumname);
+//        return new SpectrumPanel(lMZ, lIntensity, lPrecursor, lCharge, lSpectrumname, 30, true);
     }
 
     /**

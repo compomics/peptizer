@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.tree.TreeModel;
+import java.awt.*;
 /**
  * Created by IntelliJ IDEA.
  * User: kenny
@@ -25,8 +26,8 @@ import javax.swing.tree.TreeModel;
  * A group of PeptideIdentification instances from the aggregator is displayed.
  */
 public class TreeView extends JTree {
-	// Class specific log4j logger for TreeView instances.
-	 private static Logger logger = Logger.getLogger(TreeView.class);
+    // Class specific log4j logger for TreeView instances.
+    private static Logger logger = Logger.getLogger(TreeView.class);
 
     /**
      * The parent super-controller.
@@ -43,6 +44,7 @@ public class TreeView extends JTree {
         iMediator = aMediator;
         iTreeModel = new TreeModelImpl(this);
         setModel(iTreeModel);
+        setBackground(Color.white);
 
         // Custom cell renderer.
         this.setCellRenderer(new TreeCellRendererImpl());
@@ -136,5 +138,14 @@ public class TreeView extends JTree {
         }
 
         return lPeptideIdentification;
+    }
+
+    /**
+     * Returns TRUE if the Tree is filtered.
+     *
+     * @return
+     */
+    public boolean isFiltered() {
+        return iTreeModel.isFiltered();
     }
 }

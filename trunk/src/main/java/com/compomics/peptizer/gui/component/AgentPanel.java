@@ -34,8 +34,8 @@ import java.util.Properties;
  * Class description: ------------------ This class was developed to present a group of Agents in an editable Table.
  */
 public class AgentPanel extends JPanel implements Updateable {
-	// Class specific log4j logger for AgentPanel instances.
-	 private static Logger logger = Logger.getLogger(AgentPanel.class);
+    // Class specific log4j logger for AgentPanel instances.
+    private static Logger logger = Logger.getLogger(AgentPanel.class);
 
     /**
      * The table to display the Agents.
@@ -538,6 +538,7 @@ public class AgentPanel extends JPanel implements Updateable {
          */
         @Override
         public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+
             Component c = super.prepareRenderer(renderer, row, column);
             if (c instanceof JComponent) {
                 String lTooltip = "";
@@ -567,6 +568,7 @@ public class AgentPanel extends JPanel implements Updateable {
                 }
                 ((JComponent) c).setToolTipText(lTooltip);
             }
+
             return c;
         }
 
@@ -577,10 +579,10 @@ public class AgentPanel extends JPanel implements Updateable {
         @Override
         public void mouseClicked(MouseEvent e) {
             super.mouseClicked(e);    //To change body of overridden methods use File | Settings | File Templates.
-            if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount()>1) {
+            if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() > 1) {
                 int lSelectedColumn = iAgentTable.getSelectedColumn();
                 String lSelectedColumnName = iAgentTable.getModel().getColumnName(lSelectedColumn);
-                if(lSelectedColumnName.equals(NAME)){
+                if (lSelectedColumnName.equals(NAME)) {
                     int lSelectedRow = iAgentTable.getSelectedRow();
                     Agent lAgent = iAgents[lSelectedRow];
                     JDialog lDialog = new AgentInfoDialog(lAgent);

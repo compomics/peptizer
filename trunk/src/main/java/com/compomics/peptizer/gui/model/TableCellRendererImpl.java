@@ -136,8 +136,11 @@ public class TableCellRendererImpl implements TableCellRenderer {
         Font font;
         if (column == 0)
             font = new Font(lbl.getFont().getFamily(), Font.BOLD, lbl.getFont().getSize());
-        else
+        else {
             font = new Font(lbl.getFont().getFamily(), 0, lbl.getFont().getSize());
+
+        }
+
         lbl.setFont(font);
     } // End setBold function
 

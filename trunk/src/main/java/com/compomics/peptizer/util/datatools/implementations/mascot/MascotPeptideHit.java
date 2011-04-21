@@ -27,8 +27,8 @@ import java.util.Vector;
  * To change this template use File | Settings | File Templates.
  */
 public class MascotPeptideHit extends PeptizerPeptideHit implements Serializable {
-	// Class specific log4j logger for MascotPeptideHit instances.
-	 private static Logger logger = Logger.getLogger(MascotPeptideHit.class);
+    // Class specific log4j logger for MascotPeptideHit instances.
+    private static Logger logger = Logger.getLogger(MascotPeptideHit.class);
 
     private PeptideHit iPeptideHit;
     private ArrayList<PeptizerModification> modifications;
@@ -59,7 +59,7 @@ public class MascotPeptideHit extends PeptizerPeptideHit implements Serializable
     private ArrayList<AnnotationType> createAnnotationType() {
         ArrayList<AnnotationType> result = new ArrayList();
         AnnotationType mascot = new AnnotationType("Mascot", 0, SearchEngineEnum.Mascot);
-        AnnotationType fuse = new AnnotationType("Fuse", 1, SearchEngineEnum.Mascot);
+        AnnotationType fuse = new AnnotationType("Fused", 1, SearchEngineEnum.Mascot);
         result.add(mascot);
         result.add(fuse);
         return result;

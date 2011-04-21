@@ -212,7 +212,8 @@ public class Mediator extends JPanel {
 
         spltVerticalSplitter = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false, iTabbedPane, jpanTable);
         spltVerticalSplitter.setOneTouchExpandable(true);
-        spltVerticalSplitter.setDividerSize(10);
+//        spltVerticalSplitter.setDividerSize(10);
+//        spltVerticalSplitter.setDividerLocation(spltVerticalSplitter.getHeight() * 0.5);
 
         spltHorizontalSplitter = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false, jpanTree, spltVerticalSplitter);
         spltHorizontalSplitter.setOneTouchExpandable(true);
@@ -606,16 +607,10 @@ public class Mediator extends JPanel {
     }
 
     /**
-     * @Inherit
+     * IsFiltered.
      */
-    public void validate() {
-        // Call super validation,
-        super.validate();
-        // And reset the split dividers after packing.
-        if (spltHorizontalSplitter != null && spltVerticalSplitter != null) {
-            spltVerticalSplitter.setDividerLocation(0.80);
-            spltHorizontalSplitter.setDividerLocation(0.20);
-        }
+    public boolean isFiltered() {
+        return iTree.isFiltered();
     }
 
 

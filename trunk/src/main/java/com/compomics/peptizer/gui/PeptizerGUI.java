@@ -99,22 +99,35 @@ public class PeptizerGUI extends JFrame implements StatusView {
         MatLogger.setSystemOut(true);
 
         // Define look and feel.
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+        try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            // If Nimbus is not available, you can set the GUI to another look and feel.
+        }
 
         this.addWindowListener(new WindowAdapter() {
 
             public void windowClosing(final WindowEvent e) {
-                super.windowClosing(e);    //To change body of overridden methods use File | Settings | File Templates.
-                exit();
-
+                if (validateExit()) {
+                    // All is fine to exit!
+                    super.windowClosing(e);    //To change body of overridden methods use File | Settings | File Templates.
+                    System.exit(0);
+                }
             }
         });
 
         // Set size.
         Dimension lScreenResolutionToolkit = Toolkit.getDefaultToolkit().getScreenSize();
-        Double lWidth = new Double(lScreenResolutionToolkit.getWidth() * 0.9);
-        Double lHeight = new Double(lScreenResolutionToolkit.getHeight());
-        this.setPreferredSize(new Dimension(lWidth.intValue(), lHeight.intValue()));
+        Double lWidth = new Double(lScreenResolutionToolkit.getWidth() * 0.8);
+        Double lHeight = new Double(lScreenResolutionToolkit.getHeight() * 0.8);
+//        this.setPreferredSize(new Dimension(lWidth.intValue(), lHeight.intValue()));
 
         //
         // 2. Menu.
@@ -156,15 +169,17 @@ public class PeptizerGUI extends JFrame implements StatusView {
 
         cp.add(iStatusSplitPane, BorderLayout.CENTER);
 
-        iStatusSplitPane.setEnabled(false);
+        toggleInfoPanel();
 
         this.setListeners();
-        this.setVisible(true);
-        this.validate();
-        this.pack();
+//        this.setVisible(true);
+//        this.validate();
+//        this.pack();
 
-        // Tiring splitpanes, only does what i want by setting the dividerlocation after the pack call.
-        iStatusSplitPane.setDividerLocation(0.85);
+        this.setLocationRelativeTo(null);
+        this.setExtendedState(MAXIMIZED_BOTH);
+        this.setVisible(true);
+        this.update(this.getGraphics());
 
         // declare an active GUI session.
         isRunningGUI = true;
@@ -245,13 +260,13 @@ public class PeptizerGUI extends JFrame implements StatusView {
         });
         menu.add(menuItem);
 
-        // exit Peptizer.
+        // validateExit Peptizer.
         menuItem = new JMenuItem("Exit");
         menuItem.setAccelerator(KeyStroke.getKeyStroke(
                 KeyEvent.VK_X, ActionEvent.CTRL_MASK));
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                exit();
+                validateExit();
             }
         });
         menu.add(menuItem);
@@ -594,10 +609,10 @@ public class PeptizerGUI extends JFrame implements StatusView {
     }
 
     /**
-     * This method is invoked when Mat is exiting (exit in menu or close button). Make sure existing Database
+     * This method is invoked when Mat is exiting (validateExit in menu or close button). Make sure existing Database
      * connections and preferences are saved!
      */
-    private void exit() {
+    private boolean validateExit() {
         // Is all fine?
         boolean exit = true;
 
@@ -608,9 +623,9 @@ public class PeptizerGUI extends JFrame implements StatusView {
                 Mediator lMediator = (Mediator) iTabPanel.getComponentAt(i);
                 // if any of them has changed
                 if (lMediator.isChangedSinceLastSave()) {
-                    // ask for confirmation to exit
+                    // ask for confirmation to validateExit
                     int result =
-                            JOptionPane.showConfirmDialog(this, "Your validations have not been saved.\nDo you really want to exit?\n", "", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.showConfirmDialog(this, "Your validations have not been saved.\nDo you really want to validateExit?\n", "", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
                     // Save confirmation and break the iteration.
                     if (result == JOptionPane.NO_OPTION) {
                         exit = false;
@@ -641,11 +656,8 @@ public class PeptizerGUI extends JFrame implements StatusView {
 
 
         }
+        return exit;
 
-        if (exit) {
-            // All is fine to exit!
-            System.exit(0);
-        }
     }
 
     /**
@@ -684,10 +696,6 @@ public class PeptizerGUI extends JFrame implements StatusView {
         sb.append(aSelectedPeptideIdentifications.getNumberOfSpectra()).append(" spectra selected out of " + s);
         MatLogger.logNormalEvent((sb.toString()));
 
-        this.validate();
-        this.pack();
-
-        lMediator.validate();
     }
 
     /**
@@ -766,6 +774,11 @@ public class PeptizerGUI extends JFrame implements StatusView {
             iTabPanel.remove(index);
             System.gc();
         }
+        if (iTabPanel.getTabCount() == 0) {
+            StartPanel lStartPanel = new StartPanel(this);
+            JPanel jpanStart = (JPanel) lStartPanel.$$$getRootComponent$$$();
+            iTabPanel.add(START_TAB_TITLE, jpanStart);
+        }
     }
 
     public void setsConnectedToMsLims(final boolean aSConnectedToMsLims) {
@@ -829,5 +842,6 @@ public class PeptizerGUI extends JFrame implements StatusView {
         this.resize(this.getSize());
         this.update(this.getGraphics());
     }
+
 
 }

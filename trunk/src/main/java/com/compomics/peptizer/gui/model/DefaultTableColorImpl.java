@@ -17,35 +17,35 @@ import java.awt.*;
  * This class was developed as a default Color scheme for the Table coloring.
  */
 public class DefaultTableColorImpl implements TableColor {
-	// Class specific log4j logger for DefaultTableColorImpl instances.
-	 private static Logger logger = Logger.getLogger(DefaultTableColorImpl.class);
+    // Class specific log4j logger for DefaultTableColorImpl instances.
+    private static Logger logger = Logger.getLogger(DefaultTableColorImpl.class);
 
     /**
      * The light color for selected column.
      */
-    private Color iSelectedLight = new Color(235, 235, 235);
+    private Color iSelectedLight = new Color(245, 245, 245);
     /**
      * The dark color for selected column.
      */
-    private Color iSelectedDark = new Color(180, 180, 255);
+    private Color iSelectedDark = new Color(240, 240, 240);
 
     /**
      * The light color for the non-selected columns.
      */
-    private Color iNonSelectedLight = new Color(255, 255, 255);
+    private Color iNonSelectedLight = new Color(235, 235, 235);
     /**
      * The dark color for the non-selected columns.
      */
-    private Color iNonSelectedDark = new Color(205, 205, 235);
+    private Color iNonSelectedDark = new Color(230, 230, 230);
 
     /**
      * The light color for the header column.
      */
-    private Color iHeaderLight = new Color(250, 250, 250);
+    private Color iHeaderLight = new Color(225, 225, 225);
     /**
      * the dark color for the header column.
      */
-    private Color iHeaderDark = new Color(205, 205, 235);
+    private Color iHeaderDark = new Color(220, 220, 220);
 
 
     /**

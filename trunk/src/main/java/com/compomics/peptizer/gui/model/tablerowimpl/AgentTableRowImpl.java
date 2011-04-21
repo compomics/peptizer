@@ -20,8 +20,8 @@ import org.apache.log4j.Logger;
  * AgentTableRowImpl can populate a table with Agent information.
  */
 public class AgentTableRowImpl extends AbstractTableRow {
-	// Class specific log4j logger for AgentTableRowImpl instances.
-	 private static Logger logger = Logger.getLogger(AgentTableRowImpl.class);
+    // Class specific log4j logger for AgentTableRowImpl instances.
+    private static Logger logger = Logger.getLogger(AgentTableRowImpl.class);
 
     /**
      * The String identifier for the Agent of this TableRow.
@@ -65,7 +65,7 @@ public class AgentTableRowImpl extends AbstractTableRow {
 
                 if (lAgentScore > 0) {
                     // If positive, set the result in bold.
-                    sb.append("<b>").append(lReport).append("</b>");
+                    sb.append("<font color=\"1E61AB\"><b>").append(lReport).append("</b></font>");
                 } else if (lAgentScore == 0) {
                     // If neutral , hold the result normal.
                     sb.append(lReport);
