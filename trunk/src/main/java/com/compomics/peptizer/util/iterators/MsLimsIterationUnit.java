@@ -1,10 +1,9 @@
 package com.compomics.peptizer.util.iterators;
 
-import com.compomics.peptizer.util.beans.ValidationBeanForLims;
+import com.compomics.mslims.db.accessors.Validation;
 import com.compomics.peptizer.util.fileio.ConnectionManager;
 import org.apache.log4j.Logger;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,7 +24,7 @@ public class MsLimsIterationUnit implements Iterator {
     private HashMap<Integer, Long> iQueryNumberToIDMap;
 
     // A map of identificationids and corresponding validation reports that can be found for the ids.
-    private HashMap<Long, ValidationBeanForLims> iIdentificationToStatusMap;
+    private HashMap<Long, Validation> iIdentificationToStatusMap;
 
     private Iterator iter = null;
 
@@ -101,15 +100,11 @@ public class MsLimsIterationUnit implements Iterator {
      * @param aIdentificationID for the required validation. null if missing.
      * @return
      */
-    public ValidationBeanForLims getValidationBean(long aIdentificationID) {
+    public Validation getValidationBean(long aIdentificationID) {
         if (iIdentificationToStatusMap == null) {
             // lazy caching.
-            iIdentificationToStatusMap = new HashMap<Long, ValidationBeanForLims>();
+            iIdentificationToStatusMap = new HashMap<Long, Validation>();
             try {
-
-                // First get the connection.
-                Connection lConnection = ConnectionManager.getInstance().getConnection();
-
                 // Get all the identification ids.
                 Collection<Long> lIdentificationIDs = iQueryNumberToIDMap.values();
                 Iterator<Long> lIterator = lIdentificationIDs.iterator();
@@ -131,23 +126,15 @@ public class MsLimsIterationUnit implements Iterator {
                 }
 
                 String lQuery =
-                        "Select validationid, l_identificationid, comment, status from VALIDATION where l_identificationid in (" + ids + ")";
+                        "Select * from VALIDATION where l_identificationid in (" + ids + ")";
 
                 PreparedStatement ps = null;
                 ps = ConnectionManager.getInstance().getConnection().prepareStatement(lQuery);
                 ResultSet rs = ps.executeQuery();
 
-                Long lIdentificationid = -1l;
-                long lValidationid = -1l;
-                String lComment = null;
-                boolean lStatus = false;
                 while (rs.next()) {
-                    lValidationid = rs.getLong(1);
-                    lIdentificationid = rs.getLong(2);
-                    lComment = rs.getString(3);
-                    lStatus = (Boolean) rs.getObject(4);
-                    ValidationBeanForLims lBeanForLims = new ValidationBeanForLims(lStatus, lComment, lValidationid, lIdentificationid);
-                    iIdentificationToStatusMap.put(lIdentificationid, lBeanForLims);
+                    Validation lValidation = new Validation(rs);
+                    iIdentificationToStatusMap.put(lValidation.getL_identificationid(), lValidation);
                 }
                 // Ok, now persist the resultset into beans.
             } catch (SQLException e) {
