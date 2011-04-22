@@ -6,12 +6,12 @@ import com.compomics.mascotdatfile.util.mascot.PeptideHit;
 import com.compomics.mascotdatfile.util.mascot.enumeration.MascotDatfileType;
 import com.compomics.mascotdatfile.util.mascot.factory.MascotDatfileFactory;
 import com.compomics.mslims.db.accessors.Datfile;
+import com.compomics.mslims.db.accessors.Validation;
 import com.compomics.peptizer.gui.PeptizerGUI;
 import com.compomics.peptizer.interfaces.PeptideIdentificationIterator;
 import com.compomics.peptizer.util.MetaKey;
 import com.compomics.peptizer.util.PeptideIdentification;
 import com.compomics.peptizer.util.ValidationReport;
-import com.compomics.peptizer.util.beans.ValidationBeanForLims;
 import com.compomics.peptizer.util.datatools.implementations.mascot.MascotPeptideHit;
 import com.compomics.peptizer.util.datatools.implementations.mascot.MascotSpectrum;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
@@ -68,6 +68,7 @@ public abstract class Ms_Lims_Iterator implements PeptideIdentificationIterator 
      * The MascotDatfile parsing type to be used.
      */
     private MascotDatfileType iMascotDatfileType = MascotDatfileType.INDEX;
+    private boolean boolMessageHasBeenDisplayed = false;
 
     /**
      * {@inheritDoc}
@@ -110,13 +111,32 @@ public abstract class Ms_Lims_Iterator implements PeptideIdentificationIterator 
                 lPeptideIdentification.addMetaData(MetaKey.Identification_id, lIdentificationId);
                 lPeptideIdentification.addMetaData(MetaKey.Datfile_id, iCurrentIterationUnit.getDatfileID());
 
-                ValidationBeanForLims lValidationBean = iCurrentIterationUnit.getValidationBean(lIdentificationId);
+                Validation lValidation = iCurrentIterationUnit.getValidationBean(lIdentificationId);
 
-                if (lValidationBean != null) {
+                if (lValidation != null) {
                     ValidationReport lValidationReport = lPeptideIdentification.getValidationReport();
-                    lValidationReport.setAutoComment(lValidationBean.getComment());
-                    lValidationReport.setResult(lValidationBean.isValid());
+                    lValidationReport.setAutoComment(lValidation.getAuto_comment());
+                    lValidationReport.setUserComment(lValidation.getManual_comment());
+
+                    long lL_validationtypeid = lValidation.getL_validationtypeid();
+                    if (lL_validationtypeid == 0) {
+                        lValidationReport.setValidated(false);
+                    } else if (lL_validationtypeid > 0) {
+                        lValidationReport.setValidated(true);
+                        lValidationReport.setResult(true);
+                    } else {
+                        lValidationReport.setValidated(true);
+                        lValidationReport.setResult(false);
+                    }
+
                     lValidationReport.setCorrectPeptideHitNumber(1);
+                } else {
+                    String lMessage = "No validation found for some identificationid!!";
+                    logger.info(lMessage);
+                    if (PeptizerGUI.isRunningGUI() && !boolMessageHasBeenDisplayed) {
+                        boolMessageHasBeenDisplayed = true;
+                        JOptionPane.showMessageDialog(PeptizerGUI.getRunningComponent(), new JLabel(lMessage), "No validation found!", JOptionPane.INFORMATION_MESSAGE);
+                    }
                 }
 
                 return lPeptideIdentification;

@@ -79,7 +79,7 @@ public class ValidationReport implements Serializable {
      *
      * @param aValidated Class .
      */
-    private void setValidated(boolean aValidated) {
+    public void setValidated(boolean aValidated) {
         iValidated = aValidated;
     }
 

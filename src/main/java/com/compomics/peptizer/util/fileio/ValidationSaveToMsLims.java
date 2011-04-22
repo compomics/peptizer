@@ -135,7 +135,9 @@ public class ValidationSaveToMsLims extends ValidationSaver {
                             while ((o = ois1.readObject()) != null) {
                                 if (o instanceof PeptideIdentification && o != null) {
                                     PeptideIdentification lPeptideIdentification = (PeptideIdentification) o;
-                                    lPeptideIdentification.getValidationReport().setAutoComment("AUTO_ACCEPT");
+                                    String lAutoComment = CommentGenerator.getCommentForSelectiveAgents(lPeptideIdentification, 1, false);
+
+                                    lPeptideIdentification.getValidationReport().setAutoComment(lAutoComment);
                                     lPeptideIdentification.getValidationReport().setResult(true);
                                     this.persistValidation(lPeptideIdentification);
                                 }
@@ -176,7 +178,6 @@ public class ValidationSaveToMsLims extends ValidationSaver {
         Long lIdentificationid = (Long) aPeptideIdentification.getMetaData(MetaKey.Identification_id);
         try {
             Validation lValidation = Validation.getValidation(lIdentificationid, iConn);
-
             int lValidationtype = parseValidationType(aPeptideIdentification);
 
             if (lValidation == null) {

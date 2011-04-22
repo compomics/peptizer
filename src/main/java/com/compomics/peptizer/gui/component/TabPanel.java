@@ -115,8 +115,8 @@ public class TabPanel extends JPanel {
                 new PeptizerSequenceFragmentationPanel(lSequence, (Vector) iAnnotations.get(iAnnotationType.get(0).getIndex() + "" + iAnnotationType.get(0).getSearchEngine().getId() + "" + 1), boolModifedSequenceFragmentation);
         jpanFragmentsInner.setBackground(Color.white);
 
-        jpanSpectrum.setMinimumSize(new Dimension(0, 300));
-        jpanFragmentsInner.setMinimumSize(new Dimension(0, 150));
+        jpanSpectrum.setMinimumSize(new Dimension(0, 250));
+        jpanFragmentsInner.setMinimumSize(new Dimension(0, 120));
 
 
         // If necessary build the radiobuttongroup to switch the annotations on the spectrumpanel.
@@ -166,6 +166,7 @@ public class TabPanel extends JPanel {
         jpanTop.add(jpanAnnotation);
         jpanTop.add(Box.createHorizontalStrut(10));
         jpanTop.setBackground(Color.white);
+
 
         JSplitPane split1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false, jpanTop, jpanSpectrum);
         split1.setOneTouchExpandable(true);
