@@ -71,6 +71,7 @@ public class PeptizerGUI extends JFrame implements StatusView {
     private static final String START_TAB_TITLE = "Welcome";
     private JSplitPane iStatusSplitPane;
     private MainIconPanel iMainIconPanel;
+    private boolean iDisposeOnExit;
 
 
     /**
@@ -118,7 +119,11 @@ public class PeptizerGUI extends JFrame implements StatusView {
                 if (validateExit()) {
                     // All is fine to exit!
                     super.windowClosing(e);    //To change body of overridden methods use File | Settings | File Templates.
-                    System.exit(0);
+                    if (iDisposeOnExit) {
+                        PeptizerGUI.this.dispose();
+                    } else {
+                        System.exit(0);
+                    }
                 }
             }
         });
@@ -841,6 +846,15 @@ public class PeptizerGUI extends JFrame implements StatusView {
         }
         this.resize(this.getSize());
         this.update(this.getGraphics());
+    }
+
+    /**
+     * Sets wether Peptizer should dispose this Frame or call a system.exit method.
+     *
+     * @param aStatus
+     */
+    public void disposeOnExit(boolean aStatus) {
+        iDisposeOnExit = aStatus;
     }
 
 
