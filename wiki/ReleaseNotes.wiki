@@ -2,6 +2,10 @@
 # Short summary of changes for each version of Peptizer. (as from version 1.6)
 ----
 
+*Changes in Peptizer 1.8.2 (May 23. 2012):*
+ * BUGFIX: exporting to csv failed when there were no user comments or auto generated comments
+----
+
 *Changes in Peptizer 1.8 (April 17. 2011):*
  * FEATURE: created a new welcome screen and a toolbar for a more intuitive user interface
  * FEATURE: the validation comments have been split into two distinct variables for user comments and automated Agent reporting comments.
