@@ -37,13 +37,13 @@ public class CommentGenerator {
     public static String getCommentForSelectiveAgents(PeptideIdentification aPeptideIdentification, int aPeptideHit) {
         List aAgentReports = aPeptideIdentification.getAgentReports(aPeptideHit);
         StringBuffer sb = new StringBuffer();
-
-        if (aPeptideIdentification.getValidationReport().getAutoComment().equals(ValidationReport.DEFAULT_COMMENT) == false) {
+        if(aPeptideIdentification.getValidationReport().getAutoComment() != null){
+            if (!aPeptideIdentification.getValidationReport().getAutoComment().equals(ValidationReport.DEFAULT_COMMENT)) {
             // add user specified comment!
-            sb.append(aPeptideIdentification.getValidationReport().getAutoComment());
-            sb.append("/n");
+                sb.append(aPeptideIdentification.getValidationReport().getAutoComment());
+                sb.append("/n");
+            }
         }
-
         for (Object aAgentReport : aAgentReports) {
             AgentReport lAgentReport = (AgentReport) aAgentReport;
             if (lAgentReport.getReport(AgentReport.RK_RESULT) == AgentVote.POSITIVE_FOR_SELECTION) {

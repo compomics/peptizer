@@ -126,7 +126,7 @@ public class MsLimsIterationUnit implements Iterator {
                 }
 
                 String lQuery =
-                        "Select * from VALIDATION where l_identificationid in (" + ids + ")";
+                        "Select * from validation where l_identificationid in (" + ids + ")";
 
                 PreparedStatement ps = null;
                 ps = ConnectionManager.getInstance().getConnection().prepareStatement(lQuery);

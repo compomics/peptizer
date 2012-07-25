@@ -371,7 +371,9 @@ public class ValidationSaveToCSV extends ValidationSaver {
                 // 10. Validation Comment
                 iBufferedWriter.write(aPeptideIdentification.getValidationReport().getAutoComment().replaceAll("\n", "*").replaceAll("=", ""));
                 iBufferedWriter.write(iSeparator);
-                iBufferedWriter.write(aPeptideIdentification.getValidationReport().getUserComment().replaceAll("\n", " ").replaceAll("=", ""));
+                if(aPeptideIdentification.getValidationReport().getUserComment() != null){
+                    iBufferedWriter.write(aPeptideIdentification.getValidationReport().getUserComment().replaceAll("\n", " ").replaceAll("=", ""));
+                }
             }
 
             iBufferedWriter.newLine();
