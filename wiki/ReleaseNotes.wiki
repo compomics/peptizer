@@ -2,6 +2,10 @@
 # Short summary of changes for each version of Peptizer. (as from version 1.6)
 ----
 
+*Changes in Peptizer 1.8.3 (July 25. 2012):*
+ * DEPENDENCY UPDATE: updated dependency for MascotDatFile
+--------
+
 *Changes in Peptizer 1.8.2 (May 23. 2012):*
  * BUGFIX: exporting to csv failed when there were no user comments or auto generated comments
 ----
