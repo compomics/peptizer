@@ -10,16 +10,17 @@ import com.compomics.peptizer.util.datatools.implementations.mascot.MascotPeptid
 import com.compomics.peptizer.util.datatools.implementations.mascot.MascotSpectrum;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
-import junit.TestCaseLM;
+import com.compomics.util.junit.TestCaseLM;
 import junit.framework.Assert;
 
 import java.io.File;
 import java.util.Vector;
+import junit.framework.TestCase;
 
 /**
  * This class is a
  */
-public class TestC13Agent extends TestCaseLM {
+public class TestC13Agent extends TestCase {
 
     public TestC13Agent() {
         super("Testscenario Test. ");
@@ -33,7 +34,7 @@ public class TestC13Agent extends TestCaseLM {
 
         //Query300 is corrupted!!
         // normal mass error = -0.15, changed this to -1.15Da to test the EXACT Agent.
-        String datFile = getFullFilePath("F015264.dat");
+        String datFile = TestCaseLM.getFullFilePath("F015264.dat");
         if (File.separatorChar == '\\') {
             datFile = datFile.replace("%20", " ");
         }

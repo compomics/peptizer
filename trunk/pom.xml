@@ -11,8 +11,8 @@
 
     <!-- Set the version number for the whole project -->
     <properties>
-        <version.number>1.8.3</version.number>
-        <logging.level.default>ALL</logging.level.default>
+        <version.number>1.8.4</version.number>
+        <logging.level.default>WARNING</logging.level.default>
         <logging.file.path.name>peptizer-log4j.log</logging.file.path.name>
         <logging.file.max.size>6000KB</logging.file.max.size>
         <logging.pattern>[%d{dd-MMM-yyyy HH:mm:ss} - %p] "%m" (%C:%L)%n</logging.pattern>
@@ -38,12 +38,20 @@
             </resource>
         </resources>
 
+        <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>2.2</version>
+            </extension>
+        </extensions>
 
         <!-- Plugins -->
         <plugins>
             <!-- Compiler plugin -->
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
                 <configuration>
                     <source>1.5</source>
                     <target>1.5</target>
@@ -56,6 +64,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -74,6 +83,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.5.1</version>
                 <executions>
                     <execution>
                         <id>copy-dependencies</id>
@@ -124,13 +134,10 @@
                         </goals>
                         <configuration>
                             <overwrite>true</overwrite>
-                            <outputDirectory>target/peptizer-${version.number}/conf</outputDirectory>
+                            <outputDirectory>target/peptizer-${version.number}/resources/conf</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>src/main/resources/conf</directory>
-                                    <includes>
-                                        <include>*.xml</include>
-                                    </includes>
                                 </resource>
                             </resources>
                         </configuration>
@@ -191,7 +198,7 @@
                                 <resource>
                                     <directory>src/main/resources/conf</directory>
                                     <includes>
-                                        <include>log4j.properties</include>
+                                        <include>peptizer-log4j</include>
                                     </includes>
                                     <filtering>true</filtering>
                                 </resource>
@@ -219,13 +226,12 @@
                                         <include>aggregator.xml</include>
                                         <include>general.xml</include>
                                         <include>table.xml</include>
+                                        <include>JavaOptions.txt</include>
                                     </includes>
                                 </resource>
                             </resources>
                         </configuration>
                     </execution>
-
-                    <!-- Copies the image files during compilation.-->
                     <execution>
                         <id>copy-compile-image-resources</id>
                         <phase>compile</phase>
@@ -237,9 +243,6 @@
                             <resources>
                                 <resource>
                                     <directory>src/main/resources/image</directory>
-                                    <includes>
-                                        <include>*.*</include>
-                                    </includes>
                                 </resource>
                             </resources>
                         </configuration>
@@ -267,7 +270,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.1.1</version>
+                <version>2.2</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -284,7 +287,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.2-beta-5</version>
+                <version>2.3</version>
                 <configuration>
                     <descriptors>
                         <descriptor>src/main/assembly/zip.xml</descriptor>
@@ -303,78 +306,16 @@
                     </execution>
                 </executions>
             </plugin>
-
-
-            <!-- google code upload plugin -->
             <plugin>
-                <groupId>org.riedelcastro</groupId>
-                <artifactId>gcupload-maven-plugin</artifactId>
-                <version>0.9</version>
-                <configuration>
-                    <projectName>peptizer</projectName>
-                    <uploads>
-                        <upload>
-                            <extensions>zip</extensions>
-                            <labels>Type-Library,Featured</labels>
-                            <summary>Release package of ${project.artifactId} version ${project.version}</summary>
-                        </upload>
-                    </uploads>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>upload-gc</id>
-                        <!-- this is used for inheritance merges -->
-                        <phase>deploy</phase>
-                        <!-- append to the packaging phase. -->
-                        <goals>
-                            <goal>gcupload</goal>
-                            <!-- goals == mojos -->
-                        </goals>
-                    </execution>
-                </executions>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.7</version>
             </plugin>
-
-            <!-- google code upload plugin -->
-            <plugin>
-                <groupId>org.riedelcastro</groupId>
-                <artifactId>gcupload-maven-plugin</artifactId>
-                <version>0.9</version>
-                <configuration>
-                    <projectName>peptizer</projectName>
-                    <uploads>
-                        <upload>
-                            <extensions>zip</extensions>
-                            <labels>Type-Library,Featured</labels>
-                            <summary>Release package of ${project.artifactId} version ${project.version}</summary>
-                        </upload>
-                    </uploads>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>upload-gc</id>
-                        <!-- this is used for inheritance merges -->
-                        <phase>deploy</phase>
-                        <!-- append to the packaging phase. -->
-                        <goals>
-                            <goal>gcupload</goal>
-                            <!-- goals == mojos -->
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
         </plugins>
     </build>
 
     <!-- Repositores -->
     <repositories>
-        <!-- UGent Genesis Maven 1 repository -->
-        <repository>
-            <id>genesis-maven-repository</id>
-            <name>Genesis maven1 repository</name>
-            <url>http://genesis.UGent.be/maven</url>
-            <layout>legacy</layout>
-        </repository>
 
         <!-- UGent Genesis Maven 2 repository -->
         <repository>
@@ -397,12 +338,6 @@
     </repositories>
 
     <!-- Plugin repositories-->
-    <pluginRepositories>
-        <pluginRepository>
-            <id>repository.riedelcastro.org</id>
-            <url>http://repository.riedelcastro.org</url>
-        </pluginRepository>
-    </pluginRepositories>
 
 
     <!-- Dependencies -->
@@ -421,7 +356,7 @@
         </dependency>
 
         <!-- This project depends on the junit JAR file.
-          -->
+        -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -429,45 +364,36 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- This project depends on the JAR file "lmjunit-1.0.2.jar" (TestCaseLM)
-                  the remote repository root of which is 'http://genesis.UGent.be/maven'.
-                  -->
-        <dependency>
-            <groupId>lennart</groupId>
-            <artifactId>lmjunit</artifactId>
-            <version>1.0.2</version>
-            <type>jar</type>
-        </dependency>
 
         <!-- This project depends on the MascotDatfile library.
-                            -->
+        -->
         <dependency>
             <groupId>com.compomics</groupId>
             <artifactId>mascotdatfile</artifactId>
-            <version>3.3</version>
+            <version>3.4.9</version>
             <type>jar</type>
         </dependency>
 
         <!-- This project depends on the utilities JAR file.
-                  -->
+        -->
         <dependency>
             <groupId>com.compomics</groupId>
             <artifactId>utilities</artifactId>
-            <version>3.6.12</version>
+            <version>3.13.25</version>
             <type>jar</type>
         </dependency>
 
         <!-- This project depends on the ms_lims JAR file.
         -->
         <dependency>
-            <groupId>com.compomics</groupId>
-            <artifactId>ms-lims</artifactId>
-            <version>7.6</version>
+            <groupId>com.compomics.ms-lims</groupId>
+            <artifactId>ms-lims-db</artifactId>
+            <version>7.7.8</version>
             <type>jar</type>
         </dependency>
         <!-- This project depends on the JAR file "xpp-1.1.3.4.jar" (XmlPullParser)
-                        the remote repository root of which is 'http://genesis.UGent.be/maven'.
-                    -->
+            the remote repository root of which is 'http://genesis.UGent.be/maven'.
+        -->
         <dependency>
             <groupId>xpp3</groupId>
             <artifactId>xpp3</artifactId>
@@ -475,9 +401,14 @@
             <type>jar</type>
         </dependency>
 
+        <dependency>
+            <groupId>com.intellij</groupId>
+            <artifactId>forms_rt</artifactId>
+            <version>4.5.4</version>
+        </dependency>
 
         <!-- This project depends on the JFreeChart visualistations.
-          -->
+        -->
         <dependency>
             <groupId>jfree</groupId>
             <artifactId>jfreechart</artifactId>
@@ -486,7 +417,7 @@
         </dependency>
 
         <!-- This project depends on the JCommons of JFreechart.
-          -->
+        -->
         <dependency>
             <groupId>jfree</groupId>
             <artifactId>jcommon</artifactId>
@@ -540,7 +471,45 @@
             <version>1.2.1</version>
             <type>jar</type>
         </dependency>
-
+        
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.compomics.ms-lims</groupId>
+            <artifactId>ms-lims-core</artifactId>
+            <version>7.7.8</version>
+            <type>jar</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.compomics</groupId>
+                    <artifactId>peptizer</artifactId>   
+                </exclusion>
+                <exclusion>
+                    <groupId>lennart</groupId>
+                    <artifactId>lmjunit</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.compomics</groupId>
+                    <artifactId>rover</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.compomics</groupId>
+                    <artifactId>mascotdatfile</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>lennart</groupId>
+                    <artifactId>xxindex</artifactId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>thermo_msf_parser</artifactId>
+                    <groupId>com.compomics</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 
     <distributionManagement>

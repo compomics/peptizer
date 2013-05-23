@@ -1,6 +1,6 @@
 package com.compomics.peptizer.gui.component;
 
-import com.compomics.mslims.db.accessors.Project;
+import com.compomics.mslimsdb.accessors.Project;
 import com.compomics.peptizer.gui.interfaces.ImportPanel;
 import com.compomics.peptizer.gui.progressbars.DefaultProgressBar;
 import com.compomics.peptizer.gui.renderer.ProjectListRenderer;
@@ -8,7 +8,6 @@ import com.compomics.peptizer.util.datatools.IdentificationFactory;
 import com.compomics.peptizer.util.fileio.ConnectionManager;
 import com.compomics.peptizer.util.fileio.MatLogger;
 import com.compomics.util.enumeration.CompomicsTools;
-import com.compomics.util.gui.dialogs.ConnectionDialog;
 import com.compomics.util.interfaces.Connectable;
 import com.compomics.util.io.PropertiesManager;
 import org.apache.log4j.Logger;

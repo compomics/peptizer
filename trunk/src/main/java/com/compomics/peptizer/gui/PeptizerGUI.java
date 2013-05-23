@@ -23,7 +23,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.SQLException;
@@ -32,25 +34,21 @@ import java.util.Iterator;
 import java.util.Properties;
 
 /**
- * Created by IntelliJ IDEA.
- * User: kenny
- * Date: 5-mrt-2007
- * Time: 14:39:35
+ * Created by IntelliJ IDEA. User: kenny Date: 5-mrt-2007 Time: 14:39:35
  */
-
 /**
- * Class description: ------------------ This class was developed to for testing. 070305 - simulate a
- * SelectedPeptideIdentifications class to test the GUI.
+ * Class description: ------------------ This class was developed to for
+ * testing. 070305 - simulate a SelectedPeptideIdentifications class to test the
+ * GUI.
  */
 public class PeptizerGUI extends JFrame implements StatusView {
     // Class specific log4j logger for PeptizerGUI instances.
-    private static Logger logger = Logger.getLogger(PeptizerGUI.class);
 
+    private static Logger logger = Logger.getLogger(PeptizerGUI.class);
     private static boolean isRunningGUI = false;
     private static Component iRunningComponent = null;
     // MAT variables
     public static String PEPTIZER_VERSION;
-
     // GUI variables
     private JMenuBar menuBar;
     private JMenu menu;
@@ -59,12 +57,9 @@ public class PeptizerGUI extends JFrame implements StatusView {
     private JMenu taskMenu;
     private JPanel jpanContent;
     private StatusPanel jpanStatus;
-
     // TabbedPane contains the Mediators.
     private JTabbedPane iTabPanel;
-
     private boolean isConnectedToMsLims;
-
     /**
      * Constant for the startup-title tab.
      */
@@ -73,22 +68,21 @@ public class PeptizerGUI extends JFrame implements StatusView {
     private MainIconPanel iMainIconPanel;
     private boolean iDisposeOnExit;
 
-
     /**
      * The constructor takes a single argument for the title of the frame.
      */
-    public PeptizerGUI() {
+    public PeptizerGUI() throws Exception {
 
         //
         // 1. General inits.
         //
         // Super constructor.
         super();
+        logger.debug("start gui");
         Container cp = this.getContentPane();
         cp.setLayout(new BorderLayout(10, 10));
         PEPTIZER_VERSION = getLastVersion();
         super.setTitle("Peptizer - " + PEPTIZER_VERSION);
-
         // Set program icon for this JFrame
         Image img = null;
         URL url = java.net.URLClassLoader.getSystemResource("image/ICON_frame.png");
@@ -114,7 +108,6 @@ public class PeptizerGUI extends JFrame implements StatusView {
         }
 
         this.addWindowListener(new WindowAdapter() {
-
             public void windowClosing(final WindowEvent e) {
                 if (validateExit()) {
                     // All is fine to exit!
@@ -201,7 +194,6 @@ public class PeptizerGUI extends JFrame implements StatusView {
         // get the version number set in the pom file
         Properties properties = PropertiesManager.getInstance().getProperties(CompomicsTools.PEPTIZER, "peptizer.properties");
         result = properties.getProperty("version");
-
         return result;
     }
 
@@ -402,7 +394,6 @@ public class PeptizerGUI extends JFrame implements StatusView {
         }
     }
 
-
     /**
      * Action when the save menu is selected.
      */
@@ -597,7 +588,6 @@ public class PeptizerGUI extends JFrame implements StatusView {
         }
     }
 
-
     /**
      * Run a new MAT gui.
      *
@@ -605,17 +595,22 @@ public class PeptizerGUI extends JFrame implements StatusView {
      */
     public static void main(String[] args) {
         // initiate a new mat gui.
-        PropertiesManager.getInstance().updateLog4jConfiguration(logger, CompomicsTools.PEPTIZER);
         logger.debug("Starting peptizer");
         logger.debug("OS : " + System.getProperties().getProperty("os.name"));
 
-        new PeptizerGUI();
+        try {
+            logger.debug("before constructor");
+            new PeptizerGUI();
+        } catch (Exception e) {
+            logger.error(e);
+        }
 
     }
 
     /**
-     * This method is invoked when Mat is exiting (validateExit in menu or close button). Make sure existing Database
-     * connections and preferences are saved!
+     * This method is invoked when Mat is exiting (validateExit in menu or close
+     * button). Make sure existing Database connections and preferences are
+     * saved!
      */
     private boolean validateExit() {
         // Is all fine?
@@ -666,11 +661,11 @@ public class PeptizerGUI extends JFrame implements StatusView {
     }
 
     /**
-     * Pass a SelectedPeptideIdentifications instance as the result from a MatWorker. If invoked, create a new Mediator
-     * and set it in the front.
+     * Pass a SelectedPeptideIdentifications instance as the result from a
+     * MatWorker. If invoked, create a new Mediator and set it in the front.
      *
-     * @param aSelectedPeptideIdentifications
-     *         SelectedPeptideIdentifications result from a MatWorker.
+     * @param aSelectedPeptideIdentifications SelectedPeptideIdentifications
+     * result from a MatWorker.
      */
     public void passTask(SelectedPeptideIdentifications aSelectedPeptideIdentifications) {
         Mediator lMediator = new Mediator(aSelectedPeptideIdentifications);
@@ -704,7 +699,8 @@ public class PeptizerGUI extends JFrame implements StatusView {
     }
 
     /**
-     * This method allows the caller to specify the status message that is being displayed.
+     * This method allows the caller to specify the status message that is being
+     * displayed.
      *
      * @param aStatus String with the desired status message.
      */
@@ -713,7 +709,8 @@ public class PeptizerGUI extends JFrame implements StatusView {
     }
 
     /**
-     * This method allows the caller to specify the error message that is being displayed.
+     * This method allows the caller to specify the error message that is being
+     * displayed.
      *
      * @param aError String with the desired error message.
      */
@@ -795,7 +792,8 @@ public class PeptizerGUI extends JFrame implements StatusView {
     }
 
     /**
-     * This static boolean informs if a Peptizer GUI has been constructed in this JVM.
+     * This static boolean informs if a Peptizer GUI has been constructed in
+     * this JVM.
      *
      * @return
      */
@@ -849,13 +847,12 @@ public class PeptizerGUI extends JFrame implements StatusView {
     }
 
     /**
-     * Sets wether Peptizer should dispose this Frame or call a system.exit method.
+     * Sets wether Peptizer should dispose this Frame or call a system.exit
+     * method.
      *
      * @param aStatus
      */
     public void disposeOnExit(boolean aStatus) {
         iDisposeOnExit = aStatus;
     }
-
-
 }

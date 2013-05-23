@@ -6,7 +6,7 @@
  */
 package com.compomics.peptizer.gui.component;
 
-import com.compomics.mslims.util.fileio.MascotGenericFile;
+import com.compomics.mslimscore.util.fileio.MascotGenericFile;
 import com.compomics.util.gui.events.RescalingEvent;
 import com.compomics.util.gui.interfaces.SpectrumAnnotation;
 import com.compomics.util.gui.interfaces.SpectrumPanelListener;

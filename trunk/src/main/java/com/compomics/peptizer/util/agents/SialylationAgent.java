@@ -143,6 +143,6 @@ public class SialylationAgent extends Agent {
      * @return String description of the Agent.
      */
     public String getDescription() {
-        return "<html>Inspects for the Sialylation property of the peptide (Ghesquière et al. 2007) . <b>Votes 'Positive_for_selection' if the a deamidated Asn residue is found</b>. Votes 'Neutral_for_selection' if else.</html>";
+        return "<html>Inspects for the Sialylation property of the peptide (Ghesquire et al. 2007) . <b>Votes 'Positive_for_selection' if the a deamidated Asn residue is found</b>. Votes 'Neutral_for_selection' if else.</html>";
     }
 }

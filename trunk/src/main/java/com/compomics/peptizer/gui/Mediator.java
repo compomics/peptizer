@@ -20,8 +20,10 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * Created by IntelliJ IDEA.

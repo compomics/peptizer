@@ -1,6 +1,6 @@
 package com.compomics.peptizer.util.iterators;
 
-import com.compomics.mslims.db.accessors.Validation;
+import com.compomics.mslimsdb.accessors.Validation;
 import com.compomics.peptizer.util.fileio.ConnectionManager;
 import org.apache.log4j.Logger;
 

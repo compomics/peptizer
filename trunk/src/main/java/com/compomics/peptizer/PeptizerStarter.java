@@ -1,109 +1,38 @@
 package com.compomics.peptizer;
 
-import com.compomics.util.enumeration.CompomicsTools;
-import com.compomics.util.io.PropertiesManager;
-import com.jgoodies.looks.plastic.PlasticLookAndFeel;
-import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
-import com.jgoodies.looks.plastic.theme.SkyKrupp;
+import com.compomics.software.CompomicsWrapper;
 
-import javax.swing.*;
 import java.io.File;
-import java.io.IOException;
-import java.util.Properties;
+import java.net.URISyntaxException;
+import org.apache.log4j.Logger;
 
 /**
  * Created by IntelliJ IDEA. User: kenny Date: Mar 23, 2010 Time: 2:14:55 PM
  * <p/>
  * This class
  */
-public class PeptizerStarter {
+public class PeptizerStarter extends CompomicsWrapper {
+
+    private static Logger logger = Logger.getLogger(PeptizerStarter.class);
 
     /**
-     * Starts the launcher by calling the launch method. Use this as the main class in the jar file.
-     */
-    public PeptizerStarter() {
-        try {
-            PlasticLookAndFeel.setPlasticTheme(new SkyKrupp());
-            UIManager.setLookAndFeel(new PlasticXPLookAndFeel());
-        } catch (UnsupportedLookAndFeelException e) {
-            // ignore exception
-        }
-
-        try {
-            launch();
-        } catch (Exception e) {
-            System.err.println(e.getMessage());
-        }
-    }
-
-    /**
-     * Launches the jar file with parameters to the jvm.
-     *
-     * @throws java.lang.Exception
-     */
-    private void launch() throws Exception {
-
-
-        // get the version number set in the pom file
-        Properties lProperties = PropertiesManager.getInstance().getProperties(CompomicsTools.PEPTIZER, "peptizer.properties");
-
-        /**
-         * The name of the ms-lims parser jar file. Must be equal to the name
-         * given in the pom file.
-         */
-        String jarFileName = "peptizer-" + lProperties.get("version") + ".jar";
-        System.out.println(jarFileName);
-
-        // Get the jarFile path.
-        String path;
-        path = this.getClass().getResource("PeptizerStarter.class").getPath();
-        //logger.debug(path);
-        path = path.substring(5, path.indexOf(jarFileName));
-        //logger.debug(path);
-        path = path.replace("%20", " ");
-        //logger.debug(path);
-
-        // Get Java vm options.
-        String options = lProperties.get("java").toString();
-
-
-        String quote = "";
-        if (System.getProperty("os.name").lastIndexOf("Windows") != -1) {
-            quote = "\"";
-        }
-
-        String javaHome = System.getProperty("java.home") + File.separator +
-                "bin" + File.separator;
-
-        String cmdLine = javaHome + "java " + options + " -cp " + quote
-                + new File(path, jarFileName).getAbsolutePath()
-                + quote + " com.compomics.peptizer.gui.PeptizerGUI";
-
-        System.out.println(cmdLine);
-
-        try {
-            // Run the process!
-            Runtime.getRuntime().exec(cmdLine);
-
-        } catch (IOException e1) {
-            System.err.println(e1.getMessage());
-            e1.printStackTrace();
-        } catch (Throwable t) {
-            System.err.println(t.getMessage());
-            t.printStackTrace();
-        }
-
-        finally {
-            System.exit(0);
-        }
-    }
-
-    /**
-     * Starts the launcher by calling the launch method. Use this as the main class in the jar file.
+     * Starts the launcher by calling the launch method. Use this as the main
+     * class in the jar file.
      *
      * @param args
      */
+    public PeptizerStarter(String[] args) {
+        try {
+            File jarFile = new File(PeptizerStarter.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            String mainClass = "com.compomics.peptizer.gui.PeptizerGUI";
+            launchTool("Peptizer", jarFile, null, mainClass, args);
+        } catch (URISyntaxException ex) {
+            logger.error(ex);
+        }
+
+    }
+
     public static void main(String[] args) {
-        new PeptizerStarter();
+        new PeptizerStarter(args);
     }
 }
