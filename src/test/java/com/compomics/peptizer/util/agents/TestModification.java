@@ -10,12 +10,13 @@ import com.compomics.peptizer.util.datatools.implementations.mascot.MascotPeptid
 import com.compomics.peptizer.util.datatools.implementations.mascot.MascotSpectrum;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
-import junit.TestCaseLM;
+import com.compomics.util.junit.TestCaseLM;
 import junit.framework.Assert;
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.Vector;
+import junit.framework.TestCase;
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,7 +28,7 @@ import java.util.Vector;
 /**
  * TestClass description: ------------------ This TestClass was developed to test the Deamidation Agent.
  */
-public class TestModification extends TestCaseLM {
+public class TestModification extends TestCase {
     // Class specific log4j logger for TestModification instances.
     private static Logger logger = Logger.getLogger(TestModification.class);
     ModificationAgent iModification;
@@ -43,7 +44,7 @@ public class TestModification extends TestCaseLM {
 
     public void testInspect() {
         //query160
-        String datFile = getFullFilePath("F015264_small.dat");
+        String datFile = TestCaseLM.getFullFilePath("F015264_small.dat");
         if (File.separatorChar == '\\') {
             datFile = datFile.replace("%20", " ");
         }
@@ -80,7 +81,7 @@ public class TestModification extends TestCaseLM {
 
     public void testInspectExactMatch() {
         //query160
-        String datFile = getFullFilePath("F015264_small.dat");
+        String datFile = TestCaseLM.getFullFilePath("F015264_small.dat");
         if (File.separatorChar == '\\') {
             datFile = datFile.replace("%20", " ");
         }

@@ -6,7 +6,6 @@ import com.compomics.peptizer.util.datatools.IdentificationFactory;
 import com.compomics.peptizer.util.fileio.ConnectionManager;
 import com.compomics.peptizer.util.fileio.MatLogger;
 import com.compomics.util.enumeration.CompomicsTools;
-import com.compomics.util.gui.dialogs.ConnectionDialog;
 import com.compomics.util.interfaces.Connectable;
 import com.compomics.util.io.PropertiesManager;
 import org.apache.log4j.Logger;

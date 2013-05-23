@@ -6,6 +6,7 @@
  */
 package com.compomics.peptizer;
 
+import com.compomics.peptizer.gui.PeptizerGUI;
 import com.compomics.peptizer.util.AgentAggregatorFactory;
 import com.compomics.peptizer.util.AgentFactory;
 import com.compomics.peptizer.util.fileio.MatLogger;

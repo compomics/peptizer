@@ -1,7 +1,7 @@
 package com.compomics.peptizer.util.fileio;
 
-import com.compomics.mslims.db.accessors.Validation;
-import com.compomics.mslims.db.accessors.Validationtype;
+import com.compomics.mslimsdb.accessors.Validation;
+import com.compomics.mslimsdb.accessors.Validationtype;
 import com.compomics.peptizer.gui.SelectedPeptideIdentifications;
 import com.compomics.peptizer.interfaces.ValidationSaver;
 import com.compomics.peptizer.util.CommentGenerator;

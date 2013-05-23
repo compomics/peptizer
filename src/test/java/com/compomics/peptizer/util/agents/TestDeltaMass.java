@@ -14,12 +14,13 @@ import com.compomics.peptizer.util.datatools.implementations.mascot.MascotPeptid
 import com.compomics.peptizer.util.datatools.implementations.mascot.MascotSpectrum;
 import com.compomics.peptizer.util.enumerator.AgentVote;
 import com.compomics.peptizer.util.enumerator.SearchEngineEnum;
-import junit.TestCaseLM;
+import com.compomics.util.junit.TestCaseLM;
 import junit.framework.Assert;
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.util.Vector;
+import junit.framework.TestCase;
 
 /**
  * Created by IntelliJ IDEA.
@@ -31,7 +32,7 @@ import java.util.Vector;
 /**
  * TestClass description: ------------------ This TestClass was developed to test the Deamidation Agent.
  */
-public class TestDeltaMass extends TestCaseLM {
+public class TestDeltaMass extends TestCase {
     // Class specific log4j logger for TestDeltaMass instances.
     private static Logger logger = Logger.getLogger(TestDeltaMass.class);
 
@@ -44,7 +45,7 @@ public class TestDeltaMass extends TestCaseLM {
         Agent lAgent = AgentFactory.getInstance().getAgent("com.compomics.peptizer.util.agents.DeltaMassPPMAgent");
 
         //query160
-        String datFile = getFullFilePath("F015264_small.dat");
+        String datFile = TestCaseLM.getFullFilePath("F015264_small.dat");
         if (File.separatorChar == '\\') {
             datFile = datFile.replace("%20", " ");
         }
@@ -112,7 +113,7 @@ public class TestDeltaMass extends TestCaseLM {
         Agent lAgent = AgentFactory.getInstance().getAgent("com.compomics.peptizer.util.agents.DeltaMassDaAgent");
 
         //query160
-        String datFile = getFullFilePath("F015264.dat");
+        String datFile = TestCaseLM.getFullFilePath("F015264.dat");
         if (File.separatorChar == '\\') {
             datFile = datFile.replace("%20", " ");
         }
@@ -178,7 +179,7 @@ public class TestDeltaMass extends TestCaseLM {
 
         //Query300 is corrupted!!
         // normal mass error = -0.15, changed this to -1.15Da to test the EXACT Agent.
-        String datFile = getFullFilePath("F015264.dat");
+        String datFile = TestCaseLM.getFullFilePath("F015264.dat");
         if (File.separatorChar == '\\') {
             datFile = datFile.replace("%20", " ");
         }
@@ -218,7 +219,7 @@ public class TestDeltaMass extends TestCaseLM {
 
         //Query300 is corrupted!!
         // normal mass error = -0.15, changed this to -1.15Da to test the EXACT Agent.
-        String datFile = getFullFilePath("F015264.dat");
+        String datFile = TestCaseLM.getFullFilePath("F015264.dat");
         if (File.separatorChar == '\\') {
             datFile = datFile.replace("%20", " ");
         }
