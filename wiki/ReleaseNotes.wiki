@@ -1,5 +1,12 @@
 #labels Featured,Phase-Implementation
 # Short summary of changes for each version of Peptizer. (as from version 1.6)
+
+----
+
+*Changes in Peptizer 1.8.4 (May 23. 2013):*
+ * fixed bootstrap loader that works with java 1.7 update 25
+--------
+
 ----
 
 *Changes in Peptizer 1.8.3 (July 25. 2012):*
